@@ -2,7 +2,7 @@
 
 Last updated: YYYY-MM-DD · Built from: [material file / one resume / conversation]
 
-This file is written at the end of the first build, from the claims that made the page, with the candidate's yes. Don't fill it in by hand first. From then on it is the record: nothing goes on a resume unless it is here.
+Optional. Offered after a build to save the confirmed numbers and answers from it, each tagged to its source line, so the next posting goes faster. Written only with the candidate's yes, and never filled in by hand before a build. Skip it when the candidate already keeps a career record: one record is enough. Once it exists it is one more piece of evidence, the most trusted one: a number here outranks the same number stated another way elsewhere.
 
 Every number carries a tag:
 - `[confirmed]`: usable as a hard claim.

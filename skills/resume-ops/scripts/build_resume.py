@@ -414,7 +414,6 @@ def document(paras):
 SERIF_FONTS = {"georgia", "garamond", "times new roman"}
 NS_R = 'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"'
 XML_HEAD = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-APP_NAME = "resume-ops build_resume.py"
 
 
 def styles(font):
@@ -526,12 +525,14 @@ def core_props(name, when):
 
 
 def app_props():
+    """Document properties Word writes. No Application element: File,
+    Properties would show it to anyone who opens the file, and the file claims
+    no program it was not made in."""
     return (
         f'{XML_HEAD}<Properties '
         'xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" '
         'xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">'
-        f'<Template>Normal.dotm</Template><TotalTime>0</TotalTime>'
-        f'<Application>{APP_NAME}</Application><DocSecurity>0</DocSecurity>'
+        '<Template>Normal.dotm</Template><TotalTime>0</TotalTime><DocSecurity>0</DocSecurity>'
         '<ScaleCrop>false</ScaleCrop><LinksUpToDate>false</LinksUpToDate>'
         '<SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged>'
         '</Properties>'

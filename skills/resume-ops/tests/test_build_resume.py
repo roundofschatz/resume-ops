@@ -127,6 +127,23 @@ class Builds(Base):
             core = z.read("docProps/core.xml").decode("utf-8")
         self.assertIn("<dc:creator>Dana Reyes</dc:creator>", core)
 
+    def test_no_part_names_the_tool(self):
+        """2.2.0: app.xml named the builder, and anyone who opened File,
+        Properties in Word saw it. No part may name the tool, the language or
+        the assistant, and app.xml claims no application at all."""
+        code, out = self.build(blocks())
+        self.assertEqual(code, 0, out)
+        with zipfile.ZipFile(self.docx) as z:
+            self.assertEqual(z.comment, b"")
+            for n in z.namelist():
+                text = z.read(n).decode("utf-8").lower()
+                for word in ("resume-ops", "build_resume", "python", "claude"):
+                    self.assertNotIn(word, n.lower(), n)
+                    self.assertNotIn(word, text, f"{n} contains {word!r}")
+            app = z.read("docProps/app.xml").decode("utf-8")
+        self.assertNotIn("<Application", app)
+        self.assertNotIn("Microsoft", app)
+
     def test_text_file_has_the_same_lines(self):
         self.build(blocks())
         txt = [ln[2:] if ln.startswith("- ") else ln

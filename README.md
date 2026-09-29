@@ -8,7 +8,7 @@ Before a person sees a resume, the application form reads it and fills in the jo
 
 Then an AI grader may score it. Workday's HiredScore gives an A or a B only when the resume meets every required qualification in the posting. In a test with stand-in AI graders, a required tool listed only under Skills, with no job behind it, got no credit.
 
-Resume Ops is built on findings like these. It turns your career material into a true resume that fills the form correctly and proves each requirement inside the job where you did the work.
+Resume Ops is built on findings like these. It takes whatever you have about your work and builds a true resume for one posting, one that fills the form correctly and proves each requirement inside the job where you did the work.
 
 ## Install
 
@@ -29,22 +29,24 @@ Resume Ops is built on findings like these. It turns your career material into a
 
 ## Use it
 
-Give Claude whatever you have, such as old resumes or a LinkedIn export, and say what you want:
+Give Claude the link to one job posting and whatever you have about your work. One file is enough: an old resume, a cover letter, your LinkedIn profile, your website, a career record or a page of notes, in any format. Then say what you want:
 
-- *Build me a resume from this.*
-- *Tailor my resume to this posting.*
+- *Build me a resume for this posting.*
+- *Here's my LinkedIn PDF. Tailor a resume to this job.*
 - *Will this file parse?*
 - *Why am I not getting replies?*
 
-Each session opens with a short status block that names the version and the facts it's working from, so you can check it before it writes anything.
+Each session opens with a short status block that names the version and the files it's working from, so you can check it before it writes anything.
 
 ## What it does
 
-- Builds a facts file from your material, then a base resume for a job family.
-- Tailors a copy to one posting by checking every required qualification: proven on the page, written into the job where it happened, or named as a gap.
+- Builds a resume for one posting from whatever you give it. Nothing has to exist first.
+- Checks every required qualification in the posting against your files: proven in the job where you did the work, written into that job when your files show it, or named as a gap.
+- Searches a large file for each qualification instead of reading it whole, and points to the file, heading and line behind each claim.
 - Writes a Word file and a plain-text copy, then runs scripts that check the structure and flag AI-writing tells.
 - Tells you what to fix in the application form after you upload.
-- Checks your resume's titles and dates against your LinkedIn jobs export, so the two match before an employer checks them.
+- Keeps your titles and dates the same on every resume, and checks them against your LinkedIn jobs export before an employer does.
+- Builds a base resume for job boards when you want one.
 
 Full detail on the scripts, file layout and tests: [`skills/resume-ops/README.md`](skills/resume-ops/README.md).
 

@@ -4,7 +4,7 @@ corpus_triage.py: turn a pile of career material into a triage report.
 
 Reads whatever the candidate already wrote about themselves (old resumes, a
 LinkedIn export, a brain dump, performance reviews) and does the mechanical
-half of building a facts file: split it into claims, grade the evidence, find
+half of reading it: split it into claims, grade the evidence, find
 contradictions, group duplicates, separate self-description from fact, and
 suggest targets.
 

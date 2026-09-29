@@ -9,7 +9,7 @@
     {
       "name": "resume-ops",
       "source": ".",
-      "description": "Turns career material into a US resume that four readers can use: the application form, the AI grader, the recruiter and the hiring manager."
+      "description": "Builds a US resume for one job posting from whatever you have, for the four readers who decide on it: the application form, the AI grader, the recruiter and the hiring manager."
     }
   ]
 }

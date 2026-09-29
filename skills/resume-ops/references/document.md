@@ -142,7 +142,7 @@ Each has a home inside the five sections.
 
 - **Under about 10 years of experience: one page.** **10 years and up: two pages.** About 70% of 418 hiring professionals accept two pages at 16 years [S56]. Stanford GSB and MIT cap at two pages [S62, S65]; Yale says one to two [S63]; Kellogg says usually one to two [S68].
 - **Never three pages** for a US private-sector resume. 81% of the same survey called more than two pages excessive [S56].
-- **Fill the pages you use.** 61% said a page that spills over hurts the candidate [S56]. A short page two is a material problem (the skill's judgment): go back to the facts for the next strongest on-target claim before touching spacing.
+- **Fill the pages you use.** 61% said a page that spills over hurts the candidate [S56]. A short page two is a material problem (the skill's judgment): go back to the evidence for the next strongest on-target claim before touching spacing.
 
 ## File and format
 

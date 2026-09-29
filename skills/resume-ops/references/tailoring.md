@@ -1,6 +1,6 @@
 # Tailoring
 
-How a posting becomes a work order, and how a base resume becomes a variant. The work order is a requirement check: every required qualification is proven, written in, or named as a gap. HiredScore's B grade needs every required qualification met [S05], and tailored applications reached interviews about 1.85 times as often in one vendor's tracked data, where interview rates peaked at 40 to 59% keyword coverage and fell above it [S61]. Source IDs point to `references/sources.md`.
+How a posting becomes a work order, and how the candidate's evidence answers it. The work order is a requirement check: every required qualification is proven, written in, or named as a gap. HiredScore's B grade needs every required qualification met [S05], and tailored applications reached interviews about 1.85 times as often in one vendor's tracked data, where interview rates peaked at 40 to 59% keyword coverage and fell above it [S61]. Source IDs point to `references/sources.md`.
 
 ## Read the posting
 
@@ -10,13 +10,19 @@ How a posting becomes a work order, and how a base resume becomes a variant. The
 
 ## The requirement check
 
-Run `scripts/requirement_check.py posting resume`. It lists every required and preferred qualification from the posting's own headings, with up to two lines from the resume that share its words and a first guess: LIKELY, WEAK (only the summary, headline or skills line has it) or NONE. The guess is word overlap, not a grade. Finish the checklist by hand.
+It runs twice: on the evidence before writing, and on the page after building.
 
-For every required qualification, one of three actions:
+**On the evidence.** `scripts/requirement_check.py posting.md --evidence notes.md record.md old-resume.docx` lists every required and preferred qualification from the posting's own headings. For each one it returns the best passages in the evidence, each with the file, the heading above it and the line; for a list qualification ("journey maps, service blueprints, Figma") it looks for passages that cover different parts of the list. It also prints a map of each file's headings and says whether the file is small enough to read whole or should be searched (`references/intake.md`, Small evidence, large evidence). The match is word overlap: it says where to look, and the proof comes from reading the passage.
 
-- **Keep.** A role bullet already proves it, in words a grader would match to the qualification. A title alone doesn't prove it, and neither does a skills list: a line has to show the work.
-- **Write.** It is true, and the material shows where it happened, but the page doesn't say it. Write the true line into that role. Use the posting's words where they are accurate ("patient throughput", "Epic", "Tableau dashboards"). Prefer rewriting a weaker bullet in that role over adding a line.
-- **Gap.** It is not true, or the material cannot show it. It stays off the page. It goes in the brief by name. Never write around a gap, never put the term in a list to catch a search, never hint at it.
+**On the page.** `scripts/requirement_check.py posting.md out/Name-Resume.docx` gives each qualification up to two lines from the resume that share its words and a first guess: LIKELY, WEAK (only the summary, headline or skills line has it) or NONE. The guess is word overlap, not a grade. Finish the checklist by hand.
+
+For every required qualification, one of three actions, with the proof taken from the evidence:
+
+- **Keep.** A line in the evidence proves it, in words a grader would match to the qualification. It goes on the page in the role where the work happened. A title alone doesn't prove it, and neither does a skills list: a line has to show the work.
+- **Write.** It is true, and the evidence shows where it happened, but no line says it plainly. Write the true line into that role. Use the posting's words where they are accurate ("patient throughput", "Epic", "Tableau dashboards").
+- **Gap.** It is not true, or the evidence cannot show it. It stays off the page. It goes in the brief by name. Never write around a gap, never put the term in a list to catch a search, never hint at it.
+
+A qualification with no passage gets a second search in the candidate's own words, then a question, before it is called a gap.
 
 Then the preferred qualifications, the same way, once every required one is settled.
 
@@ -33,7 +39,7 @@ How to prove the common kinds:
 ## The top of the page
 
 - **The summary's first sentence carries the posting's title language** where it is honest ("Director of Supply Chain" language for a supply chain strategy director). Never change a past title to match (`references/document.md`, Titles).
-- **The summary's proof sentence answers the posting's top requirement,** the one the posting leads with or repeats most. It changes per posting. Running the same proofs on every variant is the failure to avoid.
+- **The summary's proof sentence answers the posting's top requirement,** the one the posting leads with or repeats most. It changes per posting. Running the same proofs on every resume is the failure to avoid.
 - **Each role's first bullet is the one that answers this posting,** where the role has one. Reorder; don't rewrite what already works.
 
 ## Exact terms
@@ -42,22 +48,26 @@ After the requirement check, run `scripts/term_coverage.py posting resume`. It l
 
 The term list depends only on the posting, so before and after runs share one denominator. If the employer's name shows up as a term, pass `--employer Name`.
 
-## What a variant changes
+## What changes from one posting to the next
 
-Anything the requirement check calls for, and no more: the summary, the headline if there is one, the order of bullets inside roles, bullets rewritten or added to prove requirements, bullets dropped to make room, the Skills line. Titles, employers, dates and cities never change.
+Every tailored resume is built from the evidence, not edited from the last resume. A resume built for an earlier posting can be one more input; it is never the starting point, and its choices don't carry over.
 
-If the changes touch more than about a third of the bullets, the posting is probably outside the base resume's target. Say so in the brief; it may need its own base resume.
+**Changes per posting:** which claims make the page and in what order, the bullets written to prove this posting's requirements, the summary, the headline if there is one, the Skills line.
 
-If page two comes up short, go back to the facts file for the next strongest claim for this posting before touching anything else.
+**Never changes between resumes built from the same evidence:** titles, companies, cities and dates. They come from the evidence and the rulings file (with each formal title as held), and they read the same on every resume, so the resumes, the profile and the employer's record tell one story (`references/readers.md`, The record check). `scripts/profile_check.py` checks them against the LinkedIn jobs file.
+
+If the evidence can't prove about 70% of the required qualifications, the candidate competes against better-fitting people every time (`references/intake.md`, Choosing a target). Say so in the brief.
+
+If page two comes up short, go back to the evidence for the next strongest claim for this posting before touching anything else.
 
 ## The base resume: a requirement map for a title family
 
-A base resume has no single posting to answer, so it answers the market.
+Optional, and never a prerequisite for a tailored resume. A base resume has no single posting to answer, so it answers the market. It's for job boards, recruiter databases and referrals when there is no posting, and for a candidate who wants a few anchor resumes.
 
 1. Collect 8 to 12 live postings for the target title, same level, posted within 90 days. Fewer is fine when the market is thin; say how many. (These counts and the tiers below are the skill's working thresholds, not sourced figures.)
 2. Run `requirement_check.py` on each. Group the required qualifications that recur across postings (they will be worded differently; group them by what they ask for).
 3. Run `term_coverage.py --composite` across all of them. Terms in 60% or more of the postings are Tier 1 for the base; 30 to 59%, Tier 2.
-4. The qualifications that at least half the postings require are the base resume's must-proves. Each one that is true for the candidate gets a proof line in a role. Each one they don't have gets named to them: if most postings require a credential they lack, that is a targeting problem, not a writing one.
+4. The qualifications that at least half the postings require are the base resume's must-proves. List them under a Requirements heading in one file and run `requirement_check.py` on it with `--evidence`. Each one that is true for the candidate gets a proof line in a role. Each one they don't have gets named to them: if most postings require a credential they lack, that is a targeting problem, not a writing one.
 5. The summary's first sentence uses the most common standard title for the family, and its proof sentence answers the must-prove that the most postings share.
 
 A base resume stands alone: no cover letter, no posting-specific language, no company names of employers it's aimed at.
@@ -69,6 +79,7 @@ A base resume stands alone: no cover letter, no posting-specific language, no co
 Under 150 words, in the response, delivered with the DOCX and the plain-text copy:
 
 ```
+EVIDENCE: career-notes.md (read whole); record.md (searched).
 REQUIREMENTS: 6 of 7 required proven (R4 Qualtrics: gap). 2 of 5 preferred.
 WRITTEN IN: R2 team of 6 (Acme role); R5 dashboards in Tableau (Acme role).
 GAPS: Qualtrics, SQL.

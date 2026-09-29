@@ -2,6 +2,29 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.2.0 (2026-09-28)
+
+The procedure now matches what the skill is for: evidence in, a resume for one posting out. From the first package on September 11 through 2.1.1, SKILL.md made a base resume a prerequisite ("If the candidate has no base resume, build it first") and built every tailored resume from it. The red teams checked whether the rules were true. None checked the procedure against the intent.
+
+**Procedure**
+- The tailored resume is the main procedure, built from evidence: Level Set; intake (the contact block, then whatever the candidate gives, one file or many, in any format); read the posting; map the evidence to it; write, build, check and deliver.
+- The base resume is an optional mode for job boards and referrals when there's no posting. Its 8-to-12-postings method stays. It's never a prerequisite.
+- Every next posting starts from the evidence. A resume built earlier can be one more input, never the starting point.
+- The facts file is optional, offered after the first build. When the evidence is already a career record the candidate keeps, no second copy is made.
+- One record, every resume: titles, companies, cities and dates come from the evidence and read the same on every resume built from it. `profile_check.py` stays as the check.
+- Level Set: Mode reads Tailored resume, Base resume or Review only, and an Evidence line names each file loaded in place of the facts-file line.
+- Hard rule 7: a file under the read-whole line (about 2,000 lines or 150 KB) is read start to end; a file over it is searched. No qualification is dropped because a file was too big to read.
+
+**Scripts**
+- `requirement_check.py --evidence` reads evidence as well as a resume: Markdown, text, DOCX, and PDF through `pdftotext`. It splits each file on its headings, prints a map of them, and returns the best passages for each qualification with the file, heading and line. For a list qualification it looks for passages that cover different parts of the list.
+- `build_resume.py` no longer writes an Application element in `docProps/app.xml`. It named the tool, and anyone who opened File, Properties in Word could see it. Every part the file had stays, and no part names the tool.
+
+**Docs**
+- The SKILL.md description, the Level Set, both procedures, `intake.md` (evidence in any format; small and large evidence), `tailoring.md` (what changes from one posting to the next, rewritten around evidence), the facts template and both READMEs.
+
+**Tests**
+- New: evidence search on Markdown, text, DOCX and PDF; no trace of the tool in any part of a built DOCX; SKILL.md makes nothing a prerequisite for a tailored resume.
+
 ## 2.1.1 (2026-09-28)
 
 Published on GitHub as a Claude plugin. No rule changed.
@@ -28,7 +51,7 @@ After a second red team: three research passes on first-hand sources, a check of
 - Company names keep a legal suffix without a comma ("Acme Inc."), which Greenhouse and RChilli say helps recognition.
 
 **Titles and the record**
-- New section in `readers.md`, The record check: background checks verify titles and dates against the employer's record; Lever flags work-history consistency; LinkedIn lets colleagues vouch for work history. A reorder of the formal title's own words is low risk; an added word is medium risk unless the formal title goes into the forms. The post-upload review and the brief now carry the formal title.
+- New section in `readers.md`, The record check: background checks verify titles and dates against the employer's record; Lever flags work-history consistency; LinkedIn lets colleagues vouch for work history. A reorder of the formal title's own words is low risk; an added word is medium risk unless the formal title goes into the forms. The post-upload review and the brief now show the formal title.
 - New `profile_check.py`: compares the resume's titles, companies and dates with the candidate's LinkedIn jobs file (Positions.csv from LinkedIn's data download). No browser needed.
 
 **Diagnosis**
@@ -59,7 +82,7 @@ Rebuilt after a red-team review of 1.6: a before run on eight live postings, fou
 
 **Summary**
 - Prose only, three to four lines, about 50 to 70 words. No career-level bullets, no keyword strip, implied first person, counts name what they count.
-- Carries the posting's title language and one proof that answers the posting's top requirement; at most one claim repeats a role bullet.
+- Uses the posting's title language and one proof that answers the posting's top requirement; at most one claim repeats a role bullet.
 - One belief sentence in the candidate's own words, without "I".
 
 **Skills**
@@ -67,7 +90,7 @@ Rebuilt after a red-team review of 1.6: a before run on eight live postings, fou
 
 **Roles and layout**
 - Company-first role layout, set by a live Workday test on 2026-09-28: 8 of 8 titles, companies, cities and dates right, against 2 of 8 fully right for the 1.6 layout.
-- Titles carry no comma or parenthesis: Workday keeps only the text before either. A title with a qualifier is written descriptor first ("Supply Chain Senior Analyst").
+- Titles have no comma or parenthesis: Workday keeps only the text before either. A title with a qualifier is written descriptor first ("Supply Chain Senior Analyst").
 - Every role gets a city and state. Every role in the last 15 years gets at least one bullet. Older roles go in one earlier-career line.
 - Never three pages for a US private-sector resume.
 
@@ -92,4 +115,4 @@ Rebuilt after a red-team review of 1.6: a before run on eight live postings, fou
 
 ## 1.6 and earlier
 
-No changelog was kept. The label 1.6 covered two opposite positions on the skills budget, and 1.5 covered two on the separate Workday file. That is why this file exists.
+No changelog was kept. The label 1.6 covered two opposite positions on the skills budget, and 1.5 covered two on the separate Workday file. That's why this file exists.
