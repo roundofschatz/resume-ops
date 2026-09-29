@@ -1,0 +1,1061 @@
+{
+ "about": "General AI-writing tells, one class per entry, written as realistic resume or summary lines across mixed fields. Every name and number is invented. 'clean' holds lines that must not draw a FAIL: the first eleven use exact terms of art that look like tells and are not.",
+ "tells": [
+  {
+   "class": "em dash",
+   "text": "Cut average ticket resolution time from 9 hours to 3 \u2014 without adding headcount."
+  },
+  {
+   "class": "em dash",
+   "text": "Rebuilt the spring enrollment process -- the district's first fully online intake."
+  },
+  {
+   "class": "em dash",
+   "text": "Managed a $4M renovation budget\u2014and closed it 6% under."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Treated the loading dock as a safety system, not just a place to unload trucks."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Not only reduced claim denials, but also rebuilt trust with the billing team."
+  },
+  {
+   "class": "negative corollary",
+   "text": "The new onboarding program isn't just faster; it keeps hires longer."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Built a volunteer network that was more than just a phone tree."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "Great tutoring is not about the worksheets, it's about the questions a student asks."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "Logistics was never about trucks for this team; it was about promises kept to customers."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "It's not about closing tickets. It's about making sure the customer never has to call twice."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "Not a caretaker of the old system. A builder of the next one."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "I am not a salesperson. I am a problem solver who happens to sell."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "Not a report writer; an analyst who changes decisions."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Unlike most project managers, stays with the build until the punch list is closed."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Brings a rare mix of clinical judgment and data fluency."
+  },
+  {
+   "class": "empty comparison",
+   "text": "One of the few controllers who can also run the ERP migration."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Where other agencies hand off at launch, stayed through the first 90 days of sales."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "In today's fast-moving retail market, rebuilt the store replenishment model for 42 locations."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "In an ever-changing regulatory environment, kept 3 plants audit-ready."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "At the end of the day, delivered the Denver distribution center on time and on budget."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "When it comes to vendor contracts, renegotiated 18 agreements."
+  },
+  {
+   "class": "hedge",
+   "text": "Really improved how the night shift handed off patients."
+  },
+  {
+   "class": "hedge",
+   "text": "Cut food waste by a bit more than a third across 6 kitchens."
+  },
+  {
+   "class": "hedge",
+   "text": "Became kind of the go-to person for payroll questions."
+  },
+  {
+   "class": "hedge",
+   "text": "Rebuilt a fairly complex scheduling model for 300 drivers."
+  },
+  {
+   "class": "hedge",
+   "text": "Quite successful at recruiting bilingual volunteers."
+  },
+  {
+   "class": "filler",
+   "text": "Actually reduced the audit backlog from 60 files to 12."
+  },
+  {
+   "class": "filler",
+   "text": "Simply rebuilt the grading rubric so students knew what an A looked like."
+  },
+  {
+   "class": "filler",
+   "text": "Just redesigned the intake form and wait times fell 20%."
+  },
+  {
+   "class": "filler",
+   "text": "Literally rewrote the safety manual in one weekend."
+  },
+  {
+   "class": "filler",
+   "text": "Basically ran the regional office during the director's leave."
+  },
+  {
+   "class": "vague size word",
+   "text": "Delivered significant cost savings across the supply chain."
+  },
+  {
+   "class": "vague size word",
+   "text": "Built a robust reporting framework for the finance team."
+  },
+  {
+   "class": "vague size word",
+   "text": "Created a powerful onboarding experience for new tellers."
+  },
+  {
+   "class": "vague size word",
+   "text": "Led a high-impact redesign of the patient portal."
+  },
+  {
+   "class": "vague size word",
+   "text": "Provided seamless support to 14 attorneys."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Leveraged data analytics to improve student retention."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Unlocked new revenue streams through partnerships."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Fostered a culture of accountability across three warehouses."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Drives operational excellence across the claims team."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Elevated the brand's presence in the Pacific Northwest."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Streamlined the accounts payable workflow."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Empowered frontline staff to resolve complaints on the spot."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Contributed to the launch of the new loyalty app."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Was involved in the migration of 2,000 patient records."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Played a key role in winning the state contract."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Can help teams adopt new scheduling software."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Helped to reduce overtime in the packaging department."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Responsible for managing inventory at two stores."
+  },
+  {
+   "class": "latinate default",
+   "text": "Utilized SQL to identify billing errors."
+  },
+  {
+   "class": "latinate default",
+   "text": "Commenced the transition to electronic health records in March."
+  },
+  {
+   "class": "latinate default",
+   "text": "Demonstrated strong leadership during the plant shutdown."
+  },
+  {
+   "class": "latinate default",
+   "text": "Constructed a framework for vendor evaluation."
+  },
+  {
+   "class": "latinate default",
+   "text": "Endeavored to improve response times across the county."
+  },
+  {
+   "class": "latinate default",
+   "text": "Facilitated the implementation of a new ERP system."
+  },
+  {
+   "class": "cliche",
+   "text": "Results-driven operations leader with a proven track record of success."
+  },
+  {
+   "class": "cliche",
+   "text": "Dynamic team player and go-getter."
+  },
+  {
+   "class": "cliche",
+   "text": "Passionate about delivering world-class guest experiences."
+  },
+  {
+   "class": "cliche",
+   "text": "Seasoned thought leader in supply chain strategy."
+  },
+  {
+   "class": "cliche",
+   "text": "Detail-oriented self-starter who thinks outside the box."
+  },
+  {
+   "class": "cliche",
+   "text": "Bridged the gap between the sales and engineering teams."
+  },
+  {
+   "class": "from scratch",
+   "text": "Built the volunteer program from scratch."
+  },
+  {
+   "class": "from scratch",
+   "text": "Designed the district's first STEM curriculum from scratch in one summer."
+  },
+  {
+   "class": "ending on air",
+   "text": "Rebuilt the vendor scorecard, driving operational excellence."
+  },
+  {
+   "class": "ending on air",
+   "text": "Launched a mentoring program for new nurses, ensuring long-term success."
+  },
+  {
+   "class": "ending on air",
+   "text": "Reorganized the warehouse layout, creating new possibilities for growth."
+  },
+  {
+   "class": "ending on air",
+   "text": "Redesigned the quarterly report, delivering measurable value to stakeholders."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Known for being calm, clear, and decisive under pressure."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Built a front desk team that is friendly, fast, and accurate."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Brings energy, empathy and focus to every classroom."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Planned, launched and scaled the food bank's mobile pantry."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Faster, cheaper, safer."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether it's a 10-person startup or a national retailer, delivers on time."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether you need a new website or a full rebrand, brings the same focus."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether leading a night shift or training new hires, keeps patients first."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "Ready to bring this experience to a growing healthcare system."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "Eager to contribute to a mission-driven organization."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "Excited to take on new challenges in operations leadership."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "Seeking a challenging role where these skills can make a difference."
+  },
+  {
+   "class": "indirect claim",
+   "text": "That is the work I have done for 12 years."
+  },
+  {
+   "class": "indirect claim",
+   "text": "This is what great customer service looks like."
+  },
+  {
+   "class": "indirect claim",
+   "text": "Turning messy data into clear decisions: that is the work."
+  },
+  {
+   "class": "indirect claim",
+   "text": "Which is exactly what the last three clinics needed."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "This meant faster answers for every caller."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "That gave the hours back to the teachers."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "Which kept the whole operation moving."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "It made all the difference for the team."
+  },
+  {
+   "class": "vague place",
+   "text": "Earned a seat at the table with the executive team."
+  },
+  {
+   "class": "vague place",
+   "text": "Brings a strong voice to the table on budget decisions."
+  },
+  {
+   "class": "vague place",
+   "text": "The person in the room who asks what the customer will see."
+  },
+  {
+   "class": "vague place",
+   "text": "Represented the nursing staff in the room where staffing decisions were made."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "What changed the result was the new picking schedule."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "It was the night crew that found the leak."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "The reason the audit passed was that every file had been rechecked."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "Coaching new managers is the part I enjoy most."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "Running a kitchen has taught me that prep decides the night."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Delved into customer feedback to find the top complaints."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Showcased the new product line at 4 regional trade shows."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Navigated the complexities of a multi-state merger."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "A testament to the team's commitment to quality."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Meticulously managed a portfolio of 120 commercial leases."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Underscored the need for a new intake process."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Embarked on a multifaceted overhaul of the billing department."
+  },
+  {
+   "class": "borrowed framework",
+   "text": "Applied a blue ocean strategy to open two new service lines."
+  },
+  {
+   "class": "borrowed framework",
+   "text": "Took the regional sales team from good to great in 18 months."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Faster, simpler, smarter reporting for every branch."
+  },
+  {
+   "class": "filler",
+   "text": "Honestly transformed how the clinic schedules visits."
+  },
+  {
+   "class": "em dash",
+   "text": "Cut average ER wait time from 52 to 31 minutes\u2014without adding a single nurse."
+  },
+  {
+   "class": "em dash",
+   "text": "Rebuilt the carrier bid process for 14 regional lanes -- and freight costs fell 11% in the first quarter."
+  },
+  {
+   "class": "em dash",
+   "text": "Shipped the billing rewrite on schedule \u2014 a first for the payments team in three years."
+  },
+  {
+   "class": "em dash",
+   "text": "Closed the quarter's books in four days instead of nine\u2014the fastest close in company history."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Raised third-grade reading scores 18 points, not just attendance, in one school year."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Managed replenishment not only for the flagship store but also for two airport kiosks, cutting stockouts 30%."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Treated the daily safety huddle as more than a compliance box, using it to sequence crane lifts on a 12-story build."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Took the CRM migration beyond a data transfer to a full cleanup of 210,000 duplicate guest records at a hotel group."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "Discharge teaching was never about handing out pamphlets; it was about making sure 30 patients a week could manage their medications at home."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "The goal wasn't faster picking; it was fewer mis-ships, which fell from 2.1% to 0.4%."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "Code review, for me, is less about catching typos than about spreading system knowledge across a team of nine engineers."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "The audit was never about the finding count; it was about whether 42 key controls held on retest, and all of them did."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "I'm not a project manager who tracks tasks. I'm one who ships: 11 releases in 12 months."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "Less firefighting, more planning: cut reactive maintenance from 70% to 35% of crew hours at a stamping plant."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "More than a charge nurse, a mentor to 14 new graduates on a 32-bed med-surg unit."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "Not a vendor, a partner: grew wholesale accounts from 18 to 41 restaurants in two years."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Unlike most warehouse managers, I track dock-to-stock time by the hour, which cut it from 26 to 9 hours."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Offers a rare mix of bedside and medical coding experience, cutting claim denials 22% at a 40-bed rehab hospital."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Few candidates hold both a PE license and ten years as a site superintendent; I use both on every job over $20M."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Pairs a copywriter's ear with an analyst's rigor, a combination most marketers lack, and grew email revenue 34%."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "In today's healthcare environment, I cut medication errors on a 28-bed unit by 40%."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "In an era of rising freight costs, renegotiated 22 carrier contracts to save $1.4M a year."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "As retail continues to change, I moved a 60-store chain's returns process online, cutting refund time from 10 days to 3."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "At a time when schools face tight budgets, secured $85,000 in grants for a STEM lab serving 400 students."
+  },
+  {
+   "class": "hedge",
+   "text": "Kept a fairly tight budget on a $3M tenant fit-out and finished 2% under."
+  },
+  {
+   "class": "hedge",
+   "text": "Handled a pretty large book of 180 commercial insurance accounts at the Denver branch."
+  },
+  {
+   "class": "hedge",
+   "text": "Wrote somewhat simpler onboarding docs that cut new-hire ramp time from six weeks to four."
+  },
+  {
+   "class": "hedge",
+   "text": "Became quite skilled at pediatric IV starts, with a 96% first-stick rate."
+  },
+  {
+   "class": "filler",
+   "text": "Cut forklift incidents to zero in 18 months, which actually made our site the safest of 11 in the network."
+  },
+  {
+   "class": "filler",
+   "text": "Simply rewrote the report queries, and the nightly batch dropped from 4 hours to 25 minutes."
+  },
+  {
+   "class": "filler",
+   "text": "Was essentially the weekend chef, serving 300 guests a night with a crew of six."
+  },
+  {
+   "class": "filler",
+   "text": "Just reorganized the stockroom by sales velocity, and restock time fell from 3 hours to 70 minutes."
+  },
+  {
+   "class": "vague size word",
+   "text": "Generated substantial savings by renegotiating the plant's resin supply contract."
+  },
+  {
+   "class": "vague size word",
+   "text": "Built a robust orientation program for 45 new nurses a year."
+  },
+  {
+   "class": "vague size word",
+   "text": "Made meaningful improvements to the month-end close across three subsidiaries."
+  },
+  {
+   "class": "vague size word",
+   "text": "Designed a seamless mobile check-in for a 300-room resort."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Leveraged Salesforce data to target 3,000 lapsed customers with a win-back campaign."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Orchestrated a 600-guest wedding weekend across three venues at a mountain resort."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Fostered a reading habit in 28 fourth graders, who logged 4,100 books in one school year."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Drove a 15% lift in same-store sales through weekly floor resets."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Contributed to a 20% drop in patient falls on a 36-bed orthopedic unit."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Was involved in the ERP cutover for a 1,200-employee food distributor."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Played a key part in winning a $40M hospital expansion bid."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Was responsible for weekly payroll covering 340 employees in five states."
+  },
+  {
+   "class": "latinate default",
+   "text": "Utilized Tableau to track weekly sales for 85 stores."
+  },
+  {
+   "class": "latinate default",
+   "text": "Ascertained the root cause of a $220,000 inventory variance within two weeks."
+  },
+  {
+   "class": "latinate default",
+   "text": "Facilitated the transfer of 1,400 customer accounts to the new billing platform."
+  },
+  {
+   "class": "latinate default",
+   "text": "Rewrote the shift-change handoff in order to cut report time from 45 to 20 minutes."
+  },
+  {
+   "class": "cliche",
+   "text": "Results-driven operations manager with 12 years in third-party logistics."
+  },
+  {
+   "class": "cliche",
+   "text": "Proven track record of finishing school construction projects on budget, with 7 of 8 under estimate."
+  },
+  {
+   "class": "cliche",
+   "text": "Passionate about early literacy, I ran a summer reading camp for 60 kindergartners."
+  },
+  {
+   "class": "cliche",
+   "text": "Hit the ground running as night-shift supervisor, filling 9 open roles in my first 60 days."
+  },
+  {
+   "class": "from scratch",
+   "text": "Built the hospital's sepsis screening protocol from scratch, and time to antibiotics fell from 3 hours to 70 minutes."
+  },
+  {
+   "class": "from scratch",
+   "text": "Designed a vendor scorecard from the ground up for 60 suppliers."
+  },
+  {
+   "class": "from scratch",
+   "text": "From scratch, I wrote a Python pricing engine that now quotes 9,000 freight loads a month."
+  },
+  {
+   "class": "from scratch",
+   "text": "Built from the ground up a 40-person catering team for a new convention center."
+  },
+  {
+   "class": "ending on air",
+   "text": "Rolled out bedside shift report on four units, ensuring long-term success."
+  },
+  {
+   "class": "ending on air",
+   "text": "Rebuilt the carrier onboarding checklist, delivering lasting value for the network."
+  },
+  {
+   "class": "ending on air",
+   "text": "Mentored six junior developers, creating a culture of continuous improvement."
+  },
+  {
+   "class": "ending on air",
+   "text": "Merged three regional merchandising teams into one, positioning the business for sustainable growth."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Made the shipping floor faster, safer and cleaner in my first year as manager."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Brought people, process and tools together to cut changeover time from 50 to 22 minutes."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Known as a calm, organized and caring nurse on a busy cardiac step-down unit."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Wrote the brief, shot the photos and ran the ads for a $200,000 spring campaign."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether the patient is a newborn or a hospice resident, I adjust my teaching to their family."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether you need a 50-seat lunch or a 900-guest gala, I have run both at a downtown convention hotel."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether it's a two-truck startup or a 400-truck fleet, I set up dispatch in Samsara within a week."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether a client is buying a first home or refinancing a fourth rental, I close loans in 21 days on average."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "Excited to bring 10 years of ICU experience to a Level I trauma center."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "Eager to contribute my warehouse automation experience to a growing 3PL."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "To be clear, I led the full redesign of the checkout flow, which lifted conversion 9%."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "I'll say it plainly: I cut food cost from 34% to 28% at two restaurants in one year."
+  },
+  {
+   "class": "indirect claim",
+   "text": "Turning messy spreadsheets into dashboards a CFO trusts: that's what I do."
+  },
+  {
+   "class": "indirect claim",
+   "text": "Plants lose hours to unplanned downtime, and that's where I come in."
+  },
+  {
+   "class": "indirect claim",
+   "text": "Cut a 14-store chain's shrink from 2.8% to 1.1%. That is the work I have done for a decade."
+  },
+  {
+   "class": "indirect claim",
+   "text": "I get families to a clear discharge plan before noon; it's what I've done for eight years on a 30-bed unit."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "Automated the weekly inventory count with RFID. This allowed the team to focus on customers."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "Moved the nurses to 12-hour self-scheduling, which gave them their weekends back."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "Switched the CI pipeline to parallel test runners. That shift changed everything."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "Consolidated three freight forwarders into one, which made all the difference at quarter-end."
+  },
+  {
+   "class": "vague place",
+   "text": "Earned nursing a seat at the table in the hospital's capital planning."
+  },
+  {
+   "class": "vague place",
+   "text": "Was the finance voice in the room during three lender presentations for a $90M refinancing."
+  },
+  {
+   "class": "vague place",
+   "text": "Built a name in the space for boutique hotel openings across the Mountain West."
+  },
+  {
+   "class": "vague place",
+   "text": "Represented second-shift operators at the table when the plant set its annual safety goals."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "What I bring is a decade of cold-chain logistics for grocery and pharma clients."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "It is the handoff between shifts that I rebuilt, cutting missed medication orders by half."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "The part I love most is turning a failing store around, which I've done at four locations."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "Where I add value is in translating field problems into schedule fixes for general contractors."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Navigated a 14-month state licensing process to open two assisted-living facilities."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Bolstered enrollment in the district's AP program from 140 to 260 students."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Showcased the brand's spring line in a pop-up that drew 4,000 visitors over two weekends."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Meticulous bookkeeper who reconciled 22 bank accounts each month for a family office."
+  },
+  {
+   "class": "em dash",
+   "text": "Cut average chair turnover time from 22 to 14 minutes \u2014 without adding a single assistant."
+  },
+  {
+   "class": "em dash",
+   "text": "Recovered $1.2M in stalled pledges -- the largest single-year recovery in the foundation's history."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Built an onboarding program that covered not only benefits enrollment but also the first 90 days of manager check-ins for 300 hires a year."
+  },
+  {
+   "class": "negative corollary",
+   "text": "Took the security team beyond alert triage to active threat hunting, closing 18 exposed services in the first quarter."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "Support isn't about closing tickets, it's about keeping customers, and I cut churn among escalated accounts from 9% to 4%."
+  },
+  {
+   "class": "not about X, about Y",
+   "text": "The goal was never the lowest bid; it was the right carrier, and that shift cut claims on refrigerated loads by 31%."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "I'm not a salesperson; I'm a clinical partner to the 60 cardiology practices in my territory."
+  },
+  {
+   "class": "symmetrical negation",
+   "text": "Less order-taker, more operator: I run the front of house for a 180-seat restaurant doing $4.2M a year."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Unlike most recruiters, I screen every application myself, and I filled 42 nursing roles in 2025 with 91% one-year retention."
+  },
+  {
+   "class": "empty comparison",
+   "text": "Where other architects hand off at permit, I stay through construction administration, including on the $38M Larimer Street library."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "At a time when ransomware attacks on hospitals make the news every week, I rebuilt backup and restore for a 400-bed system and proved full recovery in under 6 hours."
+  },
+  {
+   "class": "throat-clearing opener",
+   "text": "With the rise of teledentistry, I set up virtual consults for a four-dentist practice and booked 1,100 remote visits in the first year."
+  },
+  {
+   "class": "hedge",
+   "text": "Built a fairly large donor database of 12,000 records in Raiser's Edge and brought duplicates under 2%."
+  },
+  {
+   "class": "hedge",
+   "text": "Kept food cost pretty steady at 29% through two years of rising beef prices."
+  },
+  {
+   "class": "filler",
+   "text": "Simply put, I cut average handle time from 11 minutes to 7 by rewriting the 40 most-used support macros."
+  },
+  {
+   "class": "filler",
+   "text": "Essentially rebuilt the firm's conflict-check process in Clio, cutting new-matter intake from 3 days to 1."
+  },
+  {
+   "class": "vague size word",
+   "text": "Negotiated significant savings on dental supplies by moving the practice to a group purchasing plan with Henry Schein."
+  },
+  {
+   "class": "vague size word",
+   "text": "Wrote a comprehensive safety manual for a 60-driver regional carrier."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Leveraged Salesforce call data to target the top 50 prescribers in the Denver territory."
+  },
+  {
+   "class": "fluff verb",
+   "text": "Orchestrated the move of 14,000 client matters from a legacy system to NetDocuments over one weekend."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Contributed to a 22% rise in same-store sales across four locations."
+  },
+  {
+   "class": "weak or passive claim",
+   "text": "Played a key role in winning a $14M middle school commission in Fort Collins."
+  },
+  {
+   "class": "latinate default",
+   "text": "Utilized Kronos to schedule 220 hourly warehouse staff across two shifts."
+  },
+  {
+   "class": "latinate default",
+   "text": "Facilitated the transfer of 1,200 patient records when the practice changed ownership in 2023."
+  },
+  {
+   "class": "cliche",
+   "text": "Results-driven HR generalist with nine years supporting manufacturing sites of 150 to 800 employees."
+  },
+  {
+   "class": "cliche",
+   "text": "Detail-oriented paralegal who has managed discovery for 60 commercial cases in state and federal court."
+  },
+  {
+   "class": "from scratch",
+   "text": "Built the planned-giving program from scratch and closed 14 bequest commitments worth $3.1M in two years."
+  },
+  {
+   "class": "from scratch",
+   "text": "Designed the restaurant's beverage program from the ground up, adding 40 wines and raising drink sales to 31% of revenue."
+  },
+  {
+   "class": "ending on air",
+   "text": "Cut roadside breakdowns 38% by rebuilding the preventive maintenance schedule for 85 trailers, setting the fleet up for long-term success."
+  },
+  {
+   "class": "ending on air",
+   "text": "Moved 12 enterprise clients to annual support contracts, creating lasting value for the business."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "Brought clarity, speed, and accountability to a 14-person intake team that handles 3,000 calls a month."
+  },
+  {
+   "class": "threes for rhythm",
+   "text": "I listen, I plan, I deliver: 11 school renovations finished on budget for Denver Public Schools."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether the account is a 5-seat startup or a 5,000-seat enterprise, I resolve tier-2 tickets in under 4 hours."
+  },
+  {
+   "class": "whether setup",
+   "text": "Whether it's a hazmat load or a flatbed of steel coil, I've hauled it safely for 1.1 million miles."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "Eager to bring eight years of hospital sales experience to a growing oncology team."
+  },
+  {
+   "class": "urgency coda or meta-statement",
+   "text": "Let me be clear: every one of my 140 closed workplace investigations held up on legal review."
+  },
+  {
+   "class": "indirect claim",
+   "text": "Opened four restaurants in 18 months, each on budget. This is what I do."
+  },
+  {
+   "class": "indirect claim",
+   "text": "When a practice's insurance claims back up past 60 days, that's where I come in: I cleared a 2,400-claim backlog in five weeks."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "Automated weekly payroll reconciliation in Excel for 600 employees, which gave the team their Fridays back."
+  },
+  {
+   "class": "hanging phrase",
+   "text": "Rewrote the patch policy to require a 7-day fix on critical CVEs. That change made all the difference."
+  },
+  {
+   "class": "vague place",
+   "text": "Gave frontline support a seat at the table in quarterly roadmap reviews with the 12-person product team."
+  },
+  {
+   "class": "vague place",
+   "text": "Known as the calmest person in the room during the firm's 2023 ransomware response."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "What I bring is 11 years of chairside and front-desk experience in pediatric dentistry."
+  },
+  {
+   "class": "drawn-out construction",
+   "text": "It was my rebuild of the prospect research process that lifted major gifts from $2M to $3.4M."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Navigated a two-year FDA label change to keep 140 hospital accounts on formulary."
+  },
+  {
+   "class": "LLM marker word",
+   "text": "Meticulous legal assistant who indexed 30,000 exhibits for a 2025 antitrust trial."
+  }
+ ],
+ "clean": [
+  "Wrote the housing chapter of the county's 2040 comprehensive plan, adopted in 2022.",
+  "Ran an A/B test on 48,000 checkout sessions; the one-page form raised conversion 3.1 points, statistically significant at p < 0.01.",
+  "Reached substantial completion on a 140-unit apartment building 3 weeks ahead of the contract date.",
+  "Modeled 12 leveraged buyouts of mid-market manufacturers valued at $40M to $220M.",
+  "Closed 9 leveraged finance deals totaling $1.4B for the sponsor coverage group.",
+  "Raised billable utilization from 68% to 81% across a 30-person consulting team.",
+  "Cut operating room idle time by lifting block utilization from 71% to 84%.",
+  "Opened the second location on Rather Street, reaching break-even in 7 months.",
+  "Kept the call center running while most of the team moved to remote work in 2020.",
+  "Launched the very first loyalty program at the 12-store grocery chain.",
+  "Fit robust regression models to 6 years of claims data to flag 214 outlier providers.",
+  "Cut patient wait times in the emergency department from 47 to 22 minutes by moving triage to the front door.",
+  "Trained 14 new tellers in 2023; 12 passed the branch certification on the first try.",
+  "Rewrote the 9th-grade algebra syllabus; the share of students passing the state exam rose from 58% to 74%.",
+  "Negotiated freight contracts with 6 carriers, saving $310,000 a year.",
+  "Managed a 22-person kitchen serving 900 covers a night at a 400-seat hotel restaurant.",
+  "Moved 3 plants from paper work orders to Maximo, ending a 2-week backlog of repair requests.",
+  "Raised $1.2M from 340 donors in a 6-week capital campaign for the new library wing.",
+  "Built the Python pipeline that checks 2 million sensor readings a day for drift.",
+  "Won 4 of 5 contested custody hearings in 2022 as lead counsel for the county legal aid office.",
+  "Facilitated 30 design workshops with nurses and IT staff to rebuild the discharge checklist.",
+  "Drove a 26-foot box truck on a 180-stop weekly route with zero late deliveries in 2021.",
+  "Inspected 35 bridges a year for the state transportation department and wrote the repair priority list.",
+  "Shipped replacement parts to dealers in 14 US states within 48 hours of the order.",
+  "Ran just-in-time replenishment for 3 plants and cut stockouts from 14 to 2 a month.",
+  "Ran an A/B test on the checkout page that showed a statistically significant 4.2% lift in conversion (p < 0.01) across 60,000 sessions.",
+  "Reached substantial completion on a 96-unit apartment building 11 days ahead of the contract date.",
+  "Built the debt schedule and returns model for a $310M leveraged buyout of a Midwest packaging manufacturer.",
+  "Held billable utilization at 82% for a 14-person accounting advisory team over two fiscal years.",
+  "Wrote the transportation chapter of Aurora's 2040 comprehensive plan, adopted by city council in March 2024.",
+  "Used robust regression in R to model delivery times on 2,300 routes where snow days skewed the averages.",
+  "Taught 11th-grade chemistry students to report lab data with correct significant figures, raising lab-report scores from 71% to 86%.",
+  "Drove a 26-foot box truck on a 140-mile daily delivery route for Sysco with no accidents in four years.",
+  "Set up just-in-time inventory with two seat suppliers, cutting on-hand stock at the assembly plant from 9 days to 2.",
+  "Facilitated a two-day workshop for 40 ICU nurses that produced 12 pilot ideas, 5 of which went live within six months.",
+  "Held a seat on the board of the Colorado Restaurant Association from 2019 to 2023.",
+  "Opened a 42-room boutique hotel in Foster City, California, in May 2021, reaching 71% occupancy in its first quarter.",
+  "Ran site logistics for a 38-unit condo build on Rather Street with a single lane for deliveries.",
+  "Shipped the very first order out of the new Reno fulfillment center on its opening day in June 2022.",
+  "Fostered 12 shelter dogs for the Dumb Friends League in Denver between 2020 and 2023.",
+  "Supervised three shifts, four plants and 900 people, holding on-time delivery at 97% through 2023.",
+  "Negotiated county impact fees on a 240-home subdivision down from $1.8M to $1.1M.",
+  "Installed seamless aluminum gutters on 140 homes a season as lead of a two-person crew.",
+  "Elevated all mechanical equipment 4 feet above base flood elevation on a 60-unit Houston build.",
+  "Designed landscape irrigation for a 12-acre corporate campus, cutting water use 30% in the first summer.",
+  "Remediated a significant deficiency in revenue recognition controls before the 2023 SOX audit.",
+  "Drew comprehensive metabolic panels for up to 25 patients a shift on a 30-bed telemetry unit.",
+  "Led Meaningful Use Stage 2 attestation for a 9-provider clinic, earning $210,000 in CMS incentive payments.",
+  "Set up dynamic pricing for 300 rooms in IDeaS G3, raising RevPAR 8% in 12 months.",
+  "Trained 18 line workers to assemble wire harnesses for Ford F-150 seats, cutting defects from 1.9% to 0.6%.",
+  "Ran a 32-table dining room that averaged 280 covers on Friday nights.",
+  "Cut new-teacher turnover at Lincoln Middle School from 30% to 12% by pairing each hire with a mentor for a full year.",
+  "Wrote a Python script that reconciles Stripe payouts against NetSuite each night, replacing 6 hours of manual work a week.",
+  "Raised average basket size at a 22-store Ace Hardware group from $31 to $38 with checkout-lane displays.",
+  "Launched a TikTok campaign for a regional credit union that added 2,600 members in 90 days.",
+  "Drove a Class A tractor-trailer 118,000 miles in 2024 with zero preventable accidents.",
+  "Recruited 38 new foster families in 2025, raising the share of foster care placements kept within the home county from 52% to 71%.",
+  "Facilitated a two-day workshop for 24 partners to set the firm's 2026 hiring plan.",
+  "Built a robust regression model in R that cut the error on weekly cover forecasts from 18% to 7%.",
+  "Found a significant deficiency in vendor access controls during the 2024 SOX audit and fixed it within 30 days.",
+  "Modeled a leveraged recapitalization for a 40-office dental group that returned $22M to the founding dentists.",
+  "Added a comprehensive metabolic panel to the pre-sedation checklist for patients over 65, cutting same-day cancellations by 40%.",
+  "Reached substantial completion on the 92,000-square-foot Aurora Central Library 11 days ahead of schedule.",
+  "Ran utilization review for 1,400 inpatient stays a year at St. Joseph Hospital, cutting denied days by 26%.",
+  "Led twice-daily family updates in the ICU family room for a 14-bed unit at Denver Health.",
+  "Signed the clinic's very first Medicaid contract in 2019; Medicaid now pays for 40% of patient visits.",
+  "Treated children with extensive decay under general anesthesia at Children's Hospital Colorado, averaging 12 cases a month.",
+  "Enrolled 210 patients in the pivotal Phase 3 trial for a GLP-1 drug across 9 sites.",
+  "Worked with the landscape architect to fit 4 acres of bioswales into the Central Park rec center site plan.",
+  "Cut average hold time on the billing line from 9 minutes to 2 by adding a callback option in Five9.",
+  "Won dismissal of 11 of 14 wage claims filed against the company in 2024.",
+  "Grew monthly donors from 210 to 640 in two years with a text-to-give campaign.",
+  "Hired and trained 45 servers for a 220-seat opening at Union Station in 11 weeks.",
+  "Moved 2,600 employee files from paper to Workday and passed the 2025 I-9 audit with no findings."
+ ]
+}

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+build/
+*.tmp
+# Resume outputs: keep real resumes out of the repo
+*.docx
+*.pdf
+*.txt
+page-*.jpg
+page-*.png

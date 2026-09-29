@@ -1,0 +1,13 @@
+{
+  "name": "resume-ops",
+  "version": "2.1.1",
+  "description": "Turns career material into a US resume that four readers can use: the application form, the AI grader, the recruiter and the hiring manager.",
+  "author": {
+    "name": "Ryan Schatzman",
+    "url": "https://www.linkedin.com/in/ryanschatzman"
+  },
+  "homepage": "https://github.com/roundofschatz/resume-ops",
+  "repository": "https://github.com/roundofschatz/resume-ops",
+  "license": "MIT",
+  "keywords": ["resume", "ats", "workday", "job-search", "hiring", "claude-skill"]
+}
