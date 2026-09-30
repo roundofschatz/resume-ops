@@ -35,6 +35,8 @@ These are two sites and one resume. They set this skill's role order (`reference
 - **Lever** searches parsed resume content plus company, school and title fields [S24]. Its resume parser is Textkernel [S88]. In a live test, Lever refused the six-part DOCX that `build_resume.py` 2.0.1 wrote, with an HTTP 422 error, which in Textkernel's API means the file could not be converted to text [S89]. The same text saved with the full set of parts Word writes parsed, with name, email, phone, city, LinkedIn and current company right [L04]. The file standard needs only the main part [S90], but Word writes document properties in every file [S91], and this parser was stricter than the standard [L04]. Since v2.1 the build writes the full set, and `parse_check.py` warns on a file without it.
 - **Textkernel reaches past Lever.** It lists integrations with SAP SuccessFactors, Oracle Recruiting Cloud and SmartRecruiters [S100]. Which parser a given employer runs is not public, so a file that fails Textkernel may fail in more places than Lever.
 - **Paycom** parses a resume to pre-fill the form [S32].
+- **Rippling Recruiting** (ats.rippling.com) fills candidate information from an uploaded resume, in English and other languages. Rippling doesn't say which fields [S108].
+- **HiringThing** runs job sites under its partners' names and web addresses [S102]. Rippling ATS, on rippling-ats.com, is one of them: HiringThing's partners sell it under that name [S103], and every board checked says "Powered by HiringThing" [L06]. It is a different product from Rippling Recruiting, so Rippling's facts don't apply to it. HiringThing parses a resume into the recruiter's view of the applicant; no HiringThing page says the application form fills from it [S105].
 - **Eightfold:** on the one application tested, the form filled only first name, last name and email from the file, then went to Submit [L03]. No work-history, education or skills form: the file is the whole application.
 - **Chat applications.** Some employers now take the application as a chat: Eightfold's Candidate Agent, which reads the resume inside the chat [S13], and Workday's Paradox, mainly for frontline roles [S09]. Answer a chat's questions as carefully as screening questions (section 6).
 - **Front ends are not applicant systems.** Jibe (owned by iCIMS since 2019) [S33], Radancy TalentBrew and DirectEmployers `.jobs` sites sit in front of the real system; the last two were seen that way on live career sites. `detect_ats.py` says when it sees one.
@@ -60,6 +62,8 @@ Nearly every major system now sells an AI layer that reads the resume against th
 | iCIMS | Ranks candidates on skills and experience | Not stated | [S34] |
 | ADP Profile Relevance | Excellent, good, fair or low match from experience, role history and skills; no cut-off; opt-out per job | Not stated | [S29] |
 | LinkedIn Hiring Assistant | For each qualification, whether evidence was found, citing where; grades applicants from LinkedIn and from the employer's own system | Add-on to LinkedIn Recruiter | [S30, S31] |
+| Rippling Recruiting | Application Review screens applicants against criteria the employer defines and surfaces the top candidates | Admins turn AI features on or off; default not stated | [S37, S109, S110] |
+| HiringThing (also sold as Rippling ATS) | Scores every applicant against the job description and ranks a shortlist; the team can adjust the criteria and their weights | Available to all partners and their clients since 2026-06; admins can turn the AI features off for their account | [S106, S107] |
 
 **What this changes for the resume.**
 
@@ -135,3 +139,4 @@ Then:
 - Whether exact posting wording beats a close synonym for an LLM grader. No public test.
 - Whether an AI grader gives less credit to a skill that is only listed. The mechanism points that way [S11, S43]; no study isolates it.
 - Which missing part made Lever refuse the six-part file [L04]. The full set fixes it; the single cause was not isolated.
+- What Rippling Recruiting's and HiringThing's application forms fill from a resume. No live upload has been done on either.

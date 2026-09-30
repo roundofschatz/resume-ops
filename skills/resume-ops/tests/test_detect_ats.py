@@ -161,5 +161,65 @@ class Output(unittest.TestCase):
         self.assertIn("apply link", out)
 
 
+class HostsCheckedLive(unittest.TestCase):
+    """2.3.0. A live build sent a job link on rippling-ats.com and got
+    "unrecognized", with a note that nothing in the URL named the system.
+    The boards on that host run on HiringThing (sources.md, L06). A check of
+    every rule found more hosts. Every company here is invented."""
+
+    def test_rippling_ats_is_hiringthing(self):
+        url = "https://acme.rippling-ats.com/job/123/example-role"
+        r = ats(url)
+        self.assertEqual((r["ats"], r["confidence"]), ("HiringThing", "confirmed"))
+        self.assertIn("Rippling ATS", r["why"])
+        self.assertIn("Rippling Recruiting", r["note"])
+        # Rippling Recruiting's Application Review [S37] is not this product.
+        self.assertNotIn("Application Review", r["ai_grading"])
+        self.assertIn("2026", r["ai_grading"])
+        code, out = run("detect_ats.py", url)
+        self.assertEqual(code, 0, out)
+        self.assertIn("Rippling ATS", out)
+
+    def test_rippling_recruiting_is_still_rippling(self):
+        r = ats("https://ats.rippling.com/acme-careers/jobs/abc")
+        self.assertEqual((r["ats"], r["confidence"]), ("Rippling", "confirmed"))
+        self.assertIn("candidate information", r["form"])
+        self.assertIn("Application Review", r["ai_grading"])
+
+    def test_hiringthing_hosts(self):
+        for url in ("https://acme.hiringthing.com/job/1/planner",
+                    "https://acme.applicant-tracking.com/job/1/planner",
+                    "https://acme.prismhr-hire.com/job/1/planner"):
+            r = ats(url)
+            self.assertEqual((r["ats"], r["confidence"]), ("HiringThing", "confirmed"), url)
+            self.assertEqual(set(r), FIELDS, url)
+
+    def test_eightfold_second_domains(self):
+        for url in ("https://acme.eightfold-eu.ai/careers", "https://acme.eightfold-gov.ai/careers"):
+            self.assertEqual(ats(url)["ats"], "Eightfold", url)
+
+    def test_schooljobs_is_neogov_and_stops(self):
+        r = ats("https://www.schooljobs.com/careers/acmeschools/jobs/123/teacher")
+        self.assertEqual(r["ats"], "NEOGOV")
+        self.assertIn("does not cover", r["note"])
+
+    def test_sap_job_site_runs_on_smartrecruiters(self):
+        r = ats("https://jobs.sap.com/job/Example-Role/123/")
+        self.assertEqual((r["ats"], r["confidence"]), ("SmartRecruiters", "inferred"))
+        self.assertIn("SAP", r["why"])
+
+    def test_an_unmatched_host_that_names_a_vendor_says_so(self):
+        for url, vendor in (("https://acme.rippling-careers.com/job/1/planner", "Rippling"),
+                            ("https://careers.acme-greenhouse-jobs.com/openings/1", "Greenhouse")):
+            code, out = run("detect_ats.py", url)
+            self.assertEqual(code, 4, out)
+            self.assertNotIn("Nothing in the URL names the system", out)
+            self.assertIn(f"names {vendor}", out)
+            self.assertIsNone(ats(url)["ats"], url)      # a lead, never a verdict
+        # A vendor's name inside another word is not a vendor.
+        self.assertIn("Nothing in the URL names the system",
+                      ats("https://careers.cleveland-tool.com/openings/1")["note"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

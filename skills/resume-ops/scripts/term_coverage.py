@@ -39,6 +39,7 @@ from urllib.parse import urlparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _docx  # noqa: E402
+import detect_ats  # noqa: E402  (one list of vendor names for both scripts)
 
 STOP = set("""
 a about above after again against all am an and any are aren as at be because been
@@ -266,14 +267,21 @@ def posting_title(text):
 
 # ------------------------------------------------------------ employer name --
 
-VENDORS = re.compile(r"^(?:myworkdayjobs|myworkdaysite|workday|greenhouse|lever|ashbyhq|icims|"
-                     r"jibeapply|eightfold|bamboohr|breezy|rippling|workable|smartrecruiters|"
-                     r"jobvite|taleo|successfactors|paycom\w*|ultipro|adp|dayforcehcm|brassring|"
-                     r"governmentjobs|neogov|typeform|linkedin|indeed|glassdoor|ziprecruiter|"
-                     r"oraclecloud|paylocity|recruitee|teamtailor|pinpointhq|applytojob|jazzhr)$")
+# Host words that belong to a vendor without naming it. Vendor names come from
+# detect_ats.VENDOR_WORDS, read as whole words inside a host word, so
+# "rippling-ats" is a vendor word and "cleveland" is not.
+VENDOR_HOSTS = re.compile(r"^(?:jibeapply|governmentjobs|schooljobs|applytojob|applicant-tracking|"
+                          r"prismhr-hire)$")
 NOT_NAME = {"www", "jobs", "job", "careers", "career", "boards", "job-boards", "apply", "recruiting",
             "hr", "com", "org", "net", "io", "co", "ai", "us", "edu", "gov", "en", "en-us", "p",
-            "careers-home", "external", "portal", "attract"}
+            "careers-home", "external", "portal", "attract", "ats", "eu"}
+
+
+def is_vendor_label(label):
+    """True for a host word that belongs to a vendor: "greenhouse", and
+    "rippling-ats", where the vendor's name is one of the joined words."""
+    label = label.lower()
+    return bool(VENDOR_HOSTS.match(label) or detect_ats.vendor_words(label))
 
 
 def _squash(s):
@@ -307,8 +315,9 @@ def employer_names(text, extra=()):
     if src:
         u = urlparse(src.group(1) if "//" in src.group(1) else "//" + src.group(1))
         labels = [l for l in (u.hostname or "").split(".") if l]
-        vendor = any(VENDORS.match(l) for l in labels)
-        tenant = [l for l in labels if l not in NOT_NAME and not VENDORS.match(l)
+        vendor = any(is_vendor_label(l) for l in labels)
+        tenant = [re.sub(r"^(?:globalcareers|careers|career|jobs)-", "", l) for l in labels
+                  if l not in NOT_NAME and not is_vendor_label(l)
                   and not re.fullmatch(r"wd\d+|\d+", l)]
         keys.update(_key(l) for l in tenant)
         if vendor and not tenant:      # boards.greenhouse.io/acme: the name is in the path

@@ -2,7 +2,7 @@
 name: resume-ops
 description: Builds a US resume for one job posting from whatever the candidate has, in any format, one file or many (an old resume, a cover letter, a LinkedIn profile, a website, a career record, notes). The resume parses cleanly into application forms like Workday, proves every required qualification for AI graders (Workday HiredScore, Eightfold, Greenhouse, Lever, Ashby), and passes a recruiter's first look. Use whenever the user is working on a resume, including tailoring one to a posting, building a base resume for job boards, checking whether a file will parse, comparing a resume with a job description, writing or fixing bullets or a summary, or asking about ATS, AI screening, keywords, or why applications get no reply. Also use when the user uploads career material or a resume, or pastes a job posting or its link, even if they never say "resume." US resumes for US private-sector postings only.
 metadata:
-  version: "2.2.0"
+  version: "2.3.0"
 ---
 
 # Resume Ops
@@ -14,7 +14,7 @@ You read resumes the way a senior recruiter does: fast, skeptical, looking for p
 Print these six lines before any work, so the candidate can see you are working from the right facts.
 
 ```
-LEVEL SET: Resume Ops v2.2.0
+LEVEL SET: Resume Ops v2.3.0
 Mode: [Tailored resume | Base resume | Review only]
 Evidence: [each file loaded, read whole or searched | none yet]
 Rulings: [N loaded | none]
@@ -83,6 +83,7 @@ The main job: a resume aimed at one posting, built from the candidate's evidence
    - **Keep:** a line in the evidence proves it in plain words. It goes on the page, tightened, in the role where the work happened.
    - **Write:** it is true and the evidence shows where it happened, but no line says it plainly. Write the true line into that role, using the posting's words where they are accurate. A tool goes inside the bullet where it was used.
    - **Gap:** it is not true, or the evidence cannot show it. It stays off the page and goes in the brief. Never write around a gap.
+   A claim that counts abstract things (decisions, directives, priorities, themes) is settled with the name of its set, taken from the same passage: what the set was about or for. If the passage can't name it, the count comes off (`references/writing.md`, Name what you count).
    A qualification with no passage gets a second search in the candidate's own words (another name for the tool, the client, the project), then a question to the candidate, before it becomes a gap. Do the same for preferred qualifications once every required one is settled.
 5. **Write the JSON source.** Titles, companies, cities and dates come from the evidence and the rulings file, and read the same on every resume built from that evidence. Shape and order per `references/document.md`; lines per `references/writing.md`. Work from the most recent role backward, and put first in each role the bullet that answers this posting. Write the summary last: its first sentence carries the posting's title language, and its proof sentence answers the posting's top requirement. If page two runs short, pull the next strongest on-target claim from the evidence; never pad.
 6. **Build, check and deliver.** See Checks and Deliver below.
@@ -147,7 +148,7 @@ Memory, chat history and session notes can point at a ruling, but they are never
 | `references/readers.md` | The readers: what each system's form and AI grader do; the record check; knockout questions; the post-upload review |
 | `references/sources.md` | Every source the skill cites, by ID: date, grade, URL, what it supports, a quote, and where it is used |
 | `references/document.md` | The document: sections and order, contact block, role layout, titles, education, skills line, length, file and format rules, the build checklist |
-| `references/writing.md` | Lines: bullets, numbers, the summary, AI-writing tells, plain and exact words, what never goes on a resume |
+| `references/writing.md` | Lines: bullets, numbers, the summary, AI-writing tells, plain and exact words, words the sentence already means, what never goes on a resume |
 | `references/tailoring.md` | Reading a posting, mapping the evidence to it, the requirement check, title language, exact terms, what changes from one posting to the next, the base resume's requirement map, the brief |
 | `references/intake.md` | Evidence in: the contact block, any file in any format, small and large evidence, contradictions, built assets, choosing a target, the rulings file and the optional facts file |
 

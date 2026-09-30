@@ -590,8 +590,267 @@ TELLS.append(Check("hanging phrase", FAIL,
                    r"|\bthe\s+work\s+that\s+wins\b",
                    "Name what was built and what it did, for whom."))
 
+
+# --- counts and labels that name nothing (2.3.0) ------------------------------
+# A count of abstract things names its set: what it was about or for.
+# "Settled seven decisions" names nothing; "seven decisions on pricing and the
+# launch date" does. A generic word ("key", "strategic", "core") is not a name.
+# A count of concrete things (stores, interviews, employees) is scope and is not
+# read here. The same goes for a label with nothing behind it ("key insights").
+# references/writing.md, Name what you count.
+
+def _wordset(text):
+    return set(text.split())
+
+
+SET_NUMBER_WORDS = ("two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|"
+                    "fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty")
+SET_COUNT = re.compile(rf"(?<![\d,.$])\d{{1,3}}(?:,\d{{3}})*\+?(?![\d,.]\d)"
+                       rf"|\b(?i:{SET_NUMBER_WORDS})\b")
+SET_WORD = re.compile(r"\s+([A-Za-z][\w'&-]*)")
+
+# Nouns whose count needs a name for the set.
+ABSTRACT_SETS = _wordset("""decisions directives priorities themes recommendations principles pillars
+ goals needs initiatives tools findings insights objectives strategies problems issues opportunities
+ ideas values areas services solutions takeaways learnings lessons imperatives tenets""")
+# "six-pillar roadmap": a count joined to a unit, ending on a plan word.
+SET_UNITS = _wordset("pillar point priority principle theme goal")
+SET_HEADS = _wordset("""plan plans list order roadmap framework agenda checklist program strategy
+ system model approach process playbook blueprint charter platform vision rubric scorecard matrix
+ methodology""")
+# Words that describe any set and so name none of them.
+GENERIC_WORDS = _wordset("""key strategic strategy major critical core important main primary principal
+ top big high-level high-priority priority essential fundamental guiding clear actionable measurable
+ concrete specific overarching foundational central crucial vital bold new final initial early several
+ different distinct various multiple separate standardized standard practical immediate quick long-term
+ short-term near-term mid-term medium-term next future broad focused targeted tailored custom
+ customized business plan planning development operating operational organizational organization
+ growth improvement action project program leadership team company firm firm-wide company-wide
+ enterprise overall general follow-up recommended proposed agreed shared common joint cross-functional
+ annual quarterly monthly weekly open remaining outstanding additional other more further related
+ relevant small simple smart effective successful innovative creative unique discrete defined
+ documented written formal internal external global regional local national high-impact impactful
+ meaningful significant powerful valuable tangible compelling fresh deep rich ranked prioritized
+ numbered phased sequenced scored weighted detailed approved adopted updated revised draft""")
+# Words that say whose set it was, not what it was about.
+OWNER_WORDS = _wordset("""client clients team teams company companies firm firms business businesses
+ organization organizations org leadership leaders executive executives exec execs senior board
+ management managers stakeholders staff partners owner owners ceo cfo coo cto cmo cio president
+ founders cofounders co-founders group department departments office offices project projects program
+ programs work year years quarter quarters future growth success improvement improvements change
+ changes plan plans strategy strategies effort efforts direction path way steps step progress outcomes
+ results performance impact value efficiency alignment everyone practice practices district
+ districts city cities county counties clinic clinics hospital hospitals school schools resort resorts
+ hotel hotels store stores plant plants site sites region regions unit units agency agencies account
+ accounts museum council committee community""")
+PLAIN_VERBS = _wordset("""move moving moved drive driving drove improve improving improved grow growing
+ grew help helping helped support supporting supported enable enabling enabled ensure ensuring ensured
+ achieve achieving achieved deliver delivering delivered increase increasing increased boost boosting
+ advance advancing advanced succeed change changing changed transform transforming transformed align
+ aligning aligned strengthen strengthening shape shaping shaped guide guiding guided set sets setting
+ make making made take taking took get getting got go going went keep keeping kept build building
+ built create creating created define defining defined inform informing informed focus focusing
+ focused address addressing addressed meet meeting met reach reaching reached win winning won lead
+ leading led is are was were be been being has have had forward ahead""")
+FUNCTION_WORDS = _wordset("""the a an its their his her our my your this that these those each every
+ all both and or but of to for in on with by at from into onto as per than then so such via across
+ over under about around within between among through including plus also only not no any some more
+ most other own which who whom whose where when while what how why it them us they we he she
+ couldn't can't didn't wasn't weren't won't isn't""")
+TOPIC_PREP = r"(?:on|about|covering|regarding|concerning|spanning)"
+PURPOSE_PREP = r"(?:for|to|of|in|across|around|over|toward|towards|within|behind|against)"
+DETERMINER = re.compile(r"(?:the|a|an|its|their|his|her|our|my|your|this|that|these|those|each|"
+                        r"every|all|[A-Za-z]+'s)\s", re.I)
+LABEL_WORDS = _wordset("""key strategic actionable critical important valuable high-level core major
+ clear deep rich fresh bold compelling crucial vital essential meaningful powerful relevant practical
+ concrete tangible""")
+LABEL_NOUNS = _wordset("""insights findings recommendations directives priorities learnings takeaways
+ themes initiatives solutions decisions principles opportunities strategies objectives imperatives
+ pillars""")
+LABEL = re.compile(r"\b(?P<mod>[A-Za-z][\w-]*)(?=(?P<gap>\s+)(?P<noun>[a-z]+)\b)")
+
+
+def content_words(phrase):
+    """The words in a phrase that name a thing: not a function word, not a
+    generic word, not an owner, not a plain verb, not another abstract noun.
+    A capitalized acronym (IT, M&A) names a thing."""
+    out = []
+    for tok in re.findall(r"[A-Za-z][A-Za-z'&.\-]*", phrase):
+        raw = tok.strip(".'-")
+        if len(raw) >= 2 and (raw.isupper() or "&" in raw):
+            out.append(raw)
+            continue
+        w = re.sub(r"'s$", "", raw.lower())
+        if (len(w) < 3 or w in FUNCTION_WORDS or w in GENERIC_WORDS or w in OWNER_WORDS
+                or w in PLAIN_VERBS or w in ABSTRACT_SETS or re.match(rf"(?:{SET_NUMBER_WORDS}|\d)", w)):
+            continue
+        out.append(w)
+    return out
+
+
+def _clause(rest, words=8):
+    """The words up to the end of the clause, or up to a new counted phrase."""
+    c = re.split(rf"[,;:.!?]\s|[,;:]|\s+(?:and\s+then|then)\s+"
+                 rf"|\s+and\s+(?:a|an|the|\d+|(?i:{SET_NUMBER_WORDS}))\b", rest, maxsplit=1)[0]
+    return " ".join(c.split()[:words])
+
+
+def set_named(rest, depth=0):
+    """What the words after a counted noun do. "named": they say what the set
+    was about or for. "owner": they only say whose it was ("for the district").
+    None: nothing names it."""
+    if re.match(r"\s*[:(]", rest) or re.match(r"\s*,?\s*(?:including|such\s+as|like)\b", rest):
+        return "named"
+    sentence = re.split(r"(?<=[.;!?])\s", rest, maxsplit=1)[0]
+    for m in re.finditer(r"\bfrom\s+([^,;.]{1,60}?)\s+to\s+([^,;.]{1,60})", sentence):
+        if not re.search(r"\d", m.group(1) + m.group(2)):
+            return "named"                             # a range: from valet parking to late checkout
+    m = re.match(r"\s*,?\s*(?:that|which|who)\s+(.*)", rest, re.S)
+    if m:
+        return "named" if content_words(_clause(m.group(1), 10)) else None
+    m = re.match(rf"\s+({TOPIC_PREP}|{PURPOSE_PREP})\s+(.*)", rest, re.S)
+    if not m:
+        return None
+    prep, tail = m.group(1).lower(), m.group(2)
+    obj = re.split(rf"\s+(?:{TOPIC_PREP}|{PURPOSE_PREP})\s+", _clause(tail), maxsplit=1)[0]
+    if content_words(obj):
+        if re.fullmatch(TOPIC_PREP, prep) or not DETERMINER.match(obj + " "):
+            return "named"
+        return "owner"
+    if depth < 2:                                      # "of needs for the clinic": read the next phrase
+        nxt = tail[len(obj):]
+        if re.match(rf"\s+(?:{TOPIC_PREP}|{PURPOSE_PREP})\s", nxt):
+            return set_named(nxt, depth + 1)
+    return None
+
+
+def _counted(t, pos, nouns=None, heads=None, max_words=3):
+    """(words before the noun, end) for the first noun in `nouns` (or head in
+    `heads`) within max_words after pos, or None."""
+    words, p = [], pos
+    for _ in range(max_words):
+        m = SET_WORD.match(t, p)
+        if not m:
+            return None
+        w = m.group(1)
+        words.append(w)
+        p = m.end()
+        if w.lower() in (heads or nouns):
+            return words[:-1], p
+        if re.search(r"[,;:.]$", w):
+            return None
+    return None
+
+
+def set_hits(text):
+    """[(level, check name, start, end)] for each count or label that names
+    nothing (FAIL) or names only its owner (REVIEW)."""
+    t = plain(text)
+    hits = []
+
+    def judge(start, end, mods, kind):
+        if content_words(" ".join(mods)):
+            return
+        verdict = set_named(t[end:])
+        if verdict == "named":
+            return
+        if verdict == "owner":
+            hits.append((REVIEW, "set named only by its owner", start, end))
+        else:
+            hits.append((FAIL, kind, start, end))
+
+    for m in SET_COUNT.finditer(t):
+        joined = re.match(r"-([a-z]+)\b", t[m.end():])
+        if joined:
+            if joined.group(1) in SET_UNITS:
+                got = _counted(t, m.end() + joined.end(), heads=SET_HEADS)
+                if got:
+                    judge(m.start(), got[1], got[0], "count names nothing")
+            continue
+        got = _counted(t, m.end(), nouns=ABSTRACT_SETS)
+        if not got:
+            continue
+        if re.search(r"\b(?:scored|allowed|conceded|kicked|saved|assisted)\s*$", t[:m.start()], re.I) \
+                and t[:got[1]].rstrip().endswith("goals"):
+            continue                                   # a sports record, not a set
+        judge(m.start(), got[1], got[0], "count names nothing")
+
+    for m in LABEL.finditer(t):
+        mod, noun = m.group("mod"), m.group("noun")
+        if mod.lower() not in LABEL_WORDS or noun not in LABEL_NOUNS:
+            continue
+        if mod[0].isupper() and not sentence_initial(t, m.start()):
+            continue                                   # "the Strategic Initiatives Group" is a name
+        if re.search(rf"(?:{SET_COUNT.pattern})\s*(?:[A-Za-z][\w'&-]*\s+)?$", t[:m.start()]):
+            continue                                   # a count: read above
+        end = m.end() + len(m.group("gap")) + len(noun)
+        judge(m.start(), end, [], "label names nothing")
+    return hits
+
+
+class _Span:
+    def __init__(self, start, end):
+        self._s, self._e = start, end
+
+    def start(self):
+        return self._s
+
+    def end(self):
+        return self._e
+
+
+class SetCheck(Check):
+    """One verdict from set_hits(), reported at this check's level."""
+
+    def __init__(self, name, level, fix):
+        super().__init__(name, level, r"(?!)", fix)
+
+    def find(self, text, masked):
+        for level, name, start, end in set_hits(text):
+            if level == self.level and name == self.name:
+                return _Span(start, end)
+        return None
+
+
+TELLS += [
+    SetCheck("count names nothing", FAIL,
+             "Say what the set was about or for: \"seven decisions on pricing and the launch "
+             "date\". \"Key\", \"strategic\" or \"core\" names nothing. If the evidence can't "
+             "name the set, drop the count."),
+    SetCheck("label names nothing", FAIL,
+             "Say what they were, or what they were about: \"key insights on churn\", not "
+             "\"key insights\"."),
+    SetCheck("set named only by its owner", REVIEW,
+             "\"For the regional sales team\" says whose set it was, not what it was about. "
+             "Name the subject, or keep it if the owner says enough."),
+]
+
+# --- words the sentence already means (2.3.0) ----------------------------------
+# references/writing.md, Words the sentence already means. "From scratch" has
+# its own check above.
+TELLS += [
+    Check("redundant word", FAIL,
+          r"\beach\s+and\s+every\b|\bend\s+results?\b|\bfinal\s+outcomes?\b"
+          r"|\bpast\s+(?:history|experience)\b|\bfuture\s+plans\b|\badvance\s+planning\b"
+          r"|\b(?:was|were)\s+able\s+to\b|\bcollaborat(?:e|es|ed|ing)\s+together\b"
+          r"|\b(?:combin|merg)(?:e|es|ed|ing)\s+together\b|\bnew\s+innovations?\b"
+          r"|\bcompletely\s+eliminat(?:e|es|ed|ing)\b",
+          "The sentence means this without the extra words. \"Every\", \"result\", "
+          "\"history\", \"plans\"; \"cut\", not \"was able to cut\"."),
+    Check("redundant word", REVIEW,
+          r"\b(?:[A-Za-z]+'s|its|their|his|her|our|my|your)\s+own\b|\bpersonally\b|\bsuccessfully\b"
+          r"|\bactual\b(?![^.;]{0,40}\b(?:budgets?|forecasts?|plans?|estimates?|targets?|projections?)\b)"
+          r"|\b(?:built|build(?:s|ing)?|creat(?:e|es|ed|ing)|launch(?:es|ed|ing)?|design(?:s|ed|ing)?"
+          r"|develop(?:s|ed|ing)?|introduc(?:e|es|ed|ing)|establish(?:es|ed|ing)?|founded"
+          r"|open(?:s|ed|ing)?)\s+(?:(?:a|an|the|its|their)\s+)?new\b",
+          "The sentence usually means this without it. It stays when it tells one thing from "
+          "another: \"its own P&L\" for a separate one, \"a new plant\" that replaced an old "
+          "one, \"actual\" against budget."),
+]
+
 # Not tells. Used only to pick which checks run where.
-LIST_ONLY = {"threes for rhythm", "hanging phrase", "drawn-out construction"}
+LIST_ONLY = {"threes for rhythm", "hanging phrase", "drawn-out construction",
+             "count names nothing", "label names nothing", "set named only by its owner"}
 NOT_TELLS = {"no number and no named thing", "long bullet", "every metric is a percentage"}
 
 

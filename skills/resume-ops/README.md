@@ -2,7 +2,7 @@
 
 A Claude Skill that builds a US resume for one job posting from whatever the candidate has, for the four readers who use it: the application form that parses it, the AI grader that checks it against the posting, the recruiter who decides in seconds whether to keep reading, and the hiring manager who wants proof.
 
-Version 2.2.0. See `CHANGELOG.md`.
+Version 2.3.0. See `CHANGELOG.md`.
 
 ## What it does
 
@@ -46,7 +46,8 @@ references/              loaded when a step needs them
                          knockout questions; the post-upload review
   sources.md             every source the skill cites, by ID, with date, grade, URL, quote
   document.md            sections, role layout, titles, education, skills line, length, format
-  writing.md             bullets, numbers, the summary, AI-writing tells
+  writing.md             bullets, numbers, the summary, AI-writing tells, words the
+                         sentence already means
   tailoring.md           reading a posting, mapping the evidence, the requirement check,
                          the base resume's map
   intake.md              the contact block, evidence in any format, small and large

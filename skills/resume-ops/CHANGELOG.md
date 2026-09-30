@@ -2,6 +2,29 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.3.0 (2026-09-30)
+
+A live build on September 30 showed three faults. `detect_ats.py` couldn't name the system behind a job link on rippling-ats.com, and its note said nothing in the link named a system, though the host said "rippling". A bullet counted seven decisions and never said what they were about. Another said "own" where the sentence meant the same thing without it.
+
+**Hosts**
+- rippling-ats.com runs on HiringThing, which sells its system under partners' names; its partners sell this one as Rippling ATS. All six boards checked there say "Powered by HiringThing" (L06). `detect_ats.py` now names HiringThing, with HiringThing's own form and AI facts, on rippling-ats.com, hiringthing.com, applicant-tracking.com and prismhr-hire.com. Rippling's facts stay with Rippling Recruiting on ats.rippling.com. Had rippling-ats.com been added as Rippling, the check would have printed facts for the wrong product.
+- A check of all 26 host rules against the links each vendor uses today found more: Eightfold's EU and government domains, NEOGOV's SchoolJobs site, and SAP's own job site, which now sends applicants to SmartRecruiters in place of SuccessFactors.
+- A host that holds a vendor's name but matches no rule now says so and points to the page footer. It no longer says nothing in the link names the system, and it doesn't print that vendor's facts: this case shows the name can belong to someone else's product.
+- `term_coverage.py` reads vendor names from the same list, as whole words inside a host word. It now finds the employer's name on links to ats.rippling.com, jobs.eu.lever.co and careers-<company>.icims.com. Before, it could list the employer's own name as a missing term.
+- `readers.md` adds Rippling Recruiting and HiringThing: what each form fills from a resume, as far as the vendors say, and a row for each among the AI graders.
+
+**Writing rules**
+- Name what you count, rewritten. A count of abstract things (decisions, directives, priorities, themes and the like) names its set: what it was about or for. It doesn't need every item. "Key" and "strategic" name nothing. If the evidence can't name the set, the count comes off. A count of concrete things (stores, interviews, employees) is scope. The same rule covers a label like "key insights".
+- The builder takes the name from the evidence while settling each claim (SKILL.md, step 4).
+- `draft_review.py` fails a count that names nothing and a label built on a generic word, and flags a count for review when the words after it may only say whose set it was. Across 213 bullets from one candidate's past resumes and the 74 clean test sentences, it flagged no line wrongly.
+- Words the sentence already means: a new section in `writing.md`. "Each and every", "was able to", "end result" and six more fail. "Own" after a possessive, "personally", "successfully", "actual" and "new" after a build verb are flagged for review, because each one sometimes changes the meaning ("its own P&L").
+
+**Sources**
+- New rows S102 to S111: HiringThing's white-label, partner, parsing and AI pages, Rippling's resume, screening and AI settings pages, and NEOGOV's SchoolJobs launch. L06 records the live host check. S37 now also backs Rippling's row among the AI graders.
+
+**Tests**
+- 19 new tests, each failing on 2.2.0: the new hosts, the note for an unmatched host that holds a vendor's name, the employer name on the three link shapes, counts and labels that name nothing, and redundant words.
+
 ## 2.2.0 (2026-09-28)
 
 The procedure now matches what the skill is for: evidence in, a resume for one posting out. From the first package on September 11 through 2.1.1, SKILL.md made a base resume a prerequisite ("If the candidate has no base resume, build it first") and built every tailored resume from it. The red teams checked whether the rules were true. None checked the procedure against the intent.

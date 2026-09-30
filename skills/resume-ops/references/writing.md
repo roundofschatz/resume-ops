@@ -30,7 +30,8 @@ Rules:
 - **No line ends on one or two words alone.** Fix it by changing words until the line count changes, never with a manual break, a non-breaking space or a spacing tweak.
 - **New evidence strengthens a line; it doesn't multiply lines.** Put the new fact into the bullet it proves.
 - **The first bullet of a role is its strongest proof for this target,** not its main duty. The duty is what the reader already assumes from the title.
-- **Name what you count.** "Three clinics, including Eastside and Riverview" reads as if the writer couldn't name the third. Name all three or drop the count.
+- **Name what you count.** A count of named things names them all or drops the number: "three clinics, including Eastside and Riverview" reads as if the writer couldn't name the third. A count of abstract things (decisions, directives, priorities, themes, recommendations, principles, pillars, goals, needs, initiatives, tools and the like) names the set: what it was about or for. It doesn't need every item. "Settled seven decisions" names nothing; "settled seven decisions on pricing and the launch date" does. The name has to be specific to the work: "seven key decisions" and "seven strategic decisions" still name nothing, and so does an owner alone ("five priorities for the district"). If the evidence can't name the set, drop the count. A count of concrete things (stores, employees, interviews, survey responses) is scope, and it stands as it is. `draft_review.py` fails a count that names nothing, and flags a count for review when the words after it may only say whose set it was.
+- **A label is not content.** "Key insights", "strategic recommendations" and "the findings" stand in for something the reader never gets. Say what they were, or what they were about: "insights on churn". "The findings" can stay when the same line names the work they came from and what they became. `draft_review.py` fails a label built on a generic word ("key", "strategic", "actionable") with nothing behind it.
 - **A page count is not a result.** "A 60-slide deck" measures the document. Use the figure the work was about (units, sites, people, dollars), or say that it got built.
 - **Claim the layer you worked at.** On work several disciplines delivered, name the part that was the candidate's. The narrower claim is usually the more senior one, and it survives a reference check.
 - **A status tag pinned to the end is not a result** ("now built", "since acquired"). Put it in the grammar or cut it.
@@ -126,6 +127,30 @@ A clean scan is not proof a page reads as human. In the one blind test found, se
 The plain word wins by default: use over utilize, start over commence, show over demonstrate.
 
 The exception matters more than the rule. In licensed and technical fields the longer word is often the exact word, and often the search term: reconciliation, titration, remediation, arbitration, calibration, utilization (a billing metric), substantial completion (a contract milestone), statistically significant, comprehensive plan (a planning document), leveraged buyout. Those stay. The test is whether a simpler word means the same thing. `draft_review.py` passes these exact terms.
+
+## Words the sentence already means
+
+A word the sentence means without it gets cut. "Built the program" is complete, so "from scratch" goes; it sits in the tells table because models reach for it. `draft_review.py` fails the phrases that are always redundant and flags for review the ones that sometimes matter.
+
+| Always cut | Write |
+|---|---|
+| each and every | every |
+| end result, final outcome | result, outcome |
+| past history, past experience | history, experience |
+| future plans, advance planning | plans, planning |
+| was able to cut | cut |
+| collaborated together, merged together | collaborated, merged |
+| new innovation | the innovation, by name |
+| completely eliminated | eliminated |
+
+| Usually cut | Keep it when |
+|---|---|
+| "own" after a possessive: "the hotel's own staff" | it means a separate one: "gave each region its own P&L" |
+| personally | it separates the candidate's part from a team's, though "closed 12 of the team's 40 deals" says it better |
+| successfully | the verb doesn't carry the outcome; "appealed" doesn't, and "won 11 of 14 appeals" says it better |
+| actual | it is set against a budget, plan or forecast |
+| "new" after built, created, launched or opened | it tells a new thing from an old one: "built a new plant to replace the 1970s one" |
+| in order to, the fact that | rarely; "to" and "that" do the same work |
 
 ## When you are revising, not writing
 

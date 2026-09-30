@@ -158,6 +158,19 @@ class TermList(unittest.TestCase):
         bare = "Chemist\n\nAt Corvel we test coatings. Chemists at Corvel run 40 tests a day. Join Corvel today.\n"
         self.assertEqual(tc.employer_names(bare), ["Corvel"])
 
+    def test_employer_on_vendor_hosts_with_extra_words(self):
+        """2.3.0: "ats" in ats.rippling.com and "eu" in jobs.eu.lever.co were read
+        as the employer, so the board path was never used; a careers- prefix hid
+        the name on iCIMS hosts; "rippling-ats" was not seen as a vendor word."""
+        body = "\n\nAcme Widgets builds widgets. Acme Widgets is hiring.\n"
+        for src in ("https://ats.rippling.com/acme-widgets/jobs/abc",
+                    "https://jobs.eu.lever.co/acmewidgets/abc",
+                    "https://careers-acmewidgets.icims.com/jobs/1/job",
+                    "https://acmewidgets.rippling-ats.com/job/1/planner"):
+            self.assertEqual(tc.employer_names("Source: " + src + body), ["Acme Widgets"], src)
+        self.assertTrue(tc.is_vendor_label("rippling-ats"))
+        self.assertFalse(tc.is_vendor_label("cleveland-tool"))
+
     def test_a_workday_site_path_is_not_the_employer(self):
         names = tc.employer_names(WAREHOUSE)
         self.assertFalse([n for n in names if "External" in n or "Reno" in n])

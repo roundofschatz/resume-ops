@@ -436,5 +436,117 @@ class Skills(unittest.TestCase):
         self.assertFalse([h for _i, n, h, _x in dr.review(blocks)[1] if n == "skill in no role bullet"])
 
 
+class NameTheSet(unittest.TestCase):
+    """2.3.0: a count of abstract things names its set, what it was about or
+    for, or the count comes off (references/writing.md, Name what you count).
+    Before, only a count followed by "including" or "such as" was flagged, so a
+    line that settled "seven decisions" and never said what they were shipped."""
+    FAIL_NAME, OWNER = "count names nothing", "set named only by its owner"
+
+    def flags(self, text):
+        return fail_names(as_bullet(text)) + review_names(as_bullet(text))
+
+    def test_a_count_that_names_nothing_fails_and_a_named_set_passes(self):
+        bare = ("Ran a two-hour workshop with the founders of Ridgeline Tile that settled seven "
+                "decisions, then built their pitch for a $2M raise.")
+        named = ("Ran a two-hour workshop with the founders of Ridgeline Tile that settled seven "
+                 "decisions on pricing and the launch date, then built their pitch for a $2M raise.")
+        self.assertIn(self.FAIL_NAME, fail_names(as_bullet(bare)))
+        self.assertNotIn(self.FAIL_NAME, self.flags(named))
+        self.assertNotIn(self.OWNER, self.flags(named))
+
+    def test_a_generic_word_is_not_a_name(self):
+        for bad in ("Settled seven key decisions with the founders.",
+                    "Settled seven strategic decisions with the founders.",
+                    "Turned 40 interviews into 11 plan directives and wrote the council memo.",
+                    "Ranked seven development priorities for the new owners.",
+                    "Delivered 14 themes and 17 recommendations to the museum board.",
+                    "Wrote 10 measurable goals."):
+            self.assertIn(self.FAIL_NAME, fail_names(as_bullet(bad)), bad)
+
+    def test_counts_of_concrete_things_are_scope(self):
+        self.assertIn(self.FAIL_NAME, fail_names(as_bullet("Rolled out four new tools across the firm.")))
+        for ok in ("Led 13 stakeholder interviews for Harbor Mutual.",
+                   "Opened 4 stores in 18 months, each at break-even within a year.",
+                   "Made 200 credit decisions a month on small-business loans.",
+                   "Resolved 1,200 IT issues a month for 900 employees.",
+                   "Scored 12 goals as captain of the club team."):
+            self.assertNotIn(self.FAIL_NAME, self.flags(ok), ok)
+
+    def test_a_range_a_list_or_a_subject_names_the_set(self):
+        self.assertIn(self.FAIL_NAME, fail_names(as_bullet("Named five operating problems.")))
+        for ok in ("Named five operating problems, from valet parking to late checkout.",
+                   "Set three priorities: patient falls, sepsis screening and discharge speed.",
+                   "Turned 40 interviews into 11 directives for rewriting the downtown gateway plan.",
+                   "Set five pricing priorities for the regional sales team.",
+                   "Settled seven decisions that set the brand's price, name and first buyer.",
+                   "Ran a workshop for 40 ICU nurses that produced 12 pilot ideas, 5 of which went live."):
+            flags = self.flags(ok)
+            self.assertNotIn(self.FAIL_NAME, flags, ok)
+            self.assertNotIn(self.OWNER, flags, ok)
+
+    def test_the_hyphen_form(self):
+        self.assertIn(self.FAIL_NAME,
+                      fail_names(as_bullet("Built a six-pillar roadmap with short- and long-term steps.")))
+        self.assertNotIn(self.FAIL_NAME,
+                         self.flags("Built a 12-point safety checklist for the press line."))
+
+    def test_an_owner_alone_gets_a_second_read(self):
+        text = "Set five priorities for the regional sales team."
+        self.assertIn(self.OWNER, review_names(as_bullet(text)))
+        self.assertNotIn(self.FAIL_NAME, fail_names(as_bullet(text)))
+
+    def test_a_label_with_nothing_behind_it_fails(self):
+        for bad in ("Presented key insights to the executive team.",
+                    "Delivered strategic recommendations to the board.",
+                    "Turned the survey into actionable insights for leadership."):
+            self.assertIn("label names nothing", fail_names(as_bullet(bad)), bad)
+        for ok in ("Presented key insights on churn to the executive team.",
+                   "Led the Strategic Initiatives Group for 3 years.",
+                   "Built the key accounts program for 14 distributors."):
+            self.assertNotIn("label names nothing", self.flags(ok), ok)
+
+    def test_skills_and_education_lines_are_not_read_for_sets(self):
+        blocks = resume(Summary.GOOD, Summary.BULLETS,
+                        skills="Three core services, strategic recommendations, SQL")
+        names = [n for _i, n, _h, _x in dr.review(blocks)[0]]
+        self.assertNotIn(self.FAIL_NAME, names)
+        self.assertNotIn("label names nothing", names)
+        bad = resume(Summary.GOOD, Summary.BULLETS + ["Codified three core services and their deliverables."])
+        self.assertIn(self.FAIL_NAME, fail_names(bad))
+
+
+class WordsTheSentenceAlreadyMeans(unittest.TestCase):
+    """2.3.0: a word the sentence means without it gets cut
+    (references/writing.md, Words the sentence already means). Before, the
+    review knew only "from scratch"."""
+
+    def test_own_after_a_possessive_is_a_second_read(self):
+        text = "Built a guest model whose four segments include the hotel's own front-desk staff."
+        self.assertIn("redundant word", review_names(as_bullet(text)))
+        needed = "Gave each region its own P&L and cut overhead 9%."
+        self.assertNotIn("redundant word", fail_names(as_bullet(needed)))
+
+    def test_always_redundant_phrases_fail(self):
+        for bad in ("Reviewed each and every invoice over $5,000.",
+                    "Was able to cut dock time from 9 hours to 4.",
+                    "The end result was a 12% lift in repeat orders.",
+                    "Wrote the future plans for 2 plants.",
+                    "Collaborated together with 3 vendors on the rollout.",
+                    "Drew on past experience in retail to open 3 stores.",
+                    "Completely eliminated a backlog of 400 tickets."):
+            self.assertIn("redundant word", fail_names(as_bullet(bad)), bad)
+
+    def test_sometimes_needed_words_are_a_second_read(self):
+        for text in ("Personally closed 12 of the team's 40 deals.",
+                     "Successfully appealed 11 of 14 claim denials.",
+                     "Cut actual cost per case 8% across 3 plants.",
+                     "Built a new warehouse to replace the 1970s site."):
+            self.assertIn("redundant word", review_names(as_bullet(text)), text)
+            self.assertNotIn("redundant word", fail_names(as_bullet(text)), text)
+        ok = "Reported actual spend against budget for 12 cost centers."
+        self.assertNotIn("redundant word", fail_names(as_bullet(ok)) + review_names(as_bullet(ok)))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
