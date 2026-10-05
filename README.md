@@ -47,6 +47,7 @@ Each session opens with a short status block that names the version and the file
 - Tells you what to fix in the application form after you upload.
 - Keeps your titles and dates the same on every resume, and checks them against your LinkedIn jobs export before an employer does.
 - Builds a base resume for job boards when you want one.
+- Reads a positioning file from job-seeker-ops's candidate-positioning skill when you have one, to aim the summary and put the strongest proof first. It builds the same way without one.
 
 Full detail on the scripts, file layout and tests: [`skills/resume-ops/README.md`](skills/resume-ops/README.md).
 

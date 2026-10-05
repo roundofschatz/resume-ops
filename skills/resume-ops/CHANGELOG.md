@@ -2,6 +2,27 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.4.0 (2026-10-05)
+
+job-seeker-ops 0.2.0 adds candidate-positioning, which writes one positioning file per posting: the case for the candidate, a requirement map with the evidence behind each row, the proofs ranked for the posting, the words the candidate can claim, and what stays off the page. This version reads that file when it's there. Without it, nothing changes: no existing script reads the file, the Level Set stays at six lines, and the brief and the delivery are the same as in 2.3.0.
+
+**Procedure**
+- Intake looks for a positioning file for the posting beside the evidence and reads it with the new `positioning_check.py`. A file that isn't confirmed, or that was built from another copy of the posting, isn't used, and the brief says why.
+- The file sets direction and order, and it isn't evidence. Its proof bank and requirement map show which evidence leads, its case lines set the summary's direction, and its words to use feed the term check. Every fact still comes from the evidence and the rulings file, and a ruling beats the file. The rules sit in `tailoring.md`, A positioning file, with a pointer from `intake.md`.
+- With a file in use, the Level Set gets a seventh line and the brief gets a POSITIONING line. When job-seeker-ops's submission-review skill is also available, the delivery ends with one line offering a submission review.
+
+**Scripts**
+- New `positioning_check.py`. At intake it says whether the file can be used, checks that the posting is the copy the file was built from, and prints the case lines, the proofs marked for the resume, the requirement map, the words to use and the keep-off list. With `--resume`, it fails when a phrase from the keep-off list is on the built resume, and lists which words to use the page holds, matched with `term_coverage.py`'s own matcher. No existing script changed.
+
+**Tests**
+- New `tests/test_positioning.py`, with a sample positioning file and its posting and resume in `tests/fixtures/positioning/`, saved as Markdown since the repository ignores .txt files. Each test of the new behavior fails on 2.3.0. Two more guard the rest: the Level Set block stays at six lines, and no other script reads a positioning file.
+- The whole suite ran before the change (279 tests, 3 skipped) and after it (291 tests, 3 skipped), and every test passed both times.
+- Every file this version adds or changes passes plainspeak-writer 1.4.1's checker, and the 1.5 build's, with no HARD hits, apart from two date ranges in the sample resume, such as "Aug 2021 - Present". The sample is test writer B's resume from job-seeker-ops, kept byte for byte. The owner ruled on October 5 that a range outside prose may keep its dash, and the checker doesn't follow that ruling yet.
+
+**Left for later**
+- A check that one bullet doesn't repeat another word for word. On October 5 the owner ruled that no sentence repeats word for word within one piece, and `draft_review.py` only asks for a second look when the summary copies a bullet. Adding the check now would change a build that has no positioning file, so it waits for the next version.
+- Whether resume-ops runs plainspeak-writer's checker in place of its own voice checks. Its own checks stay as they are for now.
+
 ## 2.3.0 (2026-09-30)
 
 A live build on September 30 showed three faults. `detect_ats.py` couldn't name the system behind a job link on rippling-ats.com, and its note said nothing in the link named a system, though the host said "rippling". A bullet counted seven decisions and never said what they were about. Another said "own" where the sentence meant the same thing without it.

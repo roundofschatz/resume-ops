@@ -60,6 +60,18 @@ If the evidence can't prove about 70% of the required qualifications, the candid
 
 If page two comes up short, go back to the evidence for the next strongest claim for this posting before touching anything else.
 
+## A positioning file
+
+job-seeker-ops's candidate-positioning skill writes one positioning file per posting, `positioning-<company>-<role>.md`, beside the candidate's files. It holds the case for this posting, a requirement map with the evidence behind each row, the proofs ranked for the posting, the words the candidate can claim, and what stays off the page. When there's one for this posting, run `scripts/positioning_check.py positioning.md --posting posting.md` at intake. Without one, nothing in this section applies and the build runs as it always has.
+
+- **Use it only when the script says to.** A file that isn't confirmed, or that was built from another copy of the posting, isn't used, and the brief says why. For another copy of the posting, ask the candidate once whether to use the file anyway.
+- **It isn't evidence.** It sets direction and order. Every title, date, number and claim on the page still comes from the evidence and the rulings file, settled as Keep, Write or Gap. Where the file and the evidence disagree, the evidence wins and the brief names the difference.
+- **A ruling beats it.** When the rulings file says otherwise, follow the ruling.
+- **The case lines set the summary's direction.** The summary's proof sentence answers the file's first line, what the hiring team wants, and the summary aims at its fourth, what the reader should believe. The second line is a working note and never goes on the page.
+- **The proof bank sets the order.** In each role, the first bullet is the proof the file ranks highest for that role, when the evidence proves it. A proof marked "On the resume being sent: no" goes on the page only when it's marked resume or both and the evidence proves it.
+- **The words to use feed the term check.** They're the posting's terms the candidate can claim. After the build, `positioning_check.py --resume` lists the ones on the page, matched the way `term_coverage.py` matches terms. Add a missing one only inside the line that proves it.
+- **The keep-off list stays off.** Gaps, the hiring team's concern and anything sensitive never go on the page, however they're framed. `positioning_check.py --resume` fails when one of the list's watch phrases shows up.
+
 ## The base resume: a requirement map for a title family
 
 Optional, and never a prerequisite for a tailored resume. A base resume has no single posting to answer, so it answers the market. It's for job boards, recruiter databases and referrals when there is no posting, and for a candidate who wants a few anchor resumes.
@@ -89,6 +101,8 @@ RECORD: 8 of 8 jobs match LinkedIn (profile_check), or the titles and dates to c
 SYSTEM: Workday. Post-upload review below.
 CHECKS: draft_review 0 FAIL; structure PASS; 2 pages; 0 widows.
 ```
+
+When a positioning file was used, add a line after RECORD: `POSITIONING: positioning-acme-planner.md (confirmed 2026-10-05); the evidence overrode nothing`, naming anything the evidence or a ruling overrode. Without a positioning file, the line doesn't appear.
 
 Then the post-upload review checklist for that system (`references/readers.md`).
 

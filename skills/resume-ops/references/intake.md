@@ -16,7 +16,7 @@ Ask once, optionally, for the jobs file from LinkedIn's own data download (a fil
 
 ## Evidence in any format
 
-Evidence is anything the candidate has written or can say about their work: a resume of any age, a cover letter, a LinkedIn profile, a website or portfolio page, a career record, performance reviews, project write-ups, notes, a brain dump. One file is enough to start. More files make the claims stronger; none of them has to be a finished resume, and none has to be built first.
+Evidence is anything the candidate has written or can say about their work: a resume of any age, a cover letter, a LinkedIn profile, a website or portfolio page, a career record, performance reviews, project write-ups, notes, a brain dump. One file is enough to start. More files make the claims stronger; none of them has to be a finished resume, and none has to be built first. A positioning file from job-seeker-ops's candidate-positioning skill isn't evidence: it's read at intake for direction and order (`references/tailoring.md`, A positioning file).
 
 | They give | How to read it |
 |---|---|

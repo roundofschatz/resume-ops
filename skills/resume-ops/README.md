@@ -2,7 +2,7 @@
 
 A Claude Skill that builds a US resume for one job posting from whatever the candidate has, for the four readers who use it: the application form that parses it, the AI grader that checks it against the posting, the recruiter who decides in seconds whether to keep reading, and the hiring manager who wants proof.
 
-Version 2.3.0. See `CHANGELOG.md`.
+Version 2.4.0. See `CHANGELOG.md`.
 
 ## What it does
 
@@ -14,6 +14,7 @@ Version 2.3.0. See `CHANGELOG.md`.
 - Checks the draft for general AI-writing tells and for the rules it states, with scripts rather than judgment wherever a script can do it.
 - Tells the candidate what to check in the application form after upload, because autofill makes mistakes the candidate has to fix before submitting.
 - Compares the resume's titles, companies and dates with the candidate's LinkedIn jobs file, so the two tell the same story before a background check compares titles and dates with the employer's record.
+- Reads a positioning file from job-seeker-ops's candidate-positioning skill when one sits beside the evidence, so the summary aims at the confirmed case and the strongest proof for the posting leads. Without one, it builds exactly as before.
 
 It isn't a career coach, a cover-letter writer or an application tracker. One job: the resume.
 
@@ -71,6 +72,7 @@ tests/                   python tests/run_tests.py
 | `render_pdf.py` | Renders a check PDF into a temp folder so the page can be looked at. Never a deliverable |
 | `widow_check.py` | Lines ending on one or two words, and bullets over two lines, read off the render |
 | `profile_check.py` | The resume's titles, companies and dates against the candidate's LinkedIn jobs file (Positions.csv from LinkedIn's data download) |
+| `positioning_check.py` | Reads a positioning file from job-seeker-ops's candidate-positioning skill at intake; with `--resume`, checks a built resume against the file's keep-off list and its words to use |
 | `_docx.py` | The shared DOCX reader. Not run directly |
 
 Some steps need outside programs, and each says so rather than passing quietly:
