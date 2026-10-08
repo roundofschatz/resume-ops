@@ -8,9 +8,10 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fixtures import SCRIPTS, run  # noqa: E402
+from fixtures import SCRIPTS, run, tiny_pdf, xpdf_run  # noqa: E402
 
 sys.path.insert(0, str(SCRIPTS))
 import requirement_check as rc  # noqa: E402
@@ -202,27 +203,6 @@ Speaks Spanish with patients and families every day.
 """
 
 
-def tiny_pdf(lines):
-    """A one-page PDF with one text line per entry, written by hand."""
-    ops = "BT /F1 11 Tf 72 720 Td 14 TL " + " ".join(
-        "(" + ln.replace("(", "[").replace(")", "]") + ") Tj T*" for ln in lines) + " ET"
-    objs = ["<< /Type /Catalog /Pages 2 0 R >>",
-            "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-            "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R "
-            "/Resources << /Font << /F1 5 0 R >> >> >>",
-            f"<< /Length {len(ops)} >>\nstream\n{ops}\nendstream",
-            "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"]
-    out, offsets = "%PDF-1.4\n", []
-    for i, body in enumerate(objs, 1):
-        offsets.append(len(out))
-        out += f"{i} 0 obj\n{body}\nendobj\n"
-    xref = len(out)
-    out += f"xref\n0 {len(objs) + 1}\n0000000000 65535 f \n"
-    out += "".join(f"{o:010d} 00000 n \n" for o in offsets)
-    out += f"trailer\n<< /Size {len(objs) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n"
-    return out.encode("latin-1")
-
-
 def line_of(text, needle):
     for n, ln in enumerate(text.splitlines(), 1):
         if needle in ln:
@@ -324,6 +304,23 @@ class Evidence(unittest.TestCase):
         self.assertEqual(found[0]["file"], "profile.pdf")
         self.assertIn("EXPERIENCE", found[0]["heading"])
         self.assertIn("Rebuilt Epic scheduling", found[0]["text"])
+
+    def test_pdf_evidence_asks_pdftotext_for_utf8(self):
+        """Fails on 2.4.0 on any machine. xpdf's pdftotext wrote Latin-1, and
+        decoding it as UTF-8 dropped the en dash without a word."""
+        line = "Clinic Supervisor | Mar 2018 \u2013 Present"
+        with mock.patch.object(rc.shutil, "which", return_value="pdftotext"):
+            with mock.patch.object(rc.subprocess, "run", xpdf_run(line + "\n")):
+                self.assertEqual(rc._pdf_lines(self.dir / "profile.pdf"), [line])
+
+    @unittest.skipUnless(shutil.which("pdftotext"), "pdftotext (poppler) is not installed")
+    def test_pdf_evidence_keeps_dashes_and_accents(self):
+        """Fails on 2.4.0 with xpdf's pdftotext, the one Git for Windows ships."""
+        lines = ["Clinic Supervisor | Mar 2018 \u2013 Present",
+                 "Scheduled r\u00e9sum\u00e9 reviews for 40 front desk applicants"]
+        pdf = self.dir / "accents.pdf"
+        pdf.write_bytes(tiny_pdf(lines))
+        self.assertEqual([ln.strip() for ln in rc._pdf_lines(pdf) if ln.strip()], lines)
 
     def test_evidence_and_resume_together(self):
         resume = self.dir / "resume.json"

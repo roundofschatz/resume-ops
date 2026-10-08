@@ -2,6 +2,20 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.4.1 (2026-10-08)
+
+Two fixes. No rule changed.
+
+**Scripts**
+- `widow_check.py` asks `pdftotext` for UTF-8 (`-enc UTF-8`) and reads the output as UTF-8. On Windows, the `pdftotext` on the path can be the xpdf 4.00 build that comes with Git for Windows, and it writes Latin-1 unless told otherwise. It wrote the en dash in each role's dates as a soft hyphen, which the matcher drops, so every title and dates line came back COULD NOT MATCH and went unchecked. Poppler and xpdf both take the flag.
+- `requirement_check.py` asks for UTF-8 the same way when it reads a PDF as evidence. It already read the output as UTF-8 and skipped any byte it couldn't read, so with xpdf, dashes and accented letters dropped out of the passages it quoted, with no warning.
+
+**Tests**
+- The made-up freight company in `tests/fixtures/positioning/` is now Switchgrass Freight Co., in the positioning file's name and text, the posting and `test_positioning.py`. The old made-up name turned out to belong to a real company. job-seeker-ops, where the sample comes from, made the same change in its 0.3.1. The stamp hashes for the posting and the notes file were worked out again (posting.md 5bc4bf94f8b5, positioning-notes.md 7a4cbb96790b), and they match job-seeker-ops's copies of both files. The resume's hash didn't change.
+- Four new tests, each failing on 2.4.0. Two use a stand-in that answers the way xpdf does, so they fail before the fix on any machine. Two run the real `pdftotext` on a small PDF written by hand, so they need no LibreOffice. They fail on 2.4.0 where `pdftotext` is xpdf. The hand-written PDF helper moved to `tests/fixtures.py`, and its font now uses WinAnsiEncoding, so a line can hold an en dash or an accented letter.
+- The whole suite ran before the change (291 tests, 1 skipped, 1 failure: `test_widow_check_on_a_real_render`, on Windows with xpdf's `pdftotext`) and after it (295 tests, 1 skipped, no failures).
+- Every file this version changes passes plainspeak-writer 1.7's checker with no HARD hits, apart from code in the Python files: minus signs, command-line flags and the en dash in a test resume's dates. 2.4.0 had each of those hits, and none sits on a line this version changed.
+
 ## 2.4.0 (2026-10-05)
 
 job-seeker-ops 0.2.0 adds candidate-positioning, which writes one positioning file per posting: the case for the candidate, a requirement map with the evidence behind each row, the proofs ranked for the posting, the words the candidate can claim, and what stays off the page. This version reads that file when it's there. Without it, nothing changes: no existing script reads the file, the Level Set stays at six lines, and the brief and the delivery are the same as in 2.3.0.

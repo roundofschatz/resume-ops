@@ -46,9 +46,13 @@ def docx_blocks(path):
 
 
 def pdf_lines(path):
+    # Ask for UTF-8 and read it as UTF-8. The pdftotext that Git for Windows
+    # ships is xpdf 4.00, which writes Latin-1 by default: the en dash in a
+    # role's dates came back as a soft hyphen, and no role line matched.
+    # Poppler and xpdf both take -enc UTF-8.
     try:
-        r = subprocess.run(["pdftotext", "-layout", str(path), "-"],
-                           capture_output=True, text=True)
+        r = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", str(path), "-"],
+                           capture_output=True, encoding="utf-8", errors="replace")
     except FileNotFoundError:
         print("pdftotext was not found. It comes with poppler "
               "(apt install poppler-utils, brew install poppler).", file=sys.stderr)

@@ -12,9 +12,10 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fixtures import SCRIPTS, run, BLOCKS  # noqa: E402
+from fixtures import SCRIPTS, run, BLOCKS, tiny_pdf, xpdf_run  # noqa: E402
 sys.path.insert(0, str(SCRIPTS))
 import render_pdf  # noqa: E402
 import widow_check  # noqa: E402
@@ -109,6 +110,32 @@ class Matching(unittest.TestCase):
         _w, _l, unmatched, matched = check([("para", "Brightline Tool, Toledo, OH", "")],
                                            ["Keller Plastics, Findlay, OH"])
         self.assertEqual((matched, len(unmatched)), (0, 1))
+
+
+class PdfText(unittest.TestCase):
+    """pdftotext's output encoding. The pdftotext that Git for Windows puts on
+    the path is xpdf 4.00, which writes Latin-1 unless asked for UTF-8. It wrote
+    the en dash in a role's dates as byte 0xAD, a soft hyphen, which squash()
+    drops, so every role line came back COULD NOT MATCH on 2.4.0."""
+
+    ROLE = "Maintenance Supervisor | Mar 2018 \u2013 Present"
+
+    def test_pdftotext_is_asked_for_utf8(self):
+        """Fails on 2.4.0 on any machine: the stand-in answers like xpdf."""
+        with mock.patch.object(widow_check.subprocess, "run", xpdf_run(self.ROLE + "\n")):
+            lines = widow_check.pdf_lines("resume.pdf")
+        self.assertEqual(lines, [self.ROLE])
+        _w, _l, unmatched, matched = check([("para", self.ROLE, "experience")], lines)
+        self.assertEqual((matched, unmatched), (1, []))
+
+    @unittest.skipUnless(shutil.which("pdftotext"), "pdftotext is not installed")
+    def test_an_en_dash_comes_through_pdftotext(self):
+        """Fails on 2.4.0 with xpdf's pdftotext. Needs no LibreOffice."""
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, True)
+        pdf = tmp / "role.pdf"
+        pdf.write_bytes(tiny_pdf([self.ROLE]))
+        self.assertEqual(widow_check.pdf_lines(pdf), [self.ROLE])
 
 
 class Render(unittest.TestCase):

@@ -10,6 +10,7 @@ role the same way the build's default layout does: a company line, then a
 "Title | dates" line.
 """
 
+import locale
 import subprocess
 import sys
 import zipfile
@@ -118,3 +119,41 @@ def write_docx(blocks, path, bare=False):
             z.writestr("word/theme/theme1.xml", head + '<a:theme xmlns:a="http://schemas.'
                        'openxmlformats.org/drawingml/2006/main" name="Office Theme"/>')
     return Path(path)
+
+
+def tiny_pdf(lines):
+    """A one-page PDF with one text line per entry, written by hand. The font
+    uses WinAnsiEncoding, so a line can hold an en dash or an accented letter."""
+    ops = "BT /F1 11 Tf 72 720 Td 14 TL " + " ".join(
+        "(" + ln.replace("(", "[").replace(")", "]") + ") Tj T*" for ln in lines) + " ET"
+    objs = ["<< /Type /Catalog /Pages 2 0 R >>",
+            "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+            "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R "
+            "/Resources << /Font << /F1 5 0 R >> >> >>",
+            f"<< /Length {len(ops)} >>\nstream\n{ops}\nendstream",
+            "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>"]
+    out, offsets = "%PDF-1.4\n", []
+    for i, body in enumerate(objs, 1):
+        offsets.append(len(out))
+        out += f"{i} 0 obj\n{body}\nendobj\n"
+    xref = len(out)
+    out += f"xref\n0 {len(objs) + 1}\n0000000000 65535 f \n"
+    out += "".join(f"{o:010d} 00000 n \n" for o in offsets)
+    out += f"trailer\n<< /Size {len(objs) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n"
+    return out.encode("cp1252")
+
+
+def xpdf_run(text):
+    """A stand-in for subprocess.run that answers like the pdftotext Git for
+    Windows ships (xpdf 4.00): `text` in Latin-1, with an en dash as byte 0xAD,
+    unless the command asks for UTF-8 with -enc. Like subprocess.run, it
+    decodes the output only when the caller asks for text."""
+    def fake(cmd, **kw):
+        utf8 = "-enc" in cmd and cmd[cmd.index("-enc") + 1] == "UTF-8"
+        raw = text.encode("utf-8") if utf8 else text.replace("\u2013", "\xad").encode("latin-1")
+        enc = kw.get("encoding")
+        if not enc and kw.get("text"):
+            enc = locale.getpreferredencoding(False)
+        out = raw.decode(enc, kw.get("errors") or "strict") if enc else raw
+        return subprocess.CompletedProcess(cmd, 0, out, "" if enc else b"")
+    return fake

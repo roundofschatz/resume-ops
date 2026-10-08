@@ -446,8 +446,10 @@ def _pdf_lines(path):
     if not exe:
         sys.exit(f"{path}: pdftotext (poppler) is not installed. Read the PDF directly, save its "
                  "text as a .txt file, and pass that instead.")
-    r = subprocess.run([exe, "-layout", str(path), "-"], capture_output=True, text=True,
-                       encoding="utf-8", errors="ignore")
+    # -enc UTF-8: xpdf's pdftotext (the one Git for Windows ships) writes
+    # Latin-1 by default, and reading that as UTF-8 drops dashes and accents.
+    r = subprocess.run([exe, "-layout", "-enc", "UTF-8", str(path), "-"], capture_output=True,
+                       text=True, encoding="utf-8", errors="ignore")
     if r.returncode != 0:
         sys.exit(f"pdftotext could not read {path}: {r.stderr.strip()}")
     return r.stdout.splitlines()
