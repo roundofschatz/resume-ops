@@ -1,10 +1,10 @@
 {
   "name": "resume-ops",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Builds a US resume for one job posting from whatever you have, for the four readers who decide on it: the application form, the AI grader, the recruiter and the hiring manager.",
   "author": {
     "name": "Ryan Schatzman",
-    "url": "https://www.linkedin.com/in/ryanschatzman"
+    "url": "https://github.com/roundofschatz"
   },
   "homepage": "https://github.com/roundofschatz/resume-ops",
   "repository": "https://github.com/roundofschatz/resume-ops",

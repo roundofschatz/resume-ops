@@ -65,7 +65,7 @@ See the [changelog](skills/resume-ops/CHANGELOG.md).
 
 ## Author
 
-Built by Ryan Schatzman, a brand and customer experience strategist in Denver. [LinkedIn](https://www.linkedin.com/in/ryanschatzman)
+Ryan Schatzman · [LinkedIn](https://www.linkedin.com/in/ryanschatzman)
 
 ## License
 
