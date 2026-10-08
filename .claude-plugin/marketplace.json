@@ -1,6 +1,6 @@
 {
   "name": "roundofschatz",
-  "description": "Claude plugins by Ryan Schatzman.",
+  "description": "Claude plugins by Ryan Schatzman: resume-ops, plainspeak-writer and job-seeker-ops.",
   "owner": {
     "name": "Ryan Schatzman",
     "url": "https://github.com/roundofschatz"
@@ -10,6 +10,32 @@
       "name": "resume-ops",
       "source": ".",
       "description": "Builds a US resume for one job posting from whatever you have, for the four readers who decide on it: the application form, the AI grader, the recruiter and the hiring manager."
+    },
+    {
+      "name": "plainspeak-writer",
+      "version": "1.7",
+      "description": "Writes and rewrites prose so it reads like a sharp human writer instead of an AI, in a plain, specific, warm voice, matched to your own writing when you share some.",
+      "author": {
+        "name": "Ryan Schatzman",
+        "url": "https://github.com/roundofschatz"
+      },
+      "homepage": "https://github.com/roundofschatz/plainspeak-writer",
+      "repository": "https://github.com/roundofschatz/plainspeak-writer",
+      "license": "MIT",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/roundofschatz/plainspeak-writer.git",
+        "ref": "v1.7"
+      }
+    },
+    {
+      "name": "job-seeker-ops",
+      "description": "Job-search writing: works out the case for one posting, writes the cover letter from it, and has a blind reviewer read a finished piece. Includes resume-ops and plainspeak-writer.",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/roundofschatz/job-seeker-ops.git",
+        "ref": "v0.4.3"
+      }
     }
   ]
 }

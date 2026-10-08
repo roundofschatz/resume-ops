@@ -2,6 +2,22 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.4.3 (2026-10-08)
+
+One marketplace for all three tools. No rule changed.
+
+**Marketplace**
+- `.claude-plugin/marketplace.json` lists plainspeak-writer and job-seeker-ops beside resume-ops, so the one marketplace, `roundofschatz`, installs any of the author's three tools. The owner asked on October 8 for the tools to work on their own and together.
+- plainspeak-writer comes from its repository at tag v1.7, and job-seeker-ops from its repository at tag v0.4.3. When either tool releases, its entry here moves to the new tag.
+- Both come over HTTPS, as `url` sources. With `github` sources, Claude Code 2.1.280 cloned over SSH, and the clone failed on a computer with no SSH key for GitHub.
+- plainspeak-writer has no plugin manifest. Its entry states the version, and the root SKILL.md of its repository loads as the plugin's one skill.
+
+**README**
+- Both READMEs say what the marketplace lists, and that job-seeker-ops includes copies of resume-ops and plainspeak-writer, so a person installs it or the tools on their own, not both.
+
+**Tests**
+- A copy of this marketplace, pointed at the tags then current, installed all three plugins in an empty Claude Code setup: plainspeak-writer 1.7 with its one skill, resume-ops with its one, and job-seeker-ops with five skills and its reviewer.
+
 ## 2.4.2 (2026-10-08)
 
 The owner's credit, a cleaned history and the first release tags. No rule changed.

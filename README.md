@@ -12,6 +12,8 @@ Resume Ops is built on findings like these. It takes whatever you have about you
 
 ## Install
 
+This repository's marketplace, `roundofschatz`, lists all three of the author's Claude tools: resume-ops, [plainspeak-writer](https://github.com/roundofschatz/plainspeak-writer), which writes in a plain human voice, and [job-seeker-ops](https://github.com/roundofschatz/job-seeker-ops), which writes a cover letter from a candidate's confirmed case and has a blind reviewer read it. job-seeker-ops includes copies of resume-ops and plainspeak-writer. Install it for the whole set, or the other two on their own for a leaner one, but not both: with two copies installed, Claude sees two skills with the same job and may load either.
+
 **Claude app (web or desktop).** This route can update itself.
 
 1. Open **Customize**, then **Plugins**.
@@ -24,6 +26,8 @@ Resume Ops is built on findings like these. It takes whatever you have about you
 /plugin marketplace add roundofschatz/resume-ops
 /plugin install resume-ops@roundofschatz
 ```
+
+For the whole set, install `job-seeker-ops@roundofschatz` instead. `plainspeak-writer@roundofschatz` installs the writing skill on its own.
 
 **Upload by hand.** Zip the `skills/resume-ops` folder, with the folder itself inside the zip, and upload it under **Customize**, **Skills**. You'll need to upload again for each new version.
 
