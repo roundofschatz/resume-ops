@@ -2,7 +2,7 @@
 
 A Claude Skill that builds a US resume for one job posting from whatever the candidate has, for the four readers who use it: the application form that parses it, the AI grader that checks it against the posting, the recruiter who decides in seconds whether to keep reading, and the hiring manager who wants proof.
 
-Version 2.4.3. See `CHANGELOG.md`.
+Version 2.4.4. See `CHANGELOG.md`.
 
 ## What it does
 
@@ -26,14 +26,14 @@ It works for any field. The examples cover nursing, trades, logistics, finance a
 
 ## Install
 
-The easiest route is the plugin, which updates itself. In the Claude app, open Customize, then Plugins, choose Add marketplace and enter `roundofschatz/resume-ops`, then install resume-ops. In Claude Code:
+The easiest route is the plugin, which updates itself. In the Claude app, open Customize, then Plugins, choose Add marketplace and enter `roundofschatz/job-seeker-ops`, then install resume-ops. In Claude Code:
 
 ```
-/plugin marketplace add roundofschatz/resume-ops
+/plugin marketplace add roundofschatz/job-seeker-ops
 /plugin install resume-ops@roundofschatz
 ```
 
-The same marketplace lists job-seeker-ops, which includes a copy of this skill. Install one or the other, not both.
+That marketplace lives in job-seeker-ops's repository and lists job-seeker-ops too, which includes a copy of this skill. Install one or the other, not both.
 
 To install the skill on its own instead, copy this folder into `~/.claude/skills/` for Claude Code, or zip it (the zip must contain the folder itself) and upload it under Customize, Skills in the Claude app.
 

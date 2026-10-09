@@ -2,6 +2,18 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.4.4 (2026-10-08)
+
+The shared marketplace moved to job-seeker-ops. No rule changed.
+
+**Marketplace**
+- `.claude-plugin/marketplace.json` is gone. The marketplace `roundofschatz`, with the same three tools under the same names, now lives in job-seeker-ops's repository, at the owner's call on October 8.
+- Why: job-seeker-ops holds a copy of resume-ops and of plainspeak-writer, so it releases whenever either of them does. With the marketplace here, each move to a new tag was a resume-ops release, which changed the copy job-seeker-ops holds and needed another job-seeker-ops release, whose tag then had to move here again. In job-seeker-ops, the move rides in the release that brings the new copy in, and changes flow one way.
+- A person who added `roundofschatz/resume-ops` as a marketplace removes it and adds `roundofschatz/job-seeker-ops`, once. Claude keeps one marketplace for each name, so the two can't sit side by side.
+
+**README**
+- Both READMEs point at `roundofschatz/job-seeker-ops`, and the top-level one says how to move.
+
 ## 2.4.3 (2026-10-08)
 
 One marketplace for all three tools. No rule changed.

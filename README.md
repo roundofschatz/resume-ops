@@ -12,22 +12,24 @@ Resume Ops is built on findings like these. It takes whatever you have about you
 
 ## Install
 
-This repository's marketplace, `roundofschatz`, lists all three of the author's Claude tools: resume-ops, [plainspeak-writer](https://github.com/roundofschatz/plainspeak-writer), which writes in a plain human voice, and [job-seeker-ops](https://github.com/roundofschatz/job-seeker-ops), which writes a cover letter from a candidate's confirmed case and has a blind reviewer read it. job-seeker-ops includes copies of resume-ops and plainspeak-writer. Install it for the whole set, or the other two on their own for a leaner one, but not both: with two copies installed, Claude sees two skills with the same job and may load either.
+The author's three Claude tools share one marketplace, `roundofschatz`, which lives in job-seeker-ops's repository. It lists resume-ops, [plainspeak-writer](https://github.com/roundofschatz/plainspeak-writer), which writes in a plain human voice, and [job-seeker-ops](https://github.com/roundofschatz/job-seeker-ops), which writes a cover letter from a candidate's confirmed case and has a blind reviewer read it. job-seeker-ops includes copies of resume-ops and plainspeak-writer. Install it for the whole set, or the other two on their own for a leaner one, but not both: with two copies installed, Claude sees two skills with the same job and may load either.
 
 **Claude app (web or desktop).** This route can update itself.
 
 1. Open **Customize**, then **Plugins**.
-2. Choose **Add marketplace** and enter `roundofschatz/resume-ops`.
+2. Choose **Add marketplace** and enter `roundofschatz/job-seeker-ops`.
 3. Install **resume-ops**. To get new versions without asking, turn on **Sync automatically** for the marketplace.
 
 **Claude Code.**
 
 ```
-/plugin marketplace add roundofschatz/resume-ops
+/plugin marketplace add roundofschatz/job-seeker-ops
 /plugin install resume-ops@roundofschatz
 ```
 
 For the whole set, install `job-seeker-ops@roundofschatz` instead. `plainspeak-writer@roundofschatz` installs the writing skill on its own.
+
+The marketplace moved to job-seeker-ops in version 2.4.4, and this repository no longer has one. If you added `roundofschatz/resume-ops` as a marketplace before then, remove it before you add `roundofschatz/job-seeker-ops`.
 
 **Upload by hand.** Zip the `skills/resume-ops` folder, with the folder itself inside the zip, and upload it under **Customize**, **Skills**. You'll need to upload again for each new version.
 

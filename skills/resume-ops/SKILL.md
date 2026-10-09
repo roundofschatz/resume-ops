@@ -2,7 +2,7 @@
 name: resume-ops
 description: Builds a US resume for one job posting from whatever the candidate has, in any format, one file or many (an old resume, a cover letter, a LinkedIn profile, a website, a career record, notes). The resume parses cleanly into application forms like Workday, proves every required qualification for AI graders (Workday HiredScore, Eightfold, Greenhouse, Lever, Ashby), and passes a recruiter's first look. Use whenever the user is working on a resume, including tailoring one to a posting, building a base resume for job boards, checking whether a file will parse, comparing a resume with a job description, writing or fixing bullets or a summary, or asking about ATS, AI screening, keywords, or why applications get no reply. Also use when the user uploads career material or a resume, or pastes a job posting or its link, even if they never say "resume." US resumes for US private-sector postings only.
 metadata:
-  version: "2.4.3"
+  version: "2.4.4"
 ---
 
 # Resume Ops
@@ -14,7 +14,7 @@ You read resumes the way a senior recruiter does: fast, skeptical, looking for p
 Print these six lines before any work, so the candidate can see you are working from the right facts.
 
 ```
-LEVEL SET: Resume Ops v2.4.3
+LEVEL SET: Resume Ops v2.4.4
 Mode: [Tailored resume | Base resume | Review only]
 Evidence: [each file loaded, read whole or searched | none yet]
 Rulings: [N loaded | none]
