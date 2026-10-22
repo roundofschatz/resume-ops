@@ -48,9 +48,9 @@ How each title is written on the page, including the parser-safe form, and the f
 
 ## Build preferences
 
-Personal choices about how this candidate's resume reads, inside the skill's rules: the belief sentence for the summary, words they always or never use, a section they want left off, how their own practice is named, which of two ventures appears.
+Personal choices about how this candidate's resume reads, inside the skill's rules: the summary they model new ones on, words they always or never use, a section they want left off, how their own practice is named, which of two ventures appears.
 
-### YYYY-MM-DD: Example: belief sentence
-**Ruling:** Summary belief sentence, in their words: "The floor team finds the waste before the report does."
+### YYYY-MM-DD: Example: summary voice model
+**Ruling:** Model the summary on the one from the March resume that got an interview at Harbor Foods. Keep its sentence shapes; drop its "I" and its old year count.
 **Kind:** build preference
 **Applies to:** all resumes

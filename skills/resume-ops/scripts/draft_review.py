@@ -26,7 +26,12 @@ A summary says in simpler form what the bullets below prove, so a summary
 claim that repeats a role is the point. What gets flagged is a summary
 sentence copied from a bullet word for word (REVIEW). A career total the
 candidate confirmed, listed under "career_totals" in the JSON source, may sit
-in the summary with no single role behind it.
+in the summary with no single role behind it. The summary is a pitch, so how
+many results it names is never counted.
+
+A list of three or more takes a comma before its last "and" or "or". A clear
+list without one fails; "A, B and C", which can also be two clauses, is a
+REVIEW.
 
 Stdlib only.
 
@@ -46,7 +51,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _docx  # noqa: E402
 
 WORD_CEILING = 25
-SUMMARY_WORDS = (45, 75)
+SUMMARY_WORDS = (45, 110)
 COPY_RUN = 8        # words in a row a summary sentence shares with one bullet
 COPY_SHARE = 0.8    # or this share of the sentence's words, in order, from one bullet
 COPY_MIN_WORDS = 6  # shorter sentences are not checked for copying
@@ -825,6 +830,138 @@ TELLS += [
              "Name the subject, or keep it if the owner says enough."),
 ]
 
+# --- the serial comma (2.5.0) ---------------------------------------------------
+# A list of three or more takes a comma before its "and" or "or": "strategists,
+# designers, and interns". references/writing.md, The serial comma. A clear list
+# missing it fails. "A, B and C" with one comma can also be two clauses ("In
+# 2020, sales rose and costs fell"), so that shape fails only when something
+# marks it as a list: a colon before it, "including" or "such as", a preposition
+# just before the first item, or a verb opening the sentence. Otherwise it is a
+# REVIEW, and so is a longer item that may be a clause in a series.
+
+SERIAL_CONJ = re.compile(r"(?<![,/])\s+(and|or)\s+(?![/,])")
+SERIAL_PREPS = _wordset("""for of with to in on at by from across among between into onto over under
+ through via within without around about against toward towards behind beside alongside per inside
+ outside beyond near along upon during throughout""")
+PAIR_WORDS = _wordset("both either neither between")
+NUMBER_WORD = re.compile(rf"(?:\d[\d,.%+]*|(?i:one|{SET_NUMBER_WORDS}))$")
+LIST_LEADS = _wordset("including like especially")
+CLAUSE_WORDS = _wordset("""that which who whom whose where when while whereas then so but yet because as
+ if though although since until unless after before once whether and or nor""")
+ABBREVIATIONS = _wordset("st dr mr ms mrs jr sr inc co corp ltd vs no mt ft dept univ assn bros est approx")
+STATE_CODE = re.compile(r"[A-Z]{2}")
+
+
+def serial_segments(text):
+    """(start, segment, stop) for each stretch between hard stops: ; : ( ) ! ?
+    an em dash, and a period that ends a sentence (not "St." or "Inc.").
+    `stop` is the mark before the segment."""
+    out, start, stop = [], 0, ""
+    for i, ch in enumerate(text):
+        hard = ch in ";:()!?—"
+        if ch == "." and (i + 1 == len(text) or text[i + 1].isspace()):
+            word = re.search(r"([A-Za-z]+)$", text[:i])
+            hard = not (word and (word.group(1).lower() in ABBREVIATIONS or len(word.group(1)) == 1))
+        if hard:
+            out.append((start, text[start:i], stop))
+            start, stop = i + 1, ch
+    out.append((start, text[start:], stop))
+    return out
+
+
+def _starts_clause(words):
+    """A participle phrase ("drawing 500 responses", "signed in May") or a
+    clause is not a list item. A lone verb ("launched") can be one."""
+    first = words[0].lower().strip("\"'")
+    return (first in CLAUSE_WORDS or first in SERIAL_PREPS or bool(re.fullmatch(r"[a-z]+ing", first))
+            or (len(words) > 1 and bool(re.fullmatch(r"[a-z]+ed", first))))
+
+
+def _item(text, limit):
+    """True for a short phrase that reads as a list item, not a clause."""
+    w = text.split()
+    return 1 <= len(w) <= limit and not _starts_clause(w)
+
+
+def _first_item_marked(chunk, stop):
+    """Whether the words before "A," mark A as the first item of a list."""
+    w = chunk.split()
+    if not w:
+        return False
+    if w[0].lower() in ("and", "then"):        # "..., and supervised its strategists, designers and"
+        w = w[1:]
+    if not w:
+        return False
+    if stop == ":" and len(w) <= 4:            # "for four readers: council, city staff and"
+        return True
+    low = [x.lower().strip(",") for x in w]
+    for k in range(len(low) - 1, 0, -1):       # a preposition or "including" before A
+        if low[k] in SERIAL_PREPS or low[k] in LIST_LEADS or (low[k] == "as" and low[k - 1] == "such"):
+            return 1 <= len(low) - k - 1 <= 4
+    # a verb opens the sentence: "Supervised the strategists, designers and"
+    return len(w) <= 6 and low[0] not in SERIAL_PREPS and low[0] not in CLAUSE_WORDS
+
+
+def serial_hits(text):
+    """[(level, start, end)] for each list of three or more that skips the
+    comma before its last "and" or "or"."""
+    t = re.sub(r"\[[^\]]*\]", lambda m: "[" + "x" * (len(m.group(0)) - 2) + "]", plain(text))
+    hits = []                                   # a citation in square brackets is one item
+    for seg_start, seg, stop in serial_segments(t):
+        for m in SERIAL_CONJ.finditer(seg):
+            before = seg[:m.start()]
+            parts = before.split(", ")
+            if len(parts) < 2:
+                continue
+            last = parts[-1].strip()           # the item just before "and"
+            after = seg[m.end():].split()
+            if not last or not after or after[0].lower() in CLAUSE_WORDS:
+                continue
+            if re.search(r"\s(?:and|or)\s", last) or PAIR_WORDS & {w.lower() for w in last.split()}:
+                continue                        # "clients or sites or products"; "both X and Y"
+            if re.search(r"\b(?:two|2|both|pair)\b", parts[-2], re.I):
+                continue                        # "two hospitals, Mercy and County" names two
+            if NUMBER_WORD.match(last.split()[-1]) and NUMBER_WORD.match(after[0].strip(",.")):
+                continue                        # "one or two words", "5 or 6 sites"
+            if re.search(rf"\s{m.group(1)}\s", " " + " ".join(seg[m.end():].split(", ")[0].split()[:3]) + " "):
+                continue                        # "clients or sites or products": one item
+            rest = seg[m.end():].split(", ")
+            if len(rest) > 1 and (_item(rest[1].strip(), 5) or re.match(r"(?:and|or)\s", rest[1])):
+                continue                        # the list runs on past this item, so this
+                                                # "and" is inside one: "small and large files, notes"
+            if STATE_CODE.fullmatch(last) or re.fullmatch(r"\d{4}", last):
+                continue                        # "Dayton, OH and", "Oct 6, 2026 and"
+            span = (seg_start + m.start() - len(parts[-1]), seg_start + m.end() + len(after[0]))
+            if len(parts) >= 3 and _item(last, 5) and _item(parts[-2].strip(), 5):
+                hits.append((FAIL, *span))      # "A, B, C and D"
+            elif _item(last, 4) and not re.search(r"\s[a-z]+ed\b", last) \
+                    and _first_item_marked(parts[-2], stop if len(parts) == 2 else ""):
+                hits.append((FAIL, *span))      # "with A, B and C"
+            elif _item(last, 6) and not re.search(r"\b[a-z]+ing\b", last):
+                hits.append((REVIEW, *span))    # maybe a list, maybe two clauses
+    return hits
+
+
+class SerialCheck(Check):
+    """One verdict from serial_hits(), reported at this check's level."""
+
+    def __init__(self, level, fix):
+        super().__init__("missing serial comma", level, r"(?!)", fix)
+
+    def find(self, text, masked):
+        for level, start, end in serial_hits(text):
+            if level == self.level:
+                return _Span(start, end)
+        return None
+
+
+TELLS += [
+    SerialCheck(FAIL, "Put a comma before the last \"and\" or \"or\" in a list of three or more: "
+                "\"strategists, designers, and interns\". If the last two words are one name, it stands."),
+    SerialCheck(REVIEW, "If this is a list of three or more, put a comma before the last \"and\" or "
+                "\"or\". If it joins two clauses, it is right as written."),
+]
+
 # --- words the sentence already means (2.3.0) ----------------------------------
 # references/writing.md, Words the sentence already means. "From scratch" has
 # its own check above.
@@ -1223,7 +1360,7 @@ def review(blocks, career_totals=()):
         lo, hi = SUMMARY_WORDS
         if not lo <= words <= hi:
             add(REVIEW, first_n, "summary length", f"{words} words",
-                f"{lo} to {hi} words is the range. Four rendered lines at most.")
+                f"{lo} to {hi} words is the range. Seven rendered lines at most.")
 
         # figures and named clients that live only here
         seen = set()

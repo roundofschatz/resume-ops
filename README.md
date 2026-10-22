@@ -1,6 +1,6 @@
 # Resume Ops
 
-A Claude skill that builds and tailors US resumes for the four readers that decide who gets an interview: the application form, the AI grader, the recruiter and the hiring manager.
+A Claude skill that builds and tailors US resumes for the four readers that decide who gets an interview: the application form, the AI grader, the recruiter, and the hiring manager.
 
 ## Why it exists
 
@@ -35,7 +35,7 @@ The marketplace moved to job-seeker-ops in version 2.4.4, and this repository no
 
 ## Use it
 
-Give Claude the link to one job posting and whatever you have about your work. One file is enough: an old resume, a cover letter, your LinkedIn profile, your website, a career record or a page of notes, in any format. Then say what you want:
+Give Claude the link to one job posting and whatever you have about your work. One file is enough: an old resume, a cover letter, your LinkedIn profile, your website, a career record, or a page of notes, in any format. Then say what you want:
 
 - *Build me a resume for this posting.*
 - *Here's my LinkedIn PDF. Tailor a resume to this job.*
@@ -55,11 +55,11 @@ Each session opens with a short status block that names the version and the file
 - Builds a base resume for job boards when you want one.
 - Reads a positioning file from job-seeker-ops's candidate-positioning skill when you have one, to aim the summary and put the strongest proof first. It builds the same way without one.
 
-Full detail on the scripts, file layout and tests: [`skills/resume-ops/README.md`](skills/resume-ops/README.md).
+Full detail on the scripts, file layout, and tests: [`skills/resume-ops/README.md`](skills/resume-ops/README.md).
 
 ## Where the rules come from
 
-Every claim about a hiring system, a study or a law cites a source in [`sources.md`](skills/resume-ops/references/sources.md): 101 outside sources and 5 live tests, each with its date, a grade for how strong it is, the URL and a short quote. A test fails if a rule cites a source that isn't listed. Where no source exists, the skill says the rule is its own judgment.
+Every claim about a hiring system, a study, or a law cites a source in [`sources.md`](skills/resume-ops/references/sources.md): 101 outside sources and 5 live tests, each with its date, a grade for how strong it is, the URL, and a short quote. A test fails if a rule cites a source that isn't listed. Where no source exists, the skill says the rule is its own judgment.
 
 ## Scope
 

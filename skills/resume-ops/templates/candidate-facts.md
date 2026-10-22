@@ -76,7 +76,7 @@ Permanent. Tools never used, credentials not held, industries never worked in.
 
 ## Self-description
 
-Lines with nothing to verify ("I turn complexity into clarity"). Never a bullet. Kept here so they aren't recycled into claims. The candidate's one belief sentence for the summary lives in the rulings file.
+Lines with nothing to verify ("I turn complexity into clarity"). Never a bullet. Kept here so they aren't recycled into claims.
 
 ## Interview notes
 

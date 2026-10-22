@@ -268,10 +268,10 @@ class KeptFromV16(unittest.TestCase):
 
 
 class Summary(unittest.TestCase):
-    GOOD = ("Freight operations manager with 9 years running cross-dock sites for regional carriers. "
-            "Cut dock-to-stock time from 9 hours to 4 at Harbor Freightways by giving each carrier a "
-            "fixed door. Believes the night crew knows the building best, so the schedule starts "
-            "with their notes.")
+    GOOD = ("Freight operations manager who runs cross-dock sites for regional carriers and keeps "
+            "freight moving through peak season. Nine years in freight and warehousing, the last six "
+            "at Harbor Freightways, where dock-to-stock time fell from 9 hours to 4. Trainer who's "
+            "brought 14 dock leads onto the new yard system.")
     BULLETS = ["Cut dock-to-stock time from 9 hours to 4 by giving each carrier a fixed door and window.",
                "Trained 14 dock leads on the new yard system, now used at 3 sites."]
 
@@ -291,7 +291,7 @@ class Summary(unittest.TestCase):
             self.assertIn("summary ends on a keyword strip", names, strip)
 
     def test_a_list_sentence_with_a_verb_is_not_a_strip(self):
-        text = self.GOOD + " Ran sites in Ohio, Indiana, Kentucky and Michigan."
+        text = self.GOOD + " Ran sites in Ohio, Indiana, Kentucky, and Michigan."
         self.assertNotIn("summary ends on a keyword strip", fail_names(resume(text, self.BULLETS)))
 
     def test_first_person_fails_anywhere(self):
@@ -395,6 +395,115 @@ class CareerTotals(unittest.TestCase):
         self.assertIn("career_totals", out)
         code, out = run("draft_review.py", listed)
         self.assertEqual(code, 0, out)
+
+
+class SummaryAsPitch(unittest.TestCase):
+    """2.5.0: the summary is a pitch, up to about 110 words or seven lines, with
+    no count of results and no belief line. The ban on "I" and the rule that
+    every name and number has a bullet behind it stay."""
+    BULLETS = [
+        "Ran 14 public workshops for the Elm County trails plan; the county adopted it in 2023.",
+        "Wrote the Ashford downtown plan with city staff; council adopted it in 2024.",
+        "Built and led a team of 6 planners and designers, and trained 30 staff on the new review process.",
+        "Opened the Denver office and won 9 of 15 public pursuits in its first two years.",
+    ]
+    PITCH = ("Community planning manager who brings residents, city departments, developers, and "
+             "elected officials together to turn local fights into plans that get adopted. Twelve "
+             "years in planning and design across parks, downtowns, and corridors, with a run of "
+             "adopted public plans for Colorado communities, including the Elm County trails plan "
+             "and the Ashford downtown plan. Practice builder and team leader who's opened the "
+             "Denver office, built and led a team of 6 planners and designers, and trained 30 "
+             "staff on a new review process.")
+
+    def test_a_long_pitch_is_clean(self):
+        self.assertGreater(len(self.PITCH.split()), 75)
+        fails, reviews = dr.review(resume(self.PITCH, self.BULLETS))
+        self.assertFalse(fails, [(n, h) for _i, n, h, _x in fails])
+        self.assertNotIn("summary length", [n for _i, n, _h, _x in reviews])
+
+    def test_several_results_are_never_counted(self):
+        """The one-result rule is gone, and no check counts results."""
+        many = ("Community planning manager with 12 years in public planning. Ran 14 workshops for "
+                "the Elm County trails plan, wrote the Ashford downtown plan, won 9 of 15 public "
+                "pursuits, and trained 30 staff on a new review process.")
+        fails, reviews = dr.review(resume(many, self.BULLETS))
+        self.assertFalse(fails, [(n, h) for _i, n, h, _x in fails])
+        names = [n for _i, n, _h, _x in reviews]
+        self.assertFalse([n for n in names if "result" in n], names)
+
+    def test_the_length_limit_is_110_words(self):
+        self.assertEqual(dr.SUMMARY_WORDS, (45, 110))
+        words = self.PITCH.split()
+        at_limit = " ".join((words * 2)[:110]).rstrip(".") + "."
+        over = at_limit[:-1] + " " + " ".join(["more"] * 6) + "."
+        self.assertNotIn("summary length", review_names(resume(at_limit, self.BULLETS)))
+        hits = [(h, x) for _i, n, h, x in dr.review(resume(over, self.BULLETS))[1] if n == "summary length"]
+        self.assertTrue(hits)
+        self.assertIn("45 to 110", hits[0][1])
+        self.assertIn("Seven rendered lines", hits[0][1])
+
+    def test_first_person_still_fails_in_a_pitch(self):
+        bad = self.PITCH.replace("Practice builder and team leader who's", "I'm a practice builder who has")
+        self.assertIn("first person", fail_names(resume(bad, self.BULLETS)))
+
+    def test_a_name_with_no_bullet_behind_it_still_fails(self):
+        bad = self.PITCH.replace("the Ashford downtown plan", "the Ashford and Millbrook downtown plans")
+        fails = dr.review(resume(bad, self.BULLETS))[0]
+        self.assertIn("Millbrook", [h for _i, n, h, _x in fails if n == "evidence only in the Summary"])
+
+
+class SerialComma(unittest.TestCase):
+    """2.5.0: a list of three or more takes a comma before its last "and" or
+    "or". A clear list without one fails; a line that may be two clauses is a
+    second read."""
+
+    def levels(self, text):
+        return [lv for lv, _a, _b in dr.serial_hits(text)]
+
+    def test_clear_lists_without_it_fail(self):
+        for bad in ("Wrote the report for four readers: council, city staff, developers and the public.",
+                    "Mapped 15 agencies across county, city, school district, transit and utility lines.",
+                    "Supervised the strategists, designers and interns.",
+                    "Trained staff through lunch-and-learns, office visits and pilot projects.",
+                    "Hired for Workday, Greenhouse or Lever roles.",
+                    "Ran workshops at Landor, Interact on Shelf, Norris Design, RVi and BASE.",
+                    "Cut costs: $600K+ revenue, 11 new clients and a 30% rise in profit."):
+            self.assertIn(dr.FAIL, self.levels(bad), bad)
+            self.assertIn("missing serial comma", fail_names(as_bullet(bad)), bad)
+
+    def test_lists_with_it_pass(self):
+        for ok in ("Wrote the report for four readers: council, city staff, developers, and the public.",
+                   "Supervised the strategists, designers, and interns.",
+                   "Hired for Workday, Greenhouse, or Lever roles.",
+                   "Built the month-end close at both companies, hired and trained the teams of four "
+                   "and six that run them, and took both through audits."):
+            self.assertEqual(self.levels(ok), [], ok)
+
+    def test_two_items_and_one_item_with_and_pass(self):
+        for ok in ("Supervised designers and interns across 2 offices.",
+                   "Ran sites in Dayton, OH and Toledo, OH.",
+                   "Shipped on Oct 6, 2026 and Nov 3, 2026.",
+                   "Kept each bullet to one or two lines, three at most, for 40 resumes.",
+                   "Counted team size and reports, budget owned, clients or sites or products, and time.",
+                   "Read the evidence, small and large files, notes, and records.",
+                   "Cut cost per case 8%, serving both the stores and the warehouse.",
+                   "Ran engagement for the plan, drawing 500 responses and focus groups.",
+                   "Cited the vendor guides [S20, S24] and two studies.",
+                   "Placed nurses at two hospitals, Mercy West and County General."):
+            self.assertNotIn(dr.FAIL, self.levels(ok), ok)
+            self.assertNotIn("missing serial comma", fail_names(as_bullet(ok)), ok)
+
+    def test_two_clauses_are_a_second_read_not_a_fail(self):
+        text = "In 2020, sales rose and costs fell."
+        self.assertEqual(self.levels(text), [dr.REVIEW])
+        self.assertIn("missing serial comma", review_names(as_bullet(text)))
+        self.assertNotIn("missing serial comma", fail_names(as_bullet(text)))
+
+    def test_it_reads_the_summary_too(self):
+        summary = SummaryAsPitch.PITCH.replace("developers, and", "developers and")
+        self.assertIn("missing serial comma", fail_names(resume(summary, SummaryAsPitch.BULLETS)))
+        self.assertNotIn("missing serial comma",
+                         fail_names(resume(SummaryAsPitch.PITCH, SummaryAsPitch.BULLETS)))
 
 
 class Skills(unittest.TestCase):

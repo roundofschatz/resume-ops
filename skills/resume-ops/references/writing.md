@@ -25,18 +25,18 @@ The shape holds in every field:
 Rules:
 
 - **Verbs.** Past tense for finished work; present tense for ongoing work in the current role. Plain verbs: led, built, ran, launched, cut, grew, won, wrote, designed, opened, hired, fixed. Never open with "Responsible for", "Duties included", "Helped with", "Worked on".
-- **Implied first person.** No "I", "my", "we" or "our" anywhere on the page, and never "he" or "she" [S66, S67].
+- **Implied first person.** No "I", "my", "we", or "our" anywhere on the page, and never "he" or "she" [S66, S67].
 - **One to two rendered lines.** Two lines is the guide [S62]; about 25 words is this skill's working figure. The rule is two lines on the render, which `widow_check.py` measures. A third line is setup the reader doesn't need: keep the result, cut the context.
-- **No line ends on one or two words alone.** Fix it by changing words until the line count changes, never with a manual break, a non-breaking space or a spacing tweak.
+- **No line ends on one or two words alone.** Fix it by changing words until the line count changes, never with a manual break, a non-breaking space, or a spacing tweak.
 - **New evidence strengthens a line; it doesn't multiply lines.** Put the new fact into the bullet it proves.
 - **The first bullet of a role is its strongest proof for this target,** not its main duty. The duty is what the reader already assumes from the title.
-- **Name what you count.** A count of named things names them all or drops the number: "three clinics, including Eastside and Riverview" reads as if the writer couldn't name the third. A count of abstract things (decisions, directives, priorities, themes, recommendations, principles, pillars, goals, needs, initiatives, tools and the like) names the set: what it was about or for. It doesn't need every item. "Settled seven decisions" names nothing; "settled seven decisions on pricing and the launch date" does. The name has to be specific to the work: "seven key decisions" and "seven strategic decisions" still name nothing, and so does an owner alone ("five priorities for the district"). If the evidence can't name the set, drop the count. A count of concrete things (stores, employees, interviews, survey responses) is scope, and it stands as it is. `draft_review.py` fails a count that names nothing, and flags a count for review when the words after it may only say whose set it was.
-- **A label is not content.** "Key insights", "strategic recommendations" and "the findings" stand in for something the reader never gets. Say what they were, or what they were about: "insights on churn". "The findings" can stay when the same line names the work they came from and what they became. `draft_review.py` fails a label built on a generic word ("key", "strategic", "actionable") with nothing behind it.
+- **Name what you count.** A count of named things names them all or drops the number: "three clinics, including Eastside and Riverview" reads as if the writer couldn't name the third. A count of abstract things (decisions, directives, priorities, themes, recommendations, principles, pillars, goals, needs, initiatives, tools, and the like) names the set: what it was about or for. It doesn't need every item. "Settled seven decisions" names nothing; "settled seven decisions on pricing and the launch date" does. The name has to be specific to the work: "seven key decisions" and "seven strategic decisions" still name nothing, and so does an owner alone ("five priorities for the district"). If the evidence can't name the set, drop the count. A count of concrete things (stores, employees, interviews, survey responses) is scope, and it stands as it is. `draft_review.py` fails a count that names nothing, and flags a count for review when the words after it may only say whose set it was.
+- **A label is not content.** "Key insights", "strategic recommendations", and "the findings" stand in for something the reader never gets. Say what they were, or what they were about: "insights on churn". "The findings" can stay when the same line names the work they came from and what they became. `draft_review.py` fails a label built on a generic word ("key", "strategic", "actionable") with nothing behind it.
 - **A page count is not a result.** "A 60-slide deck" measures the document. Use the figure the work was about (units, sites, people, dollars), or say that it got built.
 - **Claim the layer you worked at.** On work several disciplines delivered, name the part that was the candidate's. The narrower claim is usually the more senior one, and it survives a reference check.
 - **A status tag pinned to the end is not a result** ("now built", "since acquired"). Put it in the grammar or cut it.
 - **Tools go inside the bullet where they were used.** "Rebuilt the preventive maintenance schedule in Fiix" proves the tool; "Fiix" on a list does not. Put the tool in the bullet for the work it was used on. If that work is true but missing from the page, write the bullet for the work; never write a bullet only to hold a tool name.
-- **Vary the metric type.** A page where every bullet ends in a percentage reads as templated. Mix counts, dollars, time, rankings and adoption.
+- **Vary the metric type.** A page where every bullet ends in a percentage reads as templated. Mix counts, dollars, time, rankings, and adoption.
 
 ## Numbers
 
@@ -60,31 +60,38 @@ Never write around a restriction in a way that implies more access than the cand
 
 ## The summary
 
-A prose paragraph: three to four lines, about 50 to 70 words, no bullets. Stanford GSB says "Limit the summary to 4 lines plus bullet points" [S62]; Yale says fifty words or fewer [S63]. This skill keeps the four lines and drops the bullets: no study tests prose against bullets, and bullets under the summary repeated the roles below them in every resume of the skill's 2026 test [L05]. The one outcome dataset found no reliable interview effect from having a summary at all [S98], so keep it short and never let a claim live only there.
+A prose paragraph of full sentences under the Summary header, up to about 110 words or seven rendered lines, no bullets. It's the pitch: who the candidate is and why they fit this employer. Results belong in the bullets, each one in the job that produced it. A summary assembled from slots (title and years, one result, one pattern, a closing line) reads choppy and sells nothing, so don't build one that way.
 
-**What goes in it, in this order:**
+Stanford GSB says "Limit the summary to 4 lines plus bullet points" [S62]; Yale says fifty words or fewer [S63]. This skill drops the bullets: no study tests prose against bullets, and bullets under the summary repeated the roles below them in every resume of the skill's 2026 test [L05]. It also goes past both length limits when the pitch earns it, because the hiring manager reads the summary for fit, and a pitch with names in it takes more than four lines (the skill's judgment). The one outcome dataset found no reliable interview effect from having a summary at all [S98], so the extra lines cost little, and no claim may live only there.
 
-1. **The title language of the target, years and domain, in one sentence.** "Operations director with 12 years running distribution for food and consumer-goods companies." For a tailored resume, use the posting's title words where they are honest; title match went with higher interview rates in one vendor's data [S60]. AI graders read the summary (`references/readers.md`). The years count the whole career: this year minus the year the career started (for most people, the year they finished school). The words beside that number have to fit the whole career too. A posting's "N years in X" is a different count, from only the jobs that did X (`references/tailoring.md`).
-2. **The proof that answers the posting's top requirement,** with its number and its name, in a full sentence. The role states it in full; the summary states it shorter, as the headline, in new words. Change it per posting. On a base resume, it answers the requirement most postings in the family share (`references/tailoring.md`).
-3. **What is true across the whole career,** not any one role: the kinds of places, the pattern of the work, or the employers themselves ("Ran distribution for three regional grocers: Harbor Foods, Valley Fresh and Ridge Market", each one a role below). No second role-level result. A career total the candidate confirmed fits here (see the rules below).
-4. **One sentence of belief, in the candidate's own words, without "I".** No source tests it either way; it is here so the page sounds like a person, and the candidate decides whether to keep it. Write it as a plain statement: "The night-shift technician knows the machine better than the manual does." Ask the candidate for it once, write it in the rulings file, and use their wording. If they can't be asked this session, leave it out and ask in the brief; never write one for them. A summary of only numbers reads like a machine wrote it.
+**What it covers.** Three things, in whatever order and number of sentences the evidence and the candidate's voice call for:
 
-**Rules:**
+- What the candidate does, for whom, and what comes of it.
+- The run of work that matches this employer, by name (clients, places, programs), with the career's years and the range of fields.
+- What they've built and led: practices, teams, people trained, and kinds of products.
 
+**Start from a summary that worked.** Before writing, ask whether the candidate has a summary that got an interview, or one they wrote themselves, and look for one in the evidence. Use it as the voice model: its sentence shapes, its rhythm, its words for the work. Take the shape, not the words. Drop anything a rule here or a candidate ruling bans, and any fact that has gone stale (an old year count, a title no longer held). Record which summary is the model in the rulings file. With no model, write from the evidence in plain, full sentences.
+
+**Rules.** These protect the candidate. Everything else is the writer's call.
+
+- **The posting's title language opens the summary,** where it's honest. Title match went with higher interview rates in one vendor's data [S60], and AI graders read the summary (`references/readers.md`). On a base resume, use the most common standard title for the family.
+- **The years count the whole career:** this year minus the year the career started (for most people, the year they finished school). The words beside that number have to fit the whole career too. A posting's "N years in X" is a different count, from only the jobs that did X (`references/tailoring.md`).
+- **Implied first person.** Never "I", "my", "we", or "our", and never "he" or "she". A sentence can be built on a noun phrase ("Logistics manager who runs..."), with a "who" clause where the voice calls for one, or open on a past-tense verb ("Built", "Led"). Never open a sentence on a third-person verb ("Leads", "Has", "Believes"), and never "A results-driven professional who".
 - Full sentences. No colon lists, no "Specialties:" line, no keyword strip at the end.
-- Implied first person: verbs with no subject ("Led", "Ran"), never "I", never third-person verbs ("Leads", "Has", "Believes"), never "A results-driven professional who". The opening title phrase ("Registered nurse with 9 years...") is the one sentence without a verb.
-- Every count names what it counts ("three hospitals: Mercy, St. Luke's and County General") or drops the number.
-- **The summary says in simpler form what the bullets below prove.** Every claim in it has a job behind it: every number, client and credential also appears in the role or section that holds it, because the form has no summary field [S02], field matchers score only extracted skills, titles, dates, companies and years [S16], and AI graders look for the proof inside the job [S05, S31]. Repeating what the roles prove is the summary's job.
+- Every count names what it counts ("three regional grocers: Harbor Foods, Valley Fresh, and Ridge Market") or drops the number.
+- **The summary says in simpler form what the bullets below prove.** Every name and number in it has a job behind it: every client, place, number, and credential also appears in the role or section that holds it, because the form has no summary field [S02], field matchers score only extracted skills, titles, dates, companies, and years [S16], and AI graders look for the proof inside the job [S05, S31]. Repeating what the roles prove is the summary's job.
 - **Never copy a bullet word for word.** Restate the claim shorter and at a higher level. The role keeps the full wording.
 - **One exception: a career total the candidate confirmed.** A total that spans several jobs (workshops run, stores opened, new nurses trained) may sit in the summary with no single job behind it, once the candidate confirms the number. Record it (the rulings file, or the facts file if the candidate keeps one) and list it under `career_totals` in the JSON source (`references/document.md`) so `draft_review.py` passes it. A total the candidate hasn't confirmed is an estimate (SKILL.md, hard rule 2).
 
-**Examples** (different fields, same shape):
+**Examples.** Three fields, three different builds. They show range, not a template; the candidate's own model sets the shape.
 
-> Registered nurse with 9 years in emergency and critical care, most recently as charge nurse in a Level II trauma center. Led the sepsis bundle rollout at Mercy West that moved compliance from 54% to 91%. Worked charge shifts in the emergency departments at Mercy West and County General. A calm handoff saves more time than a fast one.
+> Logistics manager who runs regional distribution for grocers and consumer-goods makers, keeping shelves full through peak season at a lower cost per case. Eleven years in warehousing and transportation, most of them running cross-dock and cold-chain sites for three regional grocers: Harbor Foods, Valley Fresh, and Ridge Market. Site leader who's opened two distribution centers, built the safety program the Harbor network still runs, and trained 40 shift leads across three shifts.
 
-> Logistics manager with 11 years running regional distribution for grocery and consumer goods. Cut cost per case 18% in two years at a 220,000 sq ft site with 90 associates across three shifts. Ran distribution for three regional grocers: Harbor Foods, Valley Fresh and Ridge Market. The floor team finds the waste before the report does.
+> Emergency charge nurse with 9 years in emergency and critical care at two Level II trauma centers, Mercy West and County General. Led the sepsis bundle rollout at Mercy West and took it to County General when the two hospitals merged their protocols. Built the charge-nurse orientation both units use and precepted 11 new graduates who now work charge shifts.
 
-`draft_review.py` fails a bullet under Summary, a keyword strip, a first-person pronoun, and a figure or name found only in the summary, unless it is a listed career total. It asks you to re-read a summary outside 45 to 75 words, any count that names fewer items than it claims, and any summary sentence that copies a bullet word for word.
+> Controller for private manufacturers who closes the books fast enough for owners to run the business on this month's numbers. Fourteen years in accounting, the last eight leading finance at Brightline Tool and Keller Plastics through two acquisitions. Built the month-end close at both companies, hired and trained the teams of four and six that run them, and took both through audits with no adjustments.
+
+`draft_review.py` fails a bullet under Summary, a keyword strip, a first-person pronoun, and a figure or name found only in the summary, unless it is a listed career total. It asks you to re-read a summary outside 45 to 110 words, any count that names fewer items than it claims, and any summary sentence that copies a bullet word for word. It never counts results.
 
 ## AI-writing tells
 
@@ -92,7 +99,7 @@ A page can clear every rule and still read as generated. These are the general t
 
 | Tell | Instead |
 |---|---|
-| Em dash for emphasis or drama; "--" as a dash | A period, colon or comma |
+| Em dash for emphasis or drama; "--" as a dash | A period, colon, or comma |
 | "Not just X, but Y"; "X, not just Y"; "isn't just X; it's Y"; "not only X but Y" | Say Y |
 | "It's not about X, it's about Y" | Say what it is |
 | "I am not an X. I am the person who..." | State the capability in its own terms |
@@ -148,9 +155,15 @@ A word the sentence means without it gets cut. "Built the program" is complete, 
 | "own" after a possessive: "the hotel's own staff" | it means a separate one: "gave each region its own P&L" |
 | personally | it separates the candidate's part from a team's, though "closed 12 of the team's 40 deals" says it better |
 | successfully | the verb doesn't carry the outcome; "appealed" doesn't, and "won 11 of 14 appeals" says it better |
-| actual | it is set against a budget, plan or forecast |
-| "new" after built, created, launched or opened | it tells a new thing from an old one: "built a new plant to replace the 1970s one" |
+| actual | it is set against a budget, plan, or forecast |
+| "new" after built, created, launched, or opened | it tells a new thing from an old one: "built a new plant to replace the 1970s one" |
 | in order to, the fact that | rarely; "to" and "that" do the same work |
+
+## The serial comma
+
+A list of three or more takes a comma before its last "and" or "or": "strategists, designers, and interns"; "Workday, Greenhouse, or Lever". Without it the last two items can read as one ("thanked the founders, Dana and Lee" could name the founders), and one rule kept the same way on every line reads as care. Two items take no comma ("designers and interns"), and a name with "and" in it stays as written.
+
+`draft_review.py` fails a clear list that skips the comma. It asks you to re-read "A, B and C" when the line could be two clauses joined by "and": "In 2020, sales rose and costs fell" is right as written.
 
 ## When you are revising, not writing
 
@@ -161,10 +174,10 @@ Change a line only to fix a broken rule, prove a requirement, or aim at the targ
 - Anything the candidate lacks, is learning, or wants to grow into. A resume argues one side; the gap is handled in the interview.
 - Apologies, hedges about level, self-criticism.
 - Salary, references, reasons for leaving.
-- Positioning lines with nothing to verify ("I turn complexity into clarity") as bullets. The one belief sentence in the summary is the exception, and it is the candidate's own words.
+- Lines with nothing to verify ("turns complexity into clarity"), in the summary or a bullet. The summary's pitch names the work, the people it served, and the places it happened.
 
 ## Read it out loud before it ships
 
 1. Does it sound like a person describing their work?
-2. Does every claim land on a number, a name or a result?
+2. Does every claim land on a number, a name, or a result?
 3. Is there a line any competent writer could have written about anyone? Fix that one first.

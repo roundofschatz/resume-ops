@@ -2,6 +2,32 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.5.0 (2026-10-22)
+
+The summary is a pitch, and lists take the serial comma. The owner's rulings of October 22.
+
+**The summary** (`references/writing.md`, The summary)
+- Why: the old formula (title and years, one result, one pattern, a belief line, 75 words at most) produced two summaries for a county innovation posting that the owner rejected as choppy and not a pitch. A summary sells who the candidate is and why they fit this employer. Results belong in the bullets.
+- It covers three things, in whatever order and number of sentences the evidence and the candidate's voice call for: what the candidate does, for whom, and what comes of it; the run of work that matches this employer, by name, with the career's years and the range of fields; and what they've built and led. No fixed sentence slots, so Claude writes from the evidence instead of filling a template.
+- Up to about 110 words or seven rendered lines. The page check in SKILL.md now reads seven lines, and `document.md` matches.
+- Gone: the one-result rule, "no second role-level result", and the belief line, with its examples in `templates/rulings.md` and `templates/candidate-facts.md` and its exception under Never on a resume. A belief line only works next to an "I", and "I" stays banned.
+- New: start from a summary that worked, one on a resume that got an interview or one the candidate wrote, as the voice model. Take its shape, never banned words or stale facts. It's on the Ask list in SKILL.md, and the rulings template's example records one.
+- Kept: the posting's title language opens the summary, the years count the whole career, no "I", every name and number has a bullet behind it, confirmed career totals, and no copied bullets.
+- Three new invented examples, each built differently. `tailoring.md`, `readers.md`, `intake.md`, and SKILL.md drop "first sentence" and "proof sentence".
+
+**The serial comma** (`references/writing.md`, The serial comma)
+- New rule: a list of three or more takes a comma before its last "and" or "or" ("strategists, designers, and interns").
+- Every example and the skill's own wording follow it. Quotes in `sources.md` and old changelog entries stay as written.
+
+**draft_review.py**
+- Summary length is a REVIEW outside 45 to 110 words (was 45 to 75). Nothing counts how many results a summary names.
+- New check, missing serial comma. A clear list without the comma fails: two or more commas before the "and", or one comma after a colon, "including", a preposition, or a verb that opens the sentence. "A, B and C" that can be two clauses ("In 2020, sales rose and costs fell") is a REVIEW. Two items, "Dayton, OH and Toledo, OH", "one or two", "both X and Y", an "and" inside one item of a longer list, and citations in brackets pass.
+
+**Tests**
+- `test_draft_review.py`: SummaryAsPitch (a 90-word pitch is clean, several results are never counted, the 110-word limit, "I" and names with no bullet still fail) and SerialComma (lists that fail, lists that pass, the two-clause REVIEW, the summary is read too). The Summary class's model summary is rewritten as a pitch.
+- New `test_summary_rules.py`: the old formula stays gone, the new rules are stated, the length agrees in every file, and the skill's own lists use the serial comma.
+- `fixtures/tells.json`: the clean line "three shifts, four plants, and 900 people" takes the comma.
+
 ## 2.4.4 (2026-10-08)
 
 The shared marketplace moved to job-seeker-ops. No rule changed.

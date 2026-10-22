@@ -9,14 +9,14 @@ What goes on the page, in what order, in what shape. How each line is written is
 3. Experience
 4. Education
 5. Certifications (only if the candidate has any)
-6. Skills (one line, whenever the candidate has concrete tools, software, methods or languages to list)
+6. Skills (one line, whenever the candidate has concrete tools, software, methods, or languages to list)
 
-One resume, every reader. This outline is the one that serves parsers, AI graders, recruiters and hiring managers at once, and the evidence behind each choice is below.
+One resume, every reader. This outline is the one that serves parsers, AI graders, recruiters, and hiring managers at once, and the evidence behind each choice is below.
 
 - **Experience before Education** for anyone more than about a year out of school. The alumni and MBA guides lead with experience [S62, S68]. Textkernel needs both sections to exist and treats a missing one as fatal [S44]; no parser documents a required order. The one outcome dataset found no reliable difference between the two orders [S98].
-- **No Accomplishments, Highlights or Key Achievements section.** Textkernel files such a section as a flat list outside the jobs, with no employer and no dates [S93]; skills get their dates from the job they sit in [S92, S94]; Workday's form has no field for them [S02]; and graders that weigh recency or check evidence per qualification need the claim tied to a job [S11, S05, S25]. Each achievement goes in the bullet of the job that produced it. The case for a separate section is editorial opinion [S97].
-- **Skills last, one line.** The guides that place skills put them at the end: Harvard's template ends with skills and interests, and Yale and Kellogg end with an Additional section [S66, S63, S68]. The first look goes to titles, employers and dates [S52]. No source tests top against bottom. The line holds the posting's exact terms for search [S20, S24] and minor tools; the proof stays in the bullets (Skills, below).
-- **A summary, short.** People and LLM graders read it; field matchers score only the skills, titles, dates, companies and years they extract [S16]; the one outcome dataset found no reliable interview effect either way [S98]. It costs four lines, so keep it, keep it short, and never let a claim live only there (`references/writing.md`, The summary).
+- **No Accomplishments, Highlights, or Key Achievements section.** Textkernel files such a section as a flat list outside the jobs, with no employer and no dates [S93]; skills get their dates from the job they sit in [S92, S94]; Workday's form has no field for them [S02]; and graders that weigh recency or check evidence per qualification need the claim tied to a job [S11, S05, S25]. Each achievement goes in the bullet of the job that produced it. The case for a separate section is editorial opinion [S97].
+- **Skills last, one line.** The guides that place skills put them at the end: Harvard's template ends with skills and interests, and Yale and Kellogg end with an Additional section [S66, S63, S68]. The first look goes to titles, employers, and dates [S52]. No source tests top against bottom. The line holds the posting's exact terms for search [S20, S24] and minor tools; the proof stays in the bullets (Skills, below).
+- **A summary, short.** People and LLM graders read it; field matchers score only the skills, titles, dates, companies, and years they extract [S16]; the one outcome dataset found no reliable interview effect either way [S98]. It costs a few lines, so keep it, make it the pitch, and never let a claim live only there (`references/writing.md`, The summary).
 
 These five headers and no others: **Summary, Experience, Education, Certifications, Skills,** each on its own line. Parsers find sections by their headers: Textkernel flags a section with no header, a header not on its own line, and nonstandard headers [S44]; Greenhouse fails "resumes without clear sections" [S14]; RChilli says one section per topic [S95]; and the career centers ask for standard titles [S96]. No vendor publishes its list of header names, so the standard words are the low-risk choice. An invented header ("Where I've Made a Dent", "Key Accomplishments", "Methodology") risks the parser putting that content in the wrong place, and a person looks for the standard words. Read any header on the way in; write these on the way out. `build_resume.py` refuses anything else.
 
@@ -24,7 +24,7 @@ Move Certifications above Experience when the field gates on a license: nursing,
 
 ## Contact block
 
-First lines of the body, never in the page header or footer. Textkernel treats contact details anywhere but the top as a major issue [S44], and Greenhouse and RChilli miss contact details in a header, footer or text box [S14, S95].
+First lines of the body, never in the page header or footer. Textkernel treats contact details anywhere but the top as a major issue [S44], and Greenhouse and RChilli miss contact details in a header, footer, or text box [S14, S95].
 
 ```
 Firstname Lastname
@@ -33,15 +33,15 @@ City, ST | (555) 555-0134 | name@example.com | linkedin.com/in/handle
 ```
 
 - The contact line is a fact only the candidate has. Ask for it at intake. A file with no phone fails `parse_check.py`.
-- City and state only. No photo or age [S66], and no street address, birth date or marital status on a US resume (the skill's judgment).
+- City and state only. No photo or age [S66], and no street address, birth date, or marital status on a US resume (the skill's judgment).
 - One phone, one email the candidate reads. A personal email is the safe default.
 - LinkedIn as plain text. Workday did not fill the Websites field from it in the live tests; the post-upload review adds it by hand [L01, L02].
-- One contact line works. RChilli advises against contact details on one or two lines [S95], but Workday filled name, phone, email and city from the one line [L01], and Lever's parser read every item on it [L04].
-- The **headline** is optional. It describes the work and the field in plain words. Never a job title the candidate does not hold, never a row of keywords. The posting's title language goes in the summary's first sentence instead.
+- One contact line works. RChilli advises against contact details on one or two lines [S95], but Workday filled name, phone, email, and city from the one line [L01], and Lever's parser read every item on it [L04].
+- The **headline** is optional. It describes the work and the field in plain words. Never a job title the candidate does not hold, never a row of keywords. The posting's title language opens the summary instead.
 
 ## Summary
 
-A prose paragraph under the Summary header: three to four lines, about 50 to 70 words, no bullets. What goes in it and how it's written is in `references/writing.md`, The summary. `build_resume.py` refuses a bullet under Summary.
+A prose paragraph under the Summary header: up to about 110 words or seven rendered lines, no bullets. What goes in it and how it's written is in `references/writing.md`, The summary. `build_resume.py` refuses a bullet under Summary.
 
 ## Experience
 
@@ -116,7 +116,7 @@ License number and state where the field expects them (nursing, engineering, rea
 
 ## Skills
 
-Include it whenever the candidate has concrete tools, software, methods or languages to list; leave it off when there is nothing concrete. One line under the Skills header, at the end, items separated by commas: tools, software, methods and languages with a real level ("Spanish (professional working)"). `build_resume.py` refuses a second line. If the line ends on one or two words alone, reorder the items rather than dropping a true one.
+Include it whenever the candidate has concrete tools, software, methods, or languages to list; leave it off when there is nothing concrete. One line under the Skills header, at the end, items separated by commas: tools, software, methods, and languages with a real level ("Spanish (professional working)"). `build_resume.py` refuses a second line. If the line ends on one or two words alone, reorder the items rather than dropping a true one.
 
 - **The proof lives in the bullets.** Every tool the posting requires, and the candidate used, goes inside the bullet where it was used (`references/writing.md`, Bullets). Two parsers (Textkernel, Affinda) date a skill from the job it sits in [S92, S94], Textkernel's advice is to show skills "in the context of work history" [S44], and in the skill's own test stand-in AI graders did not credit a tool that sat only in a list [L05].
 - **The line is for search and minor tools.** Recruiter search needs the exact term [S20, S24], field matchers pick up listed skills [S16], and HiredScore's talent search filters on skills [S101]. That is the line's job; it is never the proof.
@@ -147,13 +147,13 @@ Each has a home inside the five sections.
 ## File and format
 
 - **DOCX, a complete one.** Textkernel, a parser behind several systems, treats a PDF as a major issue [S44, S100]. The file carries every part Word writes: Lever's parser refused a six-part file and read the same text once those parts were added [L04, S89]. `build_resume.py` writes the full set, and `parse_check.py` warns when a file lacks it. A file edited in Word and saved again keeps the parts.
-- **One column.** No tables, text boxes, columns, images, icons, charts, or content in page headers and footers [S14, S01, S44]. `parse_check.py` fails tables, text boxes, columns, images, hidden text and contact details in a header or footer; look for the rest on the render.
-- **One font:** Calibri, Arial, Helvetica, Georgia, Garamond or Times New Roman, body 10 to 12 point. Margins at least 0.5 inch. The guides range from Times New Roman at 10 to 11 point with 0.5-inch margins [S63] to Calibri or Arial at 11 to 12 with 0.7 [S62].
-- **Bold** for the name, the headline if there is one, section headers, each company line and each job title [S53]. Dates and bullets stay plain.
+- **One column.** No tables, text boxes, columns, images, icons, charts, or content in page headers and footers [S14, S01, S44]. `parse_check.py` fails tables, text boxes, columns, images, hidden text, and contact details in a header or footer; look for the rest on the render.
+- **One font:** Calibri, Arial, Helvetica, Georgia, Garamond, or Times New Roman, body 10 to 12 point. Margins at least 0.5 inch. The guides range from Times New Roman at 10 to 11 point with 0.5-inch margins [S63] to Calibri or Arial at 11 to 12 with 0.7 [S62].
+- **Bold** for the name, the headline if there is one, section headers, each company line, and each job title [S53]. Dates and bullets stay plain.
 - **Standard bullets** from the normal list style. No special glyphs.
-- **Filename:** `Firstname-Lastname-Resume.docx`. No dates, versions or company names in it.
+- **Filename:** `Firstname-Lastname-Resume.docx`. No dates, versions, or company names in it.
 - **The plain-text copy** comes from the same source, written by the build. Paste it into plain-text fields.
-- **Name and email appear once,** at the top of page one. Repeating them on page two needs a forced page break, which lands differently in Word, Google Docs and LibreOffice. Stanford asks for it [S62]; the layout risk outweighs it (the skill's judgment).
+- **Name and email appear once,** at the top of page one. Repeating them on page two needs a forced page break, which lands differently in Word, Google Docs, and LibreOffice. Stanford asks for it [S62]; the layout risk outweighs it (the skill's judgment).
 - **Spacing default** (`build_resume.py`): 0.5-inch margins and tight paragraph spacing. In testing it held a 16-year career to two pages [L05]. Change words, not spacing, to fix a page break.
 
 ## The JSON source
