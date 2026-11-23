@@ -31,7 +31,7 @@ For the whole set, install `job-seeker-ops@roundofschatz` instead. `plainspeak-w
 
 The marketplace moved to job-seeker-ops in version 2.4.4, and this repository no longer has one. If you added `roundofschatz/resume-ops` as a marketplace before then, remove it before you add `roundofschatz/job-seeker-ops`.
 
-**Upload by hand.** Zip the `skills/resume-ops` folder, with the folder itself inside the zip, and upload it under **Customize**, **Skills**. You'll need to upload again for each new version.
+**Upload by hand.** Get `resume-ops.zip` from the [Releases](https://github.com/roundofschatz/resume-ops/releases) page, or zip the `skills/resume-ops` folder yourself, with the folder itself inside the zip, and upload it under **Customize**, **Skills**. You'll need to upload again for each new version.
 
 ## Use it
 
@@ -67,7 +67,7 @@ US resumes for US private-sector jobs. For anything else, such as a government p
 
 ## Changes
 
-See the [changelog](skills/resume-ops/CHANGELOG.md).
+See the [changelog](skills/resume-ops/CHANGELOG.md). When a new version lands on main, `.github/workflows/release.yml` runs every test, builds `resume-ops.zip` from that commit and publishes the release with the changelog entry as its notes.
 
 ## Author
 

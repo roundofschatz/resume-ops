@@ -1,0 +1,94 @@
+# Publishes a release when a new version lands on main: the tag, the release
+# and resume-ops.zip for Claude.ai. A cloud session can push to main but can't
+# push tags or publish releases, so this runs on GitHub's side. The version is
+# SKILL.md's, and tests/test_version.py holds SKILL.md, its Level Set line, the
+# top of CHANGELOG.md and .claude-plugin/plugin.json to that one number, so a
+# release never ships under a number the changelog doesn't describe. Every test
+# runs before anything is published.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the version and write the notes
+        id: version
+        run: |
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+
+          skill = Path("skills/resume-ops")
+          text = (skill / "SKILL.md").read_text(encoding="utf-8")
+          version = re.search(r'^\s*version:\s*"?([0-9][0-9.]*)"?\s*$', text, re.M).group(1)
+          log = (skill / "CHANGELOG.md").read_text(encoding="utf-8")
+          entries = re.split(r"(?m)^## ", log)[1:]
+          heading, _, body = entries[0].partition("\n")
+          newest = heading.split(" ", 1)[0]
+          if newest != version:
+              raise SystemExit(f"CHANGELOG.md's newest entry is {newest}, and SKILL.md says {version}.")
+          notes = [body.strip(),
+                   "For Claude.ai, download `resume-ops.zip` below and upload it under Customize, Skills. "
+                   "For the whole set, with the cover letter and the blind reviewer, install "
+                   "[job-seeker-ops](https://github.com/roundofschatz/job-seeker-ops) instead, which "
+                   "includes this version. For Claude Code, follow the install steps in the README.",
+                   "Every change, and the reason for it, is logged in CHANGELOG.md."]
+          Path("notes.md").write_text("\n\n".join(notes) + "\n", encoding="utf-8")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write(f"version={version}\n")
+          PY
+
+      - name: Check whether this version is out already
+        id: released
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "v$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "v$VERSION already has a release, so there's nothing to do."
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run every test
+        if: steps.released.outputs.done != 'true'
+        run: python3 skills/resume-ops/tests/run_tests.py
+
+      - name: Build the zip from this commit and check it loads
+        if: steps.released.outputs.done != 'true'
+        run: |
+          mkdir -p dist
+          git archive --format=zip --prefix=resume-ops/ -o dist/resume-ops.zip HEAD:skills/resume-ops \
+            SKILL.md README.md CHANGELOG.md LICENSE references scripts templates
+          cd dist && unzip -q resume-ops.zip
+          test -f resume-ops/SKILL.md
+          python3 -I - <<'PY'
+          import importlib, pathlib, sys
+          sys.path.insert(0, "resume-ops/scripts")
+          for p in sorted(pathlib.Path("resume-ops/scripts").glob("*.py")):
+              importlib.import_module(p.stem)
+          print("Every script in the zip loads.")
+          PY
+
+      - name: Publish the release
+        if: steps.released.outputs.done != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v$VERSION" dist/resume-ops.zip \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "Resume Ops $VERSION" --notes-file notes.md
