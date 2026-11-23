@@ -13,16 +13,26 @@ and a field-by-field review of what the form filled in.
 
 Stdlib only.
 
+--repair writes a copy beside the file with the parts a Google Docs export
+leaves out (document properties and web settings) added. Every other part is
+copied byte for byte, so the text and the layout don't move, and the original
+is never changed. Which missing part made Lever refuse a file wasn't isolated
+(sources.md, L04), so the repair is a cheap precaution, not a proven fix.
+
 Usage:
     python parse_check.py resume.docx
     python parse_check.py resume.docx --text-only    # just the text, in file order
+    python parse_check.py resume.docx --repair       # writes resume-repaired.docx
+    python parse_check.py resume.docx --repair --out fixed.docx
 
 Exit codes: 0 no FAIL, 1 at least one FAIL.
 """
 
 import argparse
+import datetime
 import re
 import sys
+import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -42,6 +52,22 @@ PHONE_RE = _docx.PHONE_RE
 WORD_PARTS = ("docProps/core.xml", "docProps/app.xml", "word/styles.xml",
               "word/settings.xml", "word/webSettings.xml", "word/fontTable.xml",
               "word/theme/theme1.xml")
+
+# The parts --repair can add. They hold no text and no layout, so adding them
+# can't move a line. A missing styles, settings, font or theme part shapes the
+# page, so the repair leaves those to a rebuild or a re-save in Word.
+_PKG = "http://schemas.openxmlformats.org/package/2006"
+_OFF = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+REPAIRABLE = {
+    "docProps/core.xml": (f"application/vnd.openxmlformats-package.core-properties+xml",
+                          "_rels/.rels", f"{_PKG}/relationships/metadata/core-properties",
+                          "docProps/core.xml"),
+    "docProps/app.xml": ("application/vnd.openxmlformats-officedocument.extended-properties+xml",
+                         "_rels/.rels", f"{_OFF}/extended-properties", "docProps/app.xml"),
+    "word/webSettings.xml": ("application/vnd.openxmlformats-officedocument.wordprocessingml."
+                             "webSettings+xml", "word/_rels/document.xml.rels",
+                             f"{_OFF}/webSettings", "webSettings.xml"),
+}
 
 NOT_A_PREDICTION = (
     "This is a structure check of the file, not a prediction of what Workday or any "
@@ -222,11 +248,105 @@ def check_content(blks):
     return findings
 
 
+def _insert_before(xml, closing, piece):
+    at = xml.rfind(closing)
+    if at < 0:
+        raise ValueError(f"no {closing} in a package part")
+    return xml[:at] + piece + xml[at:]
+
+
+def _free_id(rels):
+    used = set(re.findall(r'\bId="([^"]+)"', rels))
+    n = 1
+    while f"rIdRepair{n}" in used:
+        n += 1
+    return f"rIdRepair{n}"
+
+
+def repair(path, out=None, when=None):
+    """Write a copy of a .docx with the missing parts in REPAIRABLE added.
+    Returns (copy path or None, parts added, missing parts it can't add)."""
+    import build_resume as br    # the build writes the same parts for a new file
+
+    src = Path(path)
+    dest = Path(out) if out else src.with_name(f"{src.stem}-repaired{src.suffix}")
+    with zipfile.ZipFile(src) as z:
+        infos = z.infolist()
+        data = {i.filename: z.read(i.filename) for i in infos}
+    missing = [p for p in WORD_PARTS if p not in data]
+    adding = [p for p in missing if p in REPAIRABLE]
+    cannot = [p for p in missing if p not in REPAIRABLE]
+    if not adding:
+        return None, [], cannot
+
+    first = next((t for _k, t in _docx.blocks(src) if t.strip()), "")
+    name = first.strip() if re.fullmatch(r"[A-Za-z][\w.'-]*(?:\s+[A-Za-z][\w.'-]*){0,3}", first.strip()) else "Resume"
+    when = when or datetime.datetime.now(datetime.timezone.utc)
+    new_parts = {"docProps/core.xml": br.core_props(name, when),
+                 "docProps/app.xml": br.app_props(),
+                 "word/webSettings.xml": br.web_settings()}
+
+    edited = {k: data[k].decode("utf-8") for k in ("[Content_Types].xml", "_rels/.rels",
+                                                   "word/_rels/document.xml.rels") if k in data}
+    for part in adding:
+        ctype, rels_part, rtype, target = REPAIRABLE[part]
+        if f'PartName="/{part}"' not in edited["[Content_Types].xml"]:
+            edited["[Content_Types].xml"] = _insert_before(
+                edited["[Content_Types].xml"], "</Types>",
+                f'<Override PartName="/{part}" ContentType="{ctype}"/>')
+        rels = edited.setdefault(rels_part, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+                                 f'<Relationships xmlns="{_PKG}/relationships"></Relationships>')
+        if f'Target="{target}"' not in rels:
+            edited[rels_part] = _insert_before(
+                rels, "</Relationships>",
+                f'<Relationship Id="{_free_id(rels)}" Type="{rtype}" Target="{target}"/>')
+
+    tmp = dest.with_name(dest.name + ".tmp")
+    with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", edited["[Content_Types].xml"].encode("utf-8"))
+        for info in infos:
+            if info.filename == "[Content_Types].xml":
+                continue
+            body = edited[info.filename].encode("utf-8") if info.filename in edited else data[info.filename]
+            z.writestr(info, body)
+        for name, body in edited.items():          # a relationships part the file didn't have
+            if name not in data and name != "[Content_Types].xml":
+                z.writestr(name, body.encode("utf-8"))
+        for part in adding:
+            z.writestr(part, new_parts[part])
+    tmp.replace(dest)
+    return dest, adding, cannot
+
+
 def main():
     ap = argparse.ArgumentParser(description="Structure check of a .docx resume. " + NOT_A_PREDICTION)
     ap.add_argument("docx")
     ap.add_argument("--text-only", action="store_true", help="print only the text, in file order")
+    ap.add_argument("--repair", action="store_true",
+                    help="write a copy with the parts a Google Docs export leaves out, then check it")
+    ap.add_argument("--out", help="where --repair writes the copy (default: <name>-repaired.docx)")
     args = ap.parse_args()
+
+    if args.repair:
+        _docx.open_docx(args.docx)          # a clear message if it isn't a .docx
+        dest, added, cannot = repair(args.docx, args.out)
+        print("=" * 68)
+        print("REPAIR")
+        print("=" * 68)
+        if dest:
+            print(f"Wrote {dest}")
+            print("Added: " + ", ".join(added))
+            print("Every other part is copied byte for byte. The original is unchanged.")
+        else:
+            print("Nothing to add: the file already has the parts --repair writes.")
+        if cannot:
+            print("Still missing, and not repairable here: " + ", ".join(cannot)
+                  + ". These shape the page. Rebuild with build_resume.py, or open the file in "
+                  "Word and save it once.")
+        print()
+        if not dest:
+            return 0
+        args.docx = str(dest)
 
     z = _docx.open_docx(args.docx)
     blks = _docx.blocks(args.docx)

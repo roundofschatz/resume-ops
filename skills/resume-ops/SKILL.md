@@ -2,7 +2,7 @@
 name: resume-ops
 description: Builds a US resume for one job posting from whatever the candidate has, in any format, one file or many (an old resume, a cover letter, a LinkedIn profile, a website, a career record, notes). The resume parses cleanly into application forms like Workday, proves every required qualification for AI graders (Workday HiredScore, Eightfold, Greenhouse, Lever, Ashby), and passes a recruiter's first look. Use whenever the user is working on a resume, including tailoring one to a posting, building a base resume for job boards, checking whether a file will parse, comparing a resume with a job description, writing or fixing bullets or a summary, or asking about ATS, AI screening, keywords, or why applications get no reply. Also use when the user uploads career material or a resume, or pastes a job posting or its link, even if they never say "resume." US resumes for US private-sector postings only.
 metadata:
-  version: "2.5.0"
+  version: "2.6.0"
 ---
 
 # Resume Ops
@@ -14,7 +14,7 @@ You read resumes the way a senior recruiter does: fast, skeptical, looking for p
 Print these six lines before any work, so the candidate can see you are working from the right facts.
 
 ```
-LEVEL SET: Resume Ops v2.5.0
+LEVEL SET: Resume Ops v2.6.0
 Mode: [Tailored resume | Base resume | Review only]
 Evidence: [each file loaded, read whole or searched | none yet]
 Rulings: [N loaded | none]
@@ -53,7 +53,8 @@ Breaking one of these hurts the candidate.
 6. **One target per resume.** A tailored resume aims at one posting. A base resume covers one title family; if the candidate has ruled a base target that spans two families, follow the ruling and say once, in the first brief, that two would each match better.
 7. **Read the evidence that bears on the build, and never drop a qualification because a file was too big.** A file under the read-whole line (about 2,000 lines or 150 KB, the skill's working line) gets read start to end: check the last line you read against the file's line count, because credentials and awards sit at the end of career files, where a partial read stops. A file over the line gets searched, never skimmed: `scripts/requirement_check.py posting.md --evidence file` gives its map of headings and, for each qualification, the best passages with the file, heading and line. Open those passages, and the sections on the map that hold the work history, education, credentials, and awards.
 8. **A contradiction gets answered by the candidate, never picked by you.** When the same career fact is stated two ways, ask. If no answer is possible this session, use the more conservative value and name it in the brief as provisional.
-9. **The deliverable is a DOCX plus a plain-text copy for paste fields, built from one source.** Never send a PDF or a designed resume: Textkernel, a parser behind several systems, treats a PDF as a major issue [S44, S100]. The DOCX is a complete Word file, built by `build_resume.py`: Lever's parser refused a bare one [L04]. The PDF that `render_pdf.py` writes is a check file in a temp folder and is never sent.
+9. **The deliverable is a DOCX plus a plain-text copy for paste fields, built from one source.** Send a PDF only when the employer asks for one, and never a designed resume. Textkernel treats a PDF as a major issue, and it parses for Lever and several other systems [S44, S88, S100]. Career guides keep a PDF on hand for the employers who ask [S63]; export it from the finished DOCX in Word or Google Docs. The DOCX is a complete Word file, built by `build_resume.py`: Lever's parser refused a bare one [L04]. The PDF that `render_pdf.py` writes is a check file in a temp folder and is never sent.
+10. **Zero spelling errors.** Two spelling errors cut a resume's interview odds by 7.3 points, and five by 18.5, in a test with 445 recruiters [S112]. The test never tried a single error; zero is the target because a fix costs nothing. `scripts/spell_check.py` runs on every build, and a word it doesn't know is fixed or added to the candidate's word list in the rulings file.
 
 ## Ask the candidate, or decide yourself
 
@@ -112,6 +113,7 @@ Run these on every build, in this order. A check that did not run is not a pass.
 python scripts/draft_review.py resume.json        # writing rules and AI-writing tells; fix every FAIL
 python scripts/build_resume.py resume.json --out out/   # refuses structural faults
 python scripts/parse_check.py out/Name-Resume.docx # file structure; not a Workday prediction
+python scripts/spell_check.py out/Name-Resume.docx --words rulings.md   # zero spelling errors
 python scripts/render_pdf.py out/Name-Resume.docx  # check PDF in a temp folder, never sent
 python scripts/widow_check.py out/Name-Resume.docx /tmp/.../Name-Resume.pdf
 python scripts/requirement_check.py posting.md out/Name-Resume.docx   # every qualification against the page
@@ -120,7 +122,9 @@ python scripts/profile_check.py resume.json Positions.csv   # when the candidate
 python scripts/positioning_check.py positioning.md --resume out/Name-Resume.docx   # when a positioning file is used
 ```
 
-Then look at the rendered pages: page count, where each page ends, the summary within seven lines, no bullet past two lines, no line ending on one or two words, page two full. LibreOffice is not Word (it draws Calibri with Carlito, which has the same widths [S80]), so treat the render as a check on page count and obvious wreckage, not as Word's exact line breaks.
+Then look at the rendered pages: page count, where each page ends, the summary within four lines, no bullet past two lines, no line ending on one or two words, page two full. LibreOffice is not Word (it draws Calibri with Carlito, which has the same widths [S80]), so treat the render as a check on page count and obvious wreckage, not as Word's exact line breaks.
+
+Three settings carry what `draft_review.py` can't see on its own: `--serial-comma` when the candidate chose it, `--allow "team player"` for a term the posting itself uses, and `--totals` for confirmed career totals on a Word file. No setting moves a limit the evidence sets.
 
 `parse_check.py` checks the file's structure, including that the DOCX carries every part Word writes. It cannot tell you what a form will fill in. The live Workday test that set this skill's layout found the stand-in parser calling every role clean while Workday mangled six of eight [L01]. The only real parse test is an upload and a field-by-field review.
 
@@ -144,6 +148,7 @@ Two kinds of decisions come out of this work, and each has one home.
 
 - **General build rules** (true for any candidate) go into this skill: the reference file that owns the topic, a version bump, and a line in `CHANGELOG.md`, the same day.
 - **Candidate rulings** (facts, credit, titles, dates, personal build preferences) go into the candidate's rulings file (`templates/rulings.md`), the same day, with the date.
+- **Evidence first.** A build preference decides only where no evidence speaks, such as the comma style or the file name. Where any source bears on a rule, a preference can't push against it: the rule holds for every candidate, and a ruling that conflicts with it gets a reversal note in the rulings file.
 
 Memory, chat history, and session notes can point at a ruling, but they are never the only copy. A ruling that lives only in a conversation will be applied by one session and missed by the next.
 
@@ -154,7 +159,7 @@ Memory, chat history, and session notes can point at a ruling, but they are neve
 | `references/readers.md` | The readers: what each system's form and AI grader do; the record check; knockout questions; the post-upload review |
 | `references/sources.md` | Every source the skill cites, by ID: date, grade, URL, what it supports, a quote, and where it is used |
 | `references/document.md` | The document: sections and order, contact block, role layout, titles, education, skills line, length, file and format rules, the build checklist |
-| `references/writing.md` | Lines: bullets, numbers, the summary, AI-writing tells, plain and exact words, words the sentence already means, the serial comma, what never goes on a resume |
+| `references/writing.md` | Lines: bullets, numbers, the summary, AI-writing tells, plain and exact words, words the sentence already means, commas in lists, spelling, what never goes on a resume |
 | `references/tailoring.md` | Reading a posting, mapping the evidence to it, the requirement check, title language, exact terms, what changes from one posting to the next, a positioning file, the base resume's requirement map, the brief |
 | `references/intake.md` | Evidence in: the contact block, any file in any format, small and large evidence, contradictions, built assets, choosing a target, the rulings file, and the optional facts file |
 
@@ -166,7 +171,8 @@ Memory, chat history, and session notes can point at a ruling, but they are neve
 | `corpus_triage.py` | Maps a pile of career material: claims graded, roles, contradictions, repeats, possible targets |
 | `draft_review.py` | Writing rules and general AI-writing tells, on the JSON source or a DOCX |
 | `build_resume.py` | Writes the DOCX and the plain-text copy from one JSON source; refuses structural faults |
-| `parse_check.py` | Structure check of a DOCX: layout faults, contact, headers, dates, markers |
+| `parse_check.py` | Structure check of a DOCX: layout faults, contact, headers, dates, markers; `--repair` adds the parts a Google Docs export leaves out |
+| `spell_check.py` | Every word its dictionary doesn't know, and doubled words, so the page goes out with zero errors; flags real words often typed for others |
 | `render_pdf.py` | Renders a check PDF with LibreOffice so the page can be looked at |
 | `widow_check.py` | Lines ending on one or two words, and bullets past two lines, read off the render |
 | `positioning_check.py` | Reads a positioning file from job-seeker-ops's candidate-positioning skill at intake, and checks a built resume against its keep-off list and its words to use. Nothing else reads the file |
@@ -182,6 +188,7 @@ Python 3.8 or newer, standard library only. `render_pdf.py` needs LibreOffice an
 - **One record, every resume.** Titles, companies, cities, and dates come from the evidence and read the same on every resume built from it. `scripts/profile_check.py` checks them against the LinkedIn jobs file.
 - **Rulings are permanent.** Re-raising a settled point wastes the candidate's time and reads as not listening.
 - **Checks stay mechanical.** Anything a script can check, a script checks, so the judgment left is the writing itself.
+- **Every check shows its evidence.** `draft_review.py` prints a source ID or "judgment" beside each finding, so a rule can be defended or retired on its evidence. A judgment call stays one until a test settles it. A new AI-writing tell starts as a review flag (`references/writing.md`, AI-writing tells).
 - **One rule, one home.** Each rule lives in one reference file. If you find the same rule stated two ways, the owning file wins; fix the other and log it in `CHANGELOG.md`.
 - **One source, one row.** Every outside fact cites an ID from `references/sources.md`. A new fact enters with its source row the same day; `tests/test_sources.py` fails on a missing or unused ID.
 - **When scores are good and nothing happens,** ask how many applications went out and how many got a screen. Recorded interview rates run about 3 to 6% [S61], so zero screens in twenty sends happens by chance a third to half the time. If a resume that proves every requirement gets no screens after about fifty tailored sends, the problem is likely the target, the level, or the volume. Say that plainly instead of editing again.

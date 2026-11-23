@@ -54,3 +54,14 @@ Personal choices about how this candidate's resume reads, inside the skill's rul
 **Ruling:** Model the summary on the one from the March resume that got an interview at Harbor Foods. Keep its sentence shapes; drop its "I" and its old year count.
 **Kind:** build preference
 **Applies to:** all resumes
+
+### YYYY-MM-DD: Example: serial comma
+**Ruling:** Lists of three or more take a comma before the last "and". Check with `draft_review.py --serial-comma`.
+**Kind:** build preference
+**Applies to:** all resumes
+
+## Words the spell check passes
+
+Names, products, and terms of art that are spelled right: one per line or comma-separated. `spell_check.py --words` reads this section.
+
+- Example: Fiix

@@ -22,12 +22,12 @@ def as_bullet(text):
     return [("header", "Experience"), ROLE, ("bullet", text)]
 
 
-def fail_names(blocks):
-    return [n for _i, n, _h, _x in dr.review(blocks)[0]]
+def fail_names(blocks, **kw):
+    return [n for _i, n, _h, _x in dr.review(blocks, **kw)[0]]
 
 
-def review_names(blocks):
-    return [n for _i, n, _h, _x in dr.review(blocks)[1]]
+def review_names(blocks, **kw):
+    return [n for _i, n, _h, _x in dr.review(blocks, **kw)[1]]
 
 
 def resume(summary, bullets, skills=None, extra=()):
@@ -260,7 +260,9 @@ class KeptFromV16(unittest.TestCase):
 
     def test_long_bullet_points_to_widow_check(self):
         text = ("Rebuilt the inbound receiving schedule for the regional distribution center so that "
-                "every carrier had a fixed door and a fixed window and the dock never sat idle again.")
+                "every carrier had a fixed door and a fixed window, the dock never sat idle again, and "
+                "the night shift stopped waiting on late trucks from the two northern routes.")
+        self.assertGreater(len(text.split()), dr.WORD_CEILING)
         hits = [(n, x) for _i, n, _h, x in dr.review(as_bullet(text))[1] if n == "long bullet"]
         self.assertTrue(hits)
         self.assertIn("widow_check", hits[0][1])
@@ -270,7 +272,7 @@ class KeptFromV16(unittest.TestCase):
 class Summary(unittest.TestCase):
     GOOD = ("Freight operations manager who runs cross-dock sites for regional carriers and keeps "
             "freight moving through peak season. Nine years in freight and warehousing, the last six "
-            "at Harbor Freightways, where dock-to-stock time fell from 9 hours to 4. Trainer who's "
+            "at Harbor Freightways, where dock-to-stock time fell from 9 hours to 4. Trainer who has "
             "brought 14 dock leads onto the new yard system.")
     BULLETS = ["Cut dock-to-stock time from 9 hours to 4 by giving each carrier a fixed door and window.",
                "Trained 14 dock leads on the new yard system, now used at 3 sites."]
@@ -398,9 +400,10 @@ class CareerTotals(unittest.TestCase):
 
 
 class SummaryAsPitch(unittest.TestCase):
-    """2.5.0: the summary is a pitch, up to about 110 words or seven lines, with
-    no count of results and no belief line. The ban on "I" and the rule that
-    every name and number has a bullet behind it stay."""
+    """The summary is a pitch (2.5.0), with no count of results and no belief
+    line. 2.6.0 holds it to four rendered lines, about 75 words, where every
+    source found points. The ban on "I" and the rule that every name and number
+    has a bullet behind it stay."""
     BULLETS = [
         "Ran 14 public workshops for the Elm County trails plan; the county adopted it in 2023.",
         "Wrote the Ashford downtown plan with city staff; council adopted it in 2024.",
@@ -411,15 +414,26 @@ class SummaryAsPitch(unittest.TestCase):
              "elected officials together to turn local fights into plans that get adopted. Twelve "
              "years in planning and design across parks, downtowns, and corridors, with a run of "
              "adopted public plans for Colorado communities, including the Elm County trails plan "
-             "and the Ashford downtown plan. Practice builder and team leader who's opened the "
+             "and the Ashford downtown plan. Practice builder and team leader who has opened the "
              "Denver office, built and led a team of 6 planners and designers, and trained 30 "
              "staff on a new review process.")
 
-    def test_a_long_pitch_is_clean(self):
+    SHORT = ("Community planning manager who brings residents, city staff, and developers together "
+             "to turn local fights into adopted plans. Twelve years in planning across parks and "
+             "downtowns, including the Elm County trails plan and the Ashford downtown plan. Opened "
+             "the Denver office and built a team of 6 planners and designers.")
+
+    def test_a_pitch_within_the_limit_is_clean(self):
+        self.assertLessEqual(len(self.SHORT.split()), 75)
+        fails, reviews = dr.review(resume(self.SHORT, self.BULLETS))
+        self.assertFalse(fails, [(n, h) for _i, n, h, _x in fails])
+        self.assertNotIn("summary length", [n for _i, n, _h, _x in reviews])
+
+    def test_a_long_pitch_is_a_second_read_not_a_fail(self):
         self.assertGreater(len(self.PITCH.split()), 75)
         fails, reviews = dr.review(resume(self.PITCH, self.BULLETS))
         self.assertFalse(fails, [(n, h) for _i, n, h, _x in fails])
-        self.assertNotIn("summary length", [n for _i, n, _h, _x in reviews])
+        self.assertIn("summary length", [n for _i, n, _h, _x in reviews])
 
     def test_several_results_are_never_counted(self):
         """The one-result rule is gone, and no check counts results."""
@@ -431,19 +445,19 @@ class SummaryAsPitch(unittest.TestCase):
         names = [n for _i, n, _h, _x in reviews]
         self.assertFalse([n for n in names if "result" in n], names)
 
-    def test_the_length_limit_is_110_words(self):
-        self.assertEqual(dr.SUMMARY_WORDS, (45, 110))
+    def test_the_length_limit_is_75_words(self):
+        self.assertEqual(dr.SUMMARY_WORDS, (45, 75))
         words = self.PITCH.split()
-        at_limit = " ".join((words * 2)[:110]).rstrip(".") + "."
+        at_limit = " ".join(words[:75]).rstrip(".,") + "."
         over = at_limit[:-1] + " " + " ".join(["more"] * 6) + "."
         self.assertNotIn("summary length", review_names(resume(at_limit, self.BULLETS)))
         hits = [(h, x) for _i, n, h, x in dr.review(resume(over, self.BULLETS))[1] if n == "summary length"]
         self.assertTrue(hits)
-        self.assertIn("45 to 110", hits[0][1])
-        self.assertIn("Seven rendered lines", hits[0][1])
+        self.assertIn("45 to 75", hits[0][1])
+        self.assertIn("Four rendered lines", hits[0][1])
 
     def test_first_person_still_fails_in_a_pitch(self):
-        bad = self.PITCH.replace("Practice builder and team leader who's", "I'm a practice builder who has")
+        bad = self.PITCH.replace("Practice builder and team leader who has", "I'm a practice builder who has")
         self.assertIn("first person", fail_names(resume(bad, self.BULLETS)))
 
     def test_a_name_with_no_bullet_behind_it_still_fails(self):
@@ -453,9 +467,15 @@ class SummaryAsPitch(unittest.TestCase):
 
 
 class SerialComma(unittest.TestCase):
-    """2.5.0: a list of three or more takes a comma before its last "and" or
-    "or". A clear list without one fails; a line that may be two clauses is a
-    second read."""
+    """2.6.0: the serial comma is the candidate's choice, checked only with
+    --serial-comma. With it, a clear list of three or more without the comma
+    fails, and a line that may be two clauses is a second read."""
+
+    def test_off_unless_the_candidate_chose_it(self):
+        bad = "Supervised the strategists, designers and interns."
+        self.assertNotIn("missing serial comma", fail_names(as_bullet(bad)))
+        self.assertNotIn("missing serial comma", review_names(as_bullet(bad)))
+        self.assertIn("missing serial comma", fail_names(as_bullet(bad), serial_comma=True))
 
     def levels(self, text):
         return [lv for lv, _a, _b in dr.serial_hits(text)]
@@ -469,7 +489,7 @@ class SerialComma(unittest.TestCase):
                     "Ran workshops at Landor, Interact on Shelf, Norris Design, RVi and BASE.",
                     "Cut costs: $600K+ revenue, 11 new clients and a 30% rise in profit."):
             self.assertIn(dr.FAIL, self.levels(bad), bad)
-            self.assertIn("missing serial comma", fail_names(as_bullet(bad)), bad)
+            self.assertIn("missing serial comma", fail_names(as_bullet(bad), serial_comma=True), bad)
 
     def test_lists_with_it_pass(self):
         for ok in ("Wrote the report for four readers: council, city staff, developers, and the public.",
@@ -491,19 +511,20 @@ class SerialComma(unittest.TestCase):
                    "Cited the vendor guides [S20, S24] and two studies.",
                    "Placed nurses at two hospitals, Mercy West and County General."):
             self.assertNotIn(dr.FAIL, self.levels(ok), ok)
-            self.assertNotIn("missing serial comma", fail_names(as_bullet(ok)), ok)
+            self.assertNotIn("missing serial comma", fail_names(as_bullet(ok), serial_comma=True), ok)
 
     def test_two_clauses_are_a_second_read_not_a_fail(self):
         text = "In 2020, sales rose and costs fell."
         self.assertEqual(self.levels(text), [dr.REVIEW])
-        self.assertIn("missing serial comma", review_names(as_bullet(text)))
-        self.assertNotIn("missing serial comma", fail_names(as_bullet(text)))
+        self.assertIn("missing serial comma", review_names(as_bullet(text), serial_comma=True))
+        self.assertNotIn("missing serial comma", fail_names(as_bullet(text), serial_comma=True))
 
     def test_it_reads_the_summary_too(self):
         summary = SummaryAsPitch.PITCH.replace("developers, and", "developers and")
-        self.assertIn("missing serial comma", fail_names(resume(summary, SummaryAsPitch.BULLETS)))
+        self.assertIn("missing serial comma",
+                      fail_names(resume(summary, SummaryAsPitch.BULLETS), serial_comma=True))
         self.assertNotIn("missing serial comma",
-                         fail_names(resume(SummaryAsPitch.PITCH, SummaryAsPitch.BULLETS)))
+                         fail_names(resume(SummaryAsPitch.PITCH, SummaryAsPitch.BULLETS), serial_comma=True))
 
 
 class Skills(unittest.TestCase):
@@ -659,3 +680,103 @@ class WordsTheSentenceAlreadyMeans(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class EvidenceChecks(unittest.TestCase):
+    """2.6.0: person, voice, contractions, numbers, bullet count, self-ratings,
+    the posting's own terms, and the evidence printed beside every finding."""
+
+    def test_a_third_person_verb_fails_and_the_base_form_passes(self):
+        self.assertIn("third-person verb", fail_names(as_bullet("Runs brand strategy for 40 resorts.")))
+        self.assertIn("third-person verb", fail_names(as_bullet("Publishes the monthly report for 6 sites.")))
+        for ok in ("Run brand strategy for 40 resorts.", "Built the program for 40 resorts.",
+                   "Sales grew 12% in 2024 at 40 resorts.", "Operations at 3 sites ran on the new plan."):
+            self.assertNotIn("third-person verb", fail_names(as_bullet(ok)), ok)
+
+    def test_a_verb_that_is_often_a_noun_is_a_second_read(self):
+        text = "Grounds crew lead for a 40-acre campus with 6 staff."
+        self.assertNotIn("third-person verb", fail_names(as_bullet(text)))
+        self.assertIn("third-person verb", review_names(as_bullet(text)))
+
+    def test_a_summary_sentence_on_a_third_person_verb_fails(self):
+        summary = ("Builds brand systems for resort operators. Freight operations manager who runs "
+                   "cross-dock sites at Harbor Freightways, where dock-to-stock time fell from 9 hours to 4.")
+        self.assertIn("third-person verb", fail_names(resume(summary, Summary.BULLETS)))
+
+    def test_passive_voice_is_a_second_read(self):
+        self.assertIn("passive voice", review_names(as_bullet("Hired by the county to rebuild 3 parks.")))
+        self.assertIn("passive voice", review_names(as_bullet("The plan was adopted by council in 2024.")))
+        self.assertNotIn("passive voice", review_names(as_bullet("Won the county contract for 3 parks.")))
+
+    def test_a_contraction_fails_and_a_possessive_passes(self):
+        self.assertIn("contraction", fail_names(as_bullet("Cut costs 12% and didn't add staff at 3 sites.")))
+        self.assertIn("contraction", fail_names(as_bullet("Ran the yard, where there's room for 40 trucks.")))
+        self.assertNotIn("contraction", fail_names(as_bullet("Rebuilt Harbor's carrier scorecard for 6 carriers.")))
+        quoted = "Presented \u201cWhat\u2019s the Story,\u201d a seminar for 100+ planners, at the 2025 meeting."
+        self.assertNotIn("contraction", fail_names(as_bullet(quoted)))
+
+    def test_numbers_of_ten_and_up_take_numerals(self):
+        self.assertIn("written-out number", review_names(as_bullet("Led a team of sixteen designers.")))
+        self.assertIn("written-out number", review_names(as_bullet("Grew revenue five percent in 2024.")))
+        self.assertNotIn("written-out number", review_names(as_bullet("Ran three workshops for 40 staff.")))
+        opener = resume("Sixteen years in freight at Harbor Freightways, where dock-to-stock time fell "
+                        "from 9 hours to 4.", Summary.BULLETS)
+        self.assertNotIn("written-out number", review_names(opener))
+
+    def test_more_than_six_bullets_in_one_role(self):
+        seven = [("header", "Experience"), ROLE] + [("bullet", f"Ran site {i} for 40 staff.") for i in range(7)]
+        six = seven[:-1]
+        self.assertIn("more than six bullets in one role", review_names(seven))
+        self.assertNotIn("more than six bullets in one role", review_names(six))
+
+    def test_a_self_rating_in_front_of_the_role(self):
+        summary = ("Customer-obsessed brand and creative strategist who runs launches for Harbor "
+                   "Freightways, where dock-to-stock time fell from 9 hours to 4.")
+        self.assertIn("self-rating in front of the role", review_names(resume(summary, Summary.BULLETS)))
+        self.assertNotIn("self-rating in front of the role",
+                         review_names(resume(summary, Summary.BULLETS), allow=["customer-obsessed"]))
+
+    def test_the_postings_own_term_passes_once(self):
+        one = as_bullet("Team player on a 12-person dock crew that cut dwell time 30%.")
+        self.assertIn("cliche", fail_names(one))
+        self.assertNotIn("cliche", fail_names(one, allow=["team player"]))
+        two = one + [("bullet", "Named team player of the year at 3 sites.")]
+        self.assertIn("allowed term used twice", fail_names(two, allow=["team player"]))
+
+    def test_contributed_to_is_a_second_read(self):
+        text = "Contributed to the county trails plan, adopted in 2023."
+        self.assertNotIn("weak or passive claim", fail_names(as_bullet(text)))
+        self.assertIn("partial credit", review_names(as_bullet(text)))
+
+    def test_measured_marker_words_are_apart_from_the_rest(self):
+        self.assertIn("LLM marker word", fail_names(as_bullet("Delved into 40 carrier contracts.")))
+        names = fail_names(as_bullet("Wove a tapestry of 40 carrier contracts."))
+        self.assertIn("model-sounding word", names)
+        self.assertNotIn("LLM marker word", names)
+
+    def test_threes_for_rhythm_runs_on_the_summary_only(self):
+        line = "Built crews that are faster, safer, and calmer."
+        self.assertNotIn("threes for rhythm", review_names(as_bullet(line)))
+        summary = Summary.GOOD + " " + line
+        self.assertIn("threes for rhythm", review_names(resume(summary, Summary.BULLETS)))
+
+    def test_every_finding_shows_its_evidence(self):
+        self.assertEqual(dr.basis("LLM marker word"), "[S122]")
+        self.assertEqual(dr.basis("em dash"), "(judgment)")
+        self.assertIn("survey", dr.basis("cliche"))
+        d = Path(tempfile.mkdtemp())
+        f = d / "r.md"
+        f.write_text("# Experience\n- Cut costs 12%" + EM + "fast.\n", encoding="utf-8")
+        code, out = run("draft_review.py", f)
+        self.assertEqual(code, 1, out)
+        self.assertIn("em dash (judgment)", out)
+
+    def test_the_command_line_settings(self):
+        files, opts = dr.parse_args(["r.docx", "--totals", "1,200 nurses;120+ surveys",
+                                     "--allow=team player", "--serial-comma"])
+        self.assertEqual(files, ["r.docx"])
+        self.assertEqual(opts["totals"], ["1,200 nurses", "120+ surveys"])
+        self.assertEqual(opts["allow"], ["team player"])
+        self.assertTrue(opts["serial_comma"])
+        with self.assertRaises(SystemExit):
+            dr.parse_args(["r.docx", "--summary-words", "100,120"])

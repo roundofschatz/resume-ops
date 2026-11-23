@@ -189,3 +189,65 @@ class ParseCheck(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class Repair(unittest.TestCase):
+    """2.6.0: --repair adds the parts a Google Docs export leaves out and
+    copies every other part byte for byte."""
+    GOOGLE_LEAVES_OUT = ("docProps/core.xml", "docProps/app.xml", "word/webSettings.xml")
+
+    def setUp(self):
+        self.dir = Path(tempfile.mkdtemp())
+
+    def google_like(self):
+        full = write_docx(BLOCKS, self.dir / "full.docx")
+        out = self.dir / "export.docx"
+        with zipfile.ZipFile(full) as src, zipfile.ZipFile(out, "w") as dst:
+            for item in src.infolist():
+                if item.filename not in self.GOOGLE_LEAVES_OUT:
+                    dst.writestr(item, src.read(item.filename))
+        return out
+
+    def test_adds_the_three_parts_and_nothing_else_moves(self):
+        export = self.google_like()
+        before = export.read_bytes()
+        dest, added, cannot = parse_check.repair(export)
+        self.assertEqual(sorted(added), sorted(self.GOOGLE_LEAVES_OUT))
+        self.assertEqual(cannot, [])
+        self.assertEqual(export.read_bytes(), before, "the original changed")
+        self.assertEqual(dest.name, "export-repaired.docx")
+        with zipfile.ZipFile(export) as a, zipfile.ZipFile(dest) as b:
+            for name in a.namelist():
+                if name in ("[Content_Types].xml", "_rels/.rels"):
+                    continue
+                self.assertEqual(a.read(name), b.read(name), name)
+            names = set(b.namelist())
+            self.assertTrue(set(self.GOOGLE_LEAVES_OUT) <= names)
+            types = b.read("[Content_Types].xml").decode()
+            for part in self.GOOGLE_LEAVES_OUT:
+                self.assertIn(f'PartName="/{part}"', types)
+            root = b.read("_rels/.rels").decode()
+            self.assertIn('Target="docProps/core.xml"', root)
+            self.assertIn('Target="docProps/app.xml"', root)
+            self.assertIn('Target="webSettings.xml"', b.read("word/_rels/document.xml.rels").decode())
+        with zipfile.ZipFile(dest) as z:
+            warns = [m for lv, m in parse_check.check_structure(z) if lv == "WARN"]
+        self.assertFalse([m for m in warns if "missing parts" in m], warns)
+
+    def test_a_complete_file_needs_nothing(self):
+        full = write_docx(BLOCKS, self.dir / "full.docx")
+        self.assertEqual(parse_check.repair(full), (None, [], []))
+
+    def test_parts_that_shape_the_page_are_left_to_a_rebuild(self):
+        bare = write_docx(BLOCKS, self.dir / "bare.docx", bare=True)
+        _dest, added, cannot = parse_check.repair(bare)
+        self.assertIn("word/styles.xml", cannot)
+        self.assertNotIn("word/styles.xml", added)
+
+    def test_the_command_writes_the_copy_and_checks_it(self):
+        export = self.google_like()
+        code, out = run("parse_check.py", export, "--repair")
+        self.assertEqual(code, 0, out)
+        self.assertIn("Added:", out)
+        self.assertIn("STRUCTURE CHECK", out)
+        self.assertTrue((self.dir / "export-repaired.docx").exists())

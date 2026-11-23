@@ -50,7 +50,7 @@ references/              loaded when a step needs them
   sources.md             every source the skill cites, by ID, with date, grade, URL, quote
   document.md            sections, role layout, titles, education, skills line, length, format
   writing.md             bullets, numbers, the summary, AI-writing tells, words the
-                         sentence already means
+                         sentence already means, commas in lists, spelling
   tailoring.md           reading a posting, mapping the evidence, the requirement check,
                          the base resume's map
   intake.md              the contact block, evidence in any format, small and large
@@ -68,9 +68,10 @@ tests/                   python tests/run_tests.py
 | `requirement_check.py` | Turns a posting's required and preferred qualifications into a checklist. With `--evidence` (Markdown, text, DOCX, or PDF through `pdftotext`), the best passages for each one with the file, heading and line; with a resume, the proof lines on the page |
 | `term_coverage.py` | Posting terms by tier against a resume; `--composite` across many postings for a base resume |
 | `corpus_triage.py` | Maps a pile of career material: graded claims, roles and employers, contradictions, repeats, possible targets |
-| `draft_review.py` | Writing rules and general AI-writing tells, on the JSON source or a DOCX |
+| `draft_review.py` | Writing rules and general AI-writing tells, on the JSON source or a DOCX. Prints the source each finding rests on, or "judgment" |
 | `build_resume.py` | Writes the DOCX and plain-text copy from one JSON source; refuses structural faults |
-| `parse_check.py` | Structure check of a DOCX. Not a prediction of what any form will fill in |
+| `parse_check.py` | Structure check of a DOCX. Not a prediction of what any form will fill in. `--repair` writes a copy with the parts a Google Docs export leaves out |
+| `spell_check.py` | Every word its dictionary doesn't know, and doubled words, so the page goes out with zero errors; flags real words often typed for others |
 | `render_pdf.py` | Renders a check PDF into a temp folder so the page can be looked at. Never a deliverable |
 | `widow_check.py` | Lines ending on one or two words, and bullets over two lines, read off the render |
 | `profile_check.py` | The resume's titles, companies, and dates against the candidate's LinkedIn jobs file (Positions.csv from LinkedIn's data download) |
@@ -83,10 +84,11 @@ Some steps need outside programs, and each says so rather than passing quietly:
 |---|---|---|
 | `render_pdf.py` | LibreOffice | `apt install libreoffice` / `brew install --cask libreoffice` / libreoffice.org |
 | `widow_check.py`, and PDF evidence in `requirement_check.py` | `pdftotext` (poppler) | `apt install poppler-utils` / `brew install poppler` |
+| `spell_check.py` | A dictionary: hunspell or aspell, the en_US.dic that LibreOffice installs, or the `pyspellchecker` package | `apt install hunspell-en-us` / `brew install hunspell` / `pip install pyspellchecker` |
 
 ## Where the rules come from
 
-Every claim about a system, a reader, a study, or a law cites a source ID, like [S16], at the point of use. `references/sources.md` holds each source once: its date, grade (first-hand, study, survey, guide, opinion, secondary, or live test), URL, what it supports, a short quote, and the files that use it. `tests/test_sources.py` fails if a cited ID has no row, a row is cited nowhere, or a row's "Used in" list is out of date. Where no source exists, the file says the rule is the skill's own judgment.
+Every claim about a system, a reader, a study, or a law cites a source ID, like [S16], at the point of use. `references/sources.md` holds each source once: its date, grade (first-hand, study, survey, guide, opinion, secondary, or live test), URL, what it supports, a short quote, and the files that use it. `tests/test_sources.py` fails if a cited ID has no row, a row is cited nowhere, or a row's "Used in" list is out of date. Where no source exists, the file says the rule is the skill's own judgment, and `draft_review.py` prints "judgment" beside the finding. A candidate's preference decides only where no evidence speaks; it never moves a rule a source backs.
 
 The role layout comes from live tests: real resumes uploaded to live Workday applications in several layouts, with every autofilled field read back, plus Greenhouse, Lever, and Eightfold forms (September 2026). The section outline, the file format, and the rest of the standard come from red-team reviews against vendor docs, parser documentation, studies, surveys, and university guides, most from 2025 and 2026.
 

@@ -2,6 +2,40 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.6.0 (2026-11-22)
+
+Every rule shows its evidence. The owner's red team of November 22, 2026 graded each rule, ban and limit by the evidence behind it: research, the systems' own documents and tests, career-center guidance where three or more agree, surveys, or the skill's judgment. Two reviewers who hadn't seen the grades then checked the 20 rules that matter most on the page from the sources alone, and every disagreement was settled against the source. The owner ruled that evidence decides, not preference.
+
+**What changes on the page**
+- New: zero spelling errors, hard rule 10, checked by `scripts/spell_check.py`. Two errors cut interview odds by 7.3 points in a test with 445 recruiters; the test never tried a single error, so zero is the target because a fix costs nothing.
+- New: present tense in the base form, as if "I" came before it: "Run", never "Runs". Active voice. No contractions on a resume. All three are career-center conventions, now with the guides that state them.
+- New: numerals for 10 and up, and always for money and percentages. A number that opens a sentence is left alone: the guides split on it.
+- Changed: three to five bullets for recent roles, no more than six, not three to four. Proving a required qualification wins over the count.
+- Changed: the summary runs to four rendered lines, about 75 words, not 110 words or seven lines. Every source found points that short, and none points longer. Two guides aren't a convention, so the limit is the skill's judgment, and it holds for every candidate.
+- Changed: Word stays the default, and a PDF goes out when the employer asks for one. "Never a PDF" overreached.
+- Changed: page length is one page until the relevant work fills a second, two at most, never three. The year line is the skill's judgment; the one guide that names one says eight years.
+- Changed: the first-bullet rule keeps its order and drops its reason ("the fourth may not get read"). No source shows later bullets go unread, and screeners in an eye-tracking lab read the whole page.
+- Changed: a cliche the posting itself uses may appear once, in a bullet that proves it. The posting's exact words outrank a survey of disliked words.
+- New: a flag for a self-rating in front of the role ("customer-obsessed strategist"), as the skill's judgment.
+
+**The checks**
+- `draft_review.py`: new fails for a third-person verb and a contraction; new second reads for passive voice, a written-out number, more than six bullets in one role, a self-rating, and "contributed to", which is no longer a fail because it's the honest verb when the part was one of several. The model marker words a study measured are split from the ones that are the skill's judgment; "tapestry" and "testament" aren't in that study. "Threes for rhythm" runs on the summary only: in bullets and the Skills line it flagged real lists. The bullet-length hint is 35 words, not 25, since two lines at the build's own layout hold about 35; the render still decides. Every finding prints the source it rests on, or "(judgment)".
+- `draft_review.py` settings: `--serial-comma`, `--allow` for a term the posting uses, and `--totals` for confirmed career totals on a Word file. No setting moves a limit the evidence sets.
+- `parse_check.py --repair`: writes a copy with the three parts a Google Docs export leaves out (document properties and web settings), and copies every other part byte for byte. Which part made Lever refuse a file wasn't isolated, so the repair is a cheap precaution, not a proven fix.
+- `spell_check.py`, new: unknown and doubled words fail; real words often typed for others get a second read. It reads a hunspell dictionary file directly when no spelling program is installed, and says the check didn't run when it finds no dictionary at all.
+
+**Moved**
+- The serial comma is the candidate's choice, checked with `--serial-comma`. Style guides split, and no resume evidence favors either style. The skill's own prose keeps the one style it uses.
+
+**Evidence first** (SKILL.md, Rulings)
+- A build preference decides only where no evidence speaks, such as the comma style or the file name. Where any source bears on a rule, a preference can't push against it, and a ruling that conflicts with it gets a reversal note in the rulings file.
+
+**Sources**
+- 36 new rows, S112 to S148, the eye-tracking study, the spelling experiment, the studies of readers who mark down suspected AI use, and the career-center guides behind each convention. S135 is left out: it repeats Yale's guide line for line. "University guides" is now "University and government guides". S44's PDF code was re-read on November 23.
+
+**Tests**
+- 2.5.0's summary-length and serial-comma tests now test 2.6.0's rules. New tests cover each new check, the settings, `--repair`, and `spell_check.py`.
+
 ## 2.5.0 (2026-10-22)
 
 The summary is a pitch, and lists take the serial comma. The owner's rulings of October 22.

@@ -49,7 +49,7 @@ Each session opens with a short status block that names the version and the file
 - Builds a resume for one posting from whatever you give it. Nothing has to exist first.
 - Checks every required qualification in the posting against your files: proven in the job where you did the work, written into that job when your files show it, or named as a gap.
 - Searches a large file for each qualification instead of reading it whole, and points to the file, heading and line behind each claim.
-- Writes a Word file and a plain-text copy, then runs scripts that check the structure and flag AI-writing tells.
+- Writes a Word file and a plain-text copy, then runs scripts that check the structure and the spelling, and flag AI-writing tells. Each finding names the source it rests on, or says it's the skill's judgment.
 - Tells you what to fix in the application form after you upload.
 - Keeps your titles and dates the same on every resume, and checks them against your LinkedIn jobs export before an employer does.
 - Builds a base resume for job boards when you want one.

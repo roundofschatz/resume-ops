@@ -29,15 +29,26 @@ candidate confirmed, listed under "career_totals" in the JSON source, may sit
 in the summary with no single role behind it. The summary is a pitch, so how
 many results it names is never counted.
 
-A list of three or more takes a comma before its last "and" or "or". A clear
-list without one fails; "A, B and C", which can also be two clauses, is a
-REVIEW.
+Every finding prints its evidence: a source ID from references/sources.md,
+or "judgment" for a rule no source tests. A judgment call stays one until a
+test settles it (references/writing.md, AI-writing tells).
+
+Three settings carry what the script can't see on its own. None of them can
+push against a rule that a source backs:
+
+  --serial-comma          the candidate chose the serial comma, where the
+                          evidence is silent: a clear list of three or more
+                          without one fails
+  --allow "a,b"           a term the posting itself uses passes once, since the
+                          posting's exact words outrank a cliche survey
+  --totals "x;y"          confirmed career totals, for a .docx or text file,
+                          which can't carry "career_totals"
 
 Stdlib only.
 
 Usage:
     python draft_review.py resume.json
-    python draft_review.py resume.docx
+    python draft_review.py resume.docx --serial-comma --allow "team player"
 """
 
 import difflib
@@ -50,8 +61,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _docx  # noqa: E402
 
-WORD_CEILING = 25
-SUMMARY_WORDS = (45, 110)
+WORD_CEILING = 35         # about two lines at the build's default type; a hint, the render decides
+SUMMARY_WORDS = (45, 75)  # the skill's judgment; references/writing.md, The summary
+MAX_ROLE_BULLETS = 6      # [S136]; three to five is the norm [S125, S138]
 COPY_RUN = 8        # words in a row a summary sentence shares with one bullet
 COPY_SHARE = 0.8    # or this share of the sentence's words, in order, from one bullet
 COPY_MIN_WORDS = 6  # shorter sentences are not checked for copying
@@ -379,7 +391,7 @@ TELLS = [
           "Use a plain verb that says what happened: led, built, ran, cut, grew, won.",
           proper_ok=True),
     Check("weak or passive claim", FAIL,
-          r"\bcontribut(?:ed|ing|es)\s+to\b|\b(?:was|were|been|being)\s+involved\s+(?:in|with)\b"
+          r"\b(?:was|were|been|being)\s+involved\s+(?:in|with)\b"
           r"|\bplayed\s+an?\s+(?:\w+\s+)?role\b|\bcan\s+help\b|\bmay\s+be\s+able\s+to\b"
           r"|\bhelped\s+(?:to|with)\b|\b(?:was|were)\s+(?:a\s+)?part\s+of\b|\bparticipated\s+in\b"
           r"|\btasked\s+with\b|\b(?:was|were|am|is)\s+responsible\s+for\b"
@@ -445,10 +457,15 @@ TELLS = [
           r"|\b(?:voice|person|people|adult|smartest\s+\w+)\s+in\s+the\s+room\b|\bin\s+the\s+room\s+where\b"
           r"|\bat\s+the\s+(?:leadership|executive|decision|strategy)\s+table\b",
           "Name the real place or group: the board, the Tuesday ops review, the plant."),
+    # Measured: these jumped in 15 million abstracts after ChatGPT [S122].
     Check("LLM marker word", FAIL,
           r"\bdelv(?:e|es|ed|ing)\b|\bunderscor(?:e|es|ed|ing)\b|\bshowcas(?:ed|es|ing)\b|\bto\s+showcase\b"
-          r"|\btapestry\b|\btestament\s+to\b|\brealms?\b|\bpivotal\b|\bmeticulous(?:ly)?\b"
-          r"|\bintricat(?:e|ely|acies)\b|\bembark(?:s|ed|ing)?\b|\bbustling\b|\bmultifaceted\b"
+          r"|\brealms?\b|\bpivotal\b|\bmeticulous(?:ly)?\b|\bintricat(?:e|ely|acies)\b|\bmultifaceted\b",
+          "A word models reach for and people rarely say. Use the plain one.", proper_ok=True),
+    # Not measured: the skill's judgment, held as a fail because people rarely
+    # write these on a resume.
+    Check("model-sounding word", FAIL,
+          r"\btapestry\b|\btestament\s+to\b|\bembark(?:s|ed|ing)?\b|\bbustling\b"
           r"|\bever[- ](?:evolving|changing|shifting)\b"
           r"|\bnavigat(?:e|es|ed|ing)\s+(?:the\s+)?(?:complex|complexities|intricacies|nuances|challenges)\b"
           r"|\bharness(?:es|ed|ing)?\s+the\s+power\b|\bunwavering\b|\btransformative\b|\bparadigm\b"
@@ -507,7 +524,7 @@ TELLS = [
           r"value|alignment|synergy|outcomes|results|success|efficiencies)[^.]{0,20}\.?\s*$",
           "Does the line close on something a reader could check? This is a shape, not a "
           "word list, so read the line."),
-    Check("LLM marker word", REVIEW,
+    Check("model-sounding word", REVIEW,
           r"\blandscape\b(?!\s+(?:architect\w*|design\w*|maintenance|crews?|contract\w*|install\w*|"
           r"plans?|lighting|irrigation|services?))",
           "Fine when it is land. Otherwise name the market or the field.", proper_ok=True),
@@ -557,7 +574,7 @@ TELLS += [
     Check("weak or passive claim", FAIL,
           r"\bplayed\s+an?\s+(?:[\w-]+\s+)?part\s+in\b|\binstrumental\s+in\b",
           "Say what you did and what came of it."),
-    Check("LLM marker word", FAIL, r"\bbolster(?:s|ed|ing)?\b",
+    Check("model-sounding word", FAIL, r"\bbolster(?:s|ed|ing)?\b",
           "A word models reach for and people rarely say. Use the plain one.", proper_ok=True),
     Check("fluff verb", REVIEW,
           r"\bharness(?:es|ed|ing)?\b|\brevolutioni[sz](?:e|es|ed|ing)\b|\bchampion(?:s|ed|ing)\b",
@@ -583,7 +600,7 @@ TELLS += [
     Check("vague place", REVIEW,
           r"\bin\s+the\s+space\b(?!\s+(?:of|between|where|program|station|shuttle|center|allotted))",
           "Name the market or the field."),
-    Check("LLM marker word", REVIEW,
+    Check("model-sounding word", REVIEW,
           r"\bnavigat(?:e|es|ed|ing)\b(?!\s+(?:the\s+)?(?:ships?|vessels?|boats?|aircraft|planes?|rivers?|"
           r"trails?|routes?|roads?))",
           "Fine for ships and trails. Otherwise say what was done: ran, cleared, won.", proper_ok=True),
@@ -830,10 +847,10 @@ TELLS += [
              "Name the subject, or keep it if the owner says enough."),
 ]
 
-# --- the serial comma (2.5.0) ---------------------------------------------------
-# A list of three or more takes a comma before its "and" or "or": "strategists,
-# designers, and interns". references/writing.md, The serial comma. A clear list
-# missing it fails. "A, B and C" with one comma can also be two clauses ("In
+# --- the serial comma (2.5.0; a candidate's choice since 2.6.0) ----------------
+# With --serial-comma, a list of three or more takes a comma before its "and" or
+# "or": "strategists, designers, and interns". references/writing.md, Commas in
+# lists. A clear list missing it fails. "A, B and C" with one comma can also be two clauses ("In
 # 2020, sales rose and costs fell"), so that shape fails only when something
 # marks it as a list: a colon before it, "including" or "such as", a preposition
 # just before the first item, or a verb opening the sentence. Otherwise it is a
@@ -955,7 +972,10 @@ class SerialCheck(Check):
         return None
 
 
-TELLS += [
+# Only with --serial-comma: a candidate's ruling, not a general rule. Style
+# guides split, so the skill asks for one style kept on every line
+# (references/writing.md, Commas in lists).
+SERIAL_CHECKS = [
     SerialCheck(FAIL, "Put a comma before the last \"and\" or \"or\" in a list of three or more: "
                 "\"strategists, designers, and interns\". If the last two words are one name, it stands."),
     SerialCheck(REVIEW, "If this is a list of three or more, put a comma before the last \"and\" or "
@@ -985,7 +1005,168 @@ TELLS += [
           "one, \"actual\" against budget."),
 ]
 
+# "Contributed to" is the honest verb when the candidate's part was one of
+# several (references/writing.md, Claim the layer you worked at), so it is a
+# second read, not a fail (2.6.0).
+TELLS.append(Check("partial credit", REVIEW, r"\bcontribut(?:ed|ing|es)\s+to\b",
+                   "Honest when the candidate's part was one of several. Otherwise say what "
+                   "they did."))
+
+# --- person, voice, contractions, numbers (2.6.0) -------------------------------
+# references/writing.md, Bullets and Numbers.
+
+def _third(verb):
+    """The -s form of a base verb: run > runs, publish > publishes, apply > applies."""
+    if verb.endswith(("s", "sh", "ch", "x", "z", "o")):
+        return verb + "es"
+    if verb.endswith("y") and verb[-2:-1] not in "aeiou":
+        return verb[:-1] + "ies"
+    return verb + "s"
+
+
+# Resume verbs whose -s form is almost never a noun at the start of a line.
+CLEAR_VERBS = _wordset("""
+accelerate achieve acquire adapt administer advise advocate align analyze anchor apply
+architect arrange assemble assess assist audit author automate balance blend bridge bring
+broker build calibrate champion clarify coach collaborate combine communicate compile
+complete compose conceive conduct configure connect consolidate consult convert coordinate
+counsel craft create curate cut define deliver deploy design develop devise diagnose direct
+draft drive edit educate elevate enable engage engineer establish evaluate examine execute
+expand facilitate focus forecast forge formulate foster frame fund generate govern grow guide
+handle help hire host identify implement improve increase influence inform initiate innovate
+inspect install integrate interview introduce invent investigate join keep launch lead lift
+maintain manage map market measure mentor merge modernize monitor motivate move negotiate
+nurture onboard open operate optimize orchestrate organize originate oversee own pair partner
+perform pilot pioneer pitch plan position prepare present prioritize produce promote propose
+prototype provide publish raise rebuild recruit redesign reduce refine reimagine relaunch
+represent research reshape resolve restore restructure revamp revitalize run save scale secure
+sell serve set shape ship simplify solve spearhead specialize sponsor standardize steer
+streamline strengthen supervise support sustain synthesize tailor teach test track train
+transform translate troubleshoot turn unify update upgrade use validate win work write
+""")
+# Verbs whose -s form is often a noun ("Grounds crew", "Programs for..."): a
+# second read, not a fail.
+NOUN_LIKE_VERBS = _wordset("field form ground model process program record review schedule source staff")
+THIRD_FAIL = {_third(v) for v in CLEAR_VERBS} | {"has"}
+THIRD_REVIEW = {_third(v) for v in NOUN_LIKE_VERBS}
+OPENING_WORD = re.compile(r"\s*[\"'(]*([A-Za-z]+)\b")
+
+
+def third_person_opener(text):
+    """(level, word) when a line opens on a verb's -s form ("Runs", "Builds"),
+    or None. "Sales grew" and "Operations" are not verbs and never trip it."""
+    m = OPENING_WORD.match(plain(text))
+    if not m:
+        return None
+    word = m.group(1).lower()
+    if word in THIRD_FAIL:
+        return FAIL, m.group(1)
+    if word in THIRD_REVIEW:
+        return REVIEW, m.group(1)
+    return None
+
+
+PASSIVE_OPEN = re.compile(r"^\s*(?:hired|selected|chosen|asked|tapped|appointed|recruited|invited|"
+                          r"brought\s+in)\s+(?:by|to|as|for)\b", re.I)
+PASSIVE_BY = re.compile(r"\b(?:was|were|is|are|been|being)\s+(?:[a-z]+ed|built|made|led|run|won|held|"
+                        r"taught|brought|chosen|given|taken|written|sold|done|seen|known|grown|drawn|"
+                        r"shown)\s+by\b", re.I)
+
+
+def passive(text):
+    t = plain(text)
+    m = PASSIVE_OPEN.search(t) or PASSIVE_BY.search(t)
+    return m.group(0).strip() if m else None
+
+
+CONTRACTION = re.compile(
+    r"(?<![\w'])[A-Za-z]+n't\b"
+    r"|(?<![\w'])(?:i|you|we|they|he|she|it|that|there|here|who|what|where|when|how|let)"
+    r"'(?:s|re|ve|ll|d|m)\b"
+    r"|(?<![\w'])[A-Za-z]+'(?:re|ve|ll)\b", re.I)
+
+
+QUOTED = re.compile(r'"[^"\n]{1,160}"')
+
+
+def unquoted(text):
+    """The text with quoted spans blanked, same length: a quoted title ("What's
+    the Story") is a name, not the candidate's wording."""
+    return QUOTED.sub(lambda m: " " * len(m.group(0)), plain(text))
+
+
+def contractions(text):
+    """Contractions as written ("there's", "didn't"). A possessive never matches:
+    "Pulte's" and "the firm's" are not contractions. A quoted title is left alone."""
+    return [m.group(0) for m in CONTRACTION.finditer(unquoted(text))]
+
+
+TENS = (r"(?:ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|"
+        r"twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)"
+        r"(?:-(?:one|two|three|four|five|six|seven|eight|nine))?")
+WRITTEN_NUMBER = re.compile(
+    rf"\b{TENS}\b"
+    r"|\b(?:zero|one|two|three|four|five|six|seven|eight|nine)\s+(?:percent|dollars|million|billion)\b",
+    re.I)
+
+
+def written_numbers(text):
+    """Numbers of 10 or more written as words inside a sentence, and money or a
+    percentage in words. A number that opens a sentence is left alone: the
+    guides split on it [S126]."""
+    t = plain(text)
+    bare = unquoted(text)
+    return [m.group(0) for m in WRITTEN_NUMBER.finditer(bare) if not sentence_initial(t, m.start())]
+
+
+SELF_RATING = re.compile(
+    r"\b(?P<rating>[a-z]+-(?:obsessed|driven|focused|minded|centric)|passionate|dynamic|visionary|"
+    r"accomplished)\s+(?:[a-z&/-]+\s+){0,4}?(?:strategists?|leaders?|managers?|directors?|designers?|"
+    r"marketers?|executives?|consultants?|professionals?|experts?|specialists?|creatives?|"
+    r"engineers?|analysts?|operators?|builders?)\b", re.I)
+
+
+def self_rating(text, allow=()):
+    """A rating word in front of the role ("Customer-obsessed strategist"), or
+    None. A word the posting itself uses, passed with --allow, is left alone."""
+    for m in SELF_RATING.finditer(plain(text)):
+        if m.group("rating").lower() not in allow:
+            return m.group(0)
+    return None
+
+
+# What each check rests on, printed beside every finding so a rule can be
+# defended or retired on its evidence. A check not listed is the skill's
+# judgment. IDs point to references/sources.md.
+BASIS = {
+    "LLM marker word": "[S122]",
+    "first person": "[S66, S128]",
+    "third-person verb": "[S131, S133, S145]",
+    "contraction": "[S67, S133, S134]",
+    "passive voice": "[S66, S130, S132, S133]",
+    "written-out number": "[S67, S126, S139, S145]",
+    "more than six bullets in one role": "[S136, S138]",
+    "long bullet": "[S62, S136]",
+    "cliche": "[S123]",
+    "evidence only in the Summary": "[S02, S16]",
+    "skills line inside Experience": "[S44]",
+    "skill in no role bullet": "[L05]",
+    "bullet under Summary": "[L05]",
+}
+BASIS_NOTE = {"long bullet": "35 words is judgment", "cliche": "a survey"}
+
+
+def basis(name):
+    """The evidence a check rests on, as printed: "[S122]", "[S123] (a survey)",
+    or "(judgment)"."""
+    ids, note = BASIS.get(name), BASIS_NOTE.get(name)
+    if not ids:
+        return "(judgment)"
+    return f"{ids} ({note})" if note else ids
+
+
 # Not tells. Used only to pick which checks run where.
+SUMMARY_ONLY = {"threes for rhythm"}   # in bullets and the Skills line a list of three is usually three facts
 LIST_ONLY = {"threes for rhythm", "hanging phrase", "drawn-out construction",
              "count names nothing", "label names nothing", "set named only by its owner"}
 NOT_TELLS = {"no number and no named thing", "long bullet", "every metric is a percentage"}
@@ -1251,14 +1432,27 @@ def copied_from(sentence, bullets):
 
 # ------------------------------------------------------------------ review --
 
-def tell_hits(text, list_like=False):
+def mask_allowed(text, allow):
+    """Hide the terms the posting itself uses (--allow), so no tell reads them."""
+    for term in allow:
+        text = re.sub(r"(?<![\w-])" + re.escape(term) + r"(?![\w-])",
+                      lambda m: re.sub(r"\S", "x", m.group(0)), text, flags=re.I)
+    return text
+
+
+def tell_hits(text, list_like=False, in_summary=True, serial_comma=False, allow=()):
     """(level, name, hit, fix) for every tell in a line. `list_like` is True for
-    the skills, education and contact lines, where lists are the point."""
+    the skills, education and contact lines, where lists are the point.
+    `in_summary` is False for a line outside the summary, where "threes for
+    rhythm" doesn't run. `serial_comma` adds the candidate's serial-comma
+    ruling. `allow` holds terms the posting itself uses."""
     t = plain(text)
-    masked = mask_terms(t)
+    masked = mask_allowed(mask_terms(t), allow)
     out, seen = [], set()
-    for chk in TELLS:
+    for chk in TELLS + (SERIAL_CHECKS if serial_comma else []):
         if list_like and chk.name in LIST_ONLY:
+            continue
+        if not in_summary and chk.name in SUMMARY_ONLY:
             continue
         m = chk.find(t, masked)
         if m and (chk.level, chk.name) not in seen:
@@ -1270,12 +1464,15 @@ def tell_hits(text, list_like=False):
     return [o for o in out if not (o[0] == REVIEW and o[1] in fails)]
 
 
-def review(blocks, career_totals=()):
+def review(blocks, career_totals=(), serial_comma=False, allow=()):
     """(fails, reviews), each a list of (block number, rule, hit, fix).
     `career_totals` are the totals the candidate confirmed ("100+ workshops");
-    they may sit in the summary with no single role behind them."""
+    they may sit in the summary with no single role behind them.
+    `serial_comma` is the candidate's ruling for the serial comma. `allow` holds
+    terms the posting itself uses, which pass the cliche check once."""
     fails, reviews = [], []
     totals = total_matchers(career_totals)
+    allow = tuple(a.strip().lower() for a in allow if a and a.strip())
 
     def add(level, n, name, hit, fix):
         (fails if level == FAIL else reviews).append((n, name, hit, fix))
@@ -1302,13 +1499,39 @@ def review(blocks, career_totals=()):
         if top and CONTACT.search(b.text):
             continue
         list_like = top or is_skills(b.section) or is_education(b.section) or is_certs(b.section)
-        for level, name, hit, fix in tell_hits(b.text, list_like=list_like):
+        for level, name, hit, fix in tell_hits(b.text, list_like=list_like,
+                                               in_summary=is_summary(b.section),
+                                               serial_comma=serial_comma, allow=allow):
             add(level, b.n, name, hit, fix)
-        if not top:
-            fp = first_person(b.text)
-            if fp:
-                add(FAIL, b.n, "first person", ", ".join(dict.fromkeys(fp)),
-                    "A resume is written without I, me, my, we or our. Start on the verb.")
+        if top:
+            if b.n > 1 and b.kind == "para":
+                rating = self_rating(b.text, allow)
+                if rating:
+                    add(REVIEW, b.n, "self-rating in front of the role", rating,
+                        "Let the work show it. Name the role and the proof.")
+            continue
+        fp = first_person(b.text)
+        if fp:
+            add(FAIL, b.n, "first person", ", ".join(dict.fromkeys(fp)),
+                "A resume is written without I, me, my, we or our. Start on the verb.")
+        con = contractions(b.text)
+        if con:
+            add(FAIL, b.n, "contraction", ", ".join(dict.fromkeys(con)),
+                "Spell it out on a resume: \"did not\", \"who has\". A letter or a profile "
+                "can contract.")
+        numbers = written_numbers(b.text)
+        if numbers:
+            add(REVIEW, b.n, "written-out number", ", ".join(dict.fromkeys(numbers)),
+                "Numerals for 10 and up, and for money and percentages: \"16 years\", \"5%\".")
+
+    # --- the posting's own terms pass once ---
+    for term in allow:
+        rx = re.compile(r"(?<![\w-])" + re.escape(term) + r"(?![\w-])", re.I)
+        uses = [b.n for b in marked if b.kind not in ("role", "header")
+                for _m in rx.finditer(plain(b.text))]
+        if len(uses) > 1:
+            add(FAIL, uses[1], "allowed term used twice", term,
+                "The posting's term goes in once, in the bullet that proves it.")
 
     # --- bullets under Experience: shape ---
     for b in marked:
@@ -1318,6 +1541,17 @@ def review(blocks, career_totals=()):
         if n > WORD_CEILING:
             add(REVIEW, b.n, "long bullet", f"{n} words",
                 "Two rendered lines is the rule. widow_check.py measures it after the render.")
+        if is_experience(b.section):
+            opener = third_person_opener(b.text)
+            if opener:
+                level, word = opener
+                add(level, b.n, "third-person verb", word,
+                    "Write the base form, as if \"I\" came before it: Run, Build, Lead."
+                    + ("" if level == FAIL else " If it's a noun here, it stands."))
+            pas = passive(b.text)
+            if pas:
+                add(REVIEW, b.n, "passive voice", pas,
+                    "Lead with what the candidate did: \"Won the county contract\".")
         if COUNT_WORD.search(b.text) and INCLUDING.search(b.text):
             add(REVIEW, b.n, "counts more than it names", b.text[:60],
                 "Name all of them, or drop the count and name the ones you have.")
@@ -1330,6 +1564,23 @@ def review(blocks, career_totals=()):
         add(REVIEW, 0, "every metric is a percentage",
             f"{len(ends_pct)} of {len(role_bullets)} bullets end on one",
             "Mix in counts, dollars, headcount, time saved, rankings.")
+
+    # --- Experience: bullets per role ---
+    roles, cur = [], None
+    for b in marked:
+        if b.kind == "role":
+            cur = [b, 0]
+            roles.append(cur)
+        elif b.kind == "header":
+            cur = None
+        elif b.kind == "bullet" and cur is not None and is_experience(b.section):
+            cur[1] += 1
+    for role_blk, count in roles:
+        if count > MAX_ROLE_BULLETS:
+            add(REVIEW, role_blk.n, "more than six bullets in one role",
+                f"{role_label(role_blk.role)}: {count} bullets",
+                "Three to five is the norm. Keep the strongest for this target, and every "
+                "line that proves a required qualification.")
 
     # --- Experience: per-role skills lines are retired ---
     for b in marked:
@@ -1360,7 +1611,23 @@ def review(blocks, career_totals=()):
         lo, hi = SUMMARY_WORDS
         if not lo <= words <= hi:
             add(REVIEW, first_n, "summary length", f"{words} words",
-                f"{lo} to {hi} words is the range. Seven rendered lines at most.")
+                f"{lo} to {hi} words is the range. Four rendered lines at most.")
+
+        for s in sents:
+            opener = third_person_opener(s)
+            if opener:
+                level, word = opener
+                add(level, first_n, "third-person verb", word,
+                    "Rebuild the sentence on a noun phrase (\"Logistics manager who runs...\") "
+                    "or a past-tense verb (\"Built\"). Dropping the \"s\" reads as an order.")
+            pas = passive(s)
+            if pas:
+                add(REVIEW, first_n, "passive voice", pas,
+                    "Lead with what the candidate did.")
+        rating = self_rating(text, allow)
+        if rating:
+            add(REVIEW, first_n, "self-rating in front of the role", rating,
+                "Let the work show it. Name the role and the proof.")
 
         # figures and named clients that live only here
         seen = set()
@@ -1425,14 +1692,44 @@ def review(blocks, career_totals=()):
 
 # -------------------------------------------------------------------- main --
 
+def split_values(value):
+    """"a;b" or "a,b" into items. A comma inside a number ("1,200 nurses") stays."""
+    return [v.strip() for v in re.split(r";|,(?!\d{3}\b)", value) if v.strip()]
+
+
+def parse_args(argv):
+    """(files, options) from the command line."""
+    files, opts = [], {"serial_comma": False, "allow": [], "totals": []}
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        if a == "--serial-comma":
+            opts["serial_comma"] = True
+        elif a.split("=", 1)[0] in ("--allow", "--totals"):
+            key, eq, value = a.partition("=")
+            if not eq:
+                i += 1
+                if i >= len(argv):
+                    sys.exit(f"{key} needs a value.")
+                value = argv[i]
+            opts[key[2:]] += split_values(value)
+        elif a.startswith("-"):
+            sys.exit(f"Unknown option {a}.\n{__doc__}")
+        else:
+            files.append(a)
+        i += 1
+    return files, opts
+
+
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    args, opts = parse_args(sys.argv[1:])
     if len(args) != 1:
         sys.exit(__doc__)
     blocks = load(args[0])
     if not blocks:
         sys.exit("Nothing to read.")
-    fails, reviews = review(blocks, load_totals(args[0]))
+    fails, reviews = review(blocks, load_totals(args[0]) + opts["totals"],
+                            serial_comma=opts["serial_comma"], allow=opts["allow"])
 
     print("=" * 70)
     print("DRAFT REVIEW")
@@ -1442,7 +1739,7 @@ def main():
         print("-" * 70)
         for i, name, hit, fix in fails:
             where = f"block {i}" if i else "document"
-            print(f"  {where}: {name}: \"{hit}\"")
+            print(f"  {where}: {name} {basis(name)}: \"{hit}\"")
             print(f"    {fix}")
     else:
         print("\nFAIL: none.")
@@ -1452,13 +1749,15 @@ def main():
         print("-" * 70)
         for i, name, hit, fix in reviews:
             where = f"block {i}" if i else "document"
-            print(f"  {where}: {name}: \"{hit}\"")
+            print(f"  {where}: {name} {basis(name)}: \"{hit}\"")
             print(f"    {fix}")
     else:
         print("\nREVIEW: none.")
 
     print("\n" + "=" * 70)
     print(f"{len(fails)} to fix, {len(reviews)} to read again.")
+    print("Beside each finding: the source it rests on (references/sources.md), or")
+    print("\"judgment\" for a rule no source tests yet.")
     print("No script sees whether the candidate claims the level they worked at,")
     print("whether a stranger gets the line on one read, or whether any writer could")
     print("have written it about anyone. Those three are still yours.")

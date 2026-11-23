@@ -41,7 +41,7 @@ City, ST | (555) 555-0134 | name@example.com | linkedin.com/in/handle
 
 ## Summary
 
-A prose paragraph under the Summary header: up to about 110 words or seven rendered lines, no bullets. What goes in it and how it's written is in `references/writing.md`, The summary. `build_resume.py` refuses a bullet under Summary.
+A prose paragraph under the Summary header: up to four rendered lines, about 75 words, no bullets. What goes in it and how it's written is in `references/writing.md`, The summary. `build_resume.py` refuses a bullet under Summary.
 
 ## Experience
 
@@ -78,8 +78,8 @@ The company-first order comes from the Workday tests. The bold title comes from 
 ### Bullets
 
 - **Every role in the last 15 years gets at least one bullet,** measured from the role's end date. Two empty roles in a row shifted a title onto the wrong Workday entry [L01], and a role with nothing under it reads as a job the candidate could not describe (the skill's judgment). `build_resume.py` refuses an empty recent role.
-- **Three to four bullets for recent roles is the guide norm** [S62], fewer for older ones. Beyond that, evidence decides: rank every claim by how strongly it proves the target's requirements, then fill the page from the top of that ranking. Target relevance beats size; recency breaks ties.
-- **Each role opens with its strongest proof for this target.** The first bullet of a role gets read; the fourth may not.
+- **Three to five bullets for recent roles is the guide norm, and no more than six** [S62, S125, S136, S138]. Older or less relevant roles get fewer (the skill's judgment). `draft_review.py` flags a role with more than six. When a role has to prove more of the posting's required qualifications than that, proof wins over the count: every true required qualification gets its line in the role where it happened (`references/readers.md`, the AI grader), held to two rendered lines. Beyond that, evidence decides: rank every claim by how strongly it proves the target's requirements, then fill the page from the top of that ranking. Target relevance beats size; recency breaks ties.
+- **Each role opens with its strongest proof for this target** (`references/writing.md`, Bullets).
 - One to two rendered lines per bullet (`references/writing.md`).
 
 ### Roles older than 15 years
@@ -140,16 +140,16 @@ Each has a home inside the five sections.
 
 ## Length
 
-- **Under about 10 years of experience: one page.** **10 years and up: two pages.** About 70% of 418 hiring professionals accept two pages at 16 years [S56]. Stanford GSB and MIT cap at two pages [S62, S65]; Yale says one to two [S63]; Kellogg says usually one to two [S68].
+- **One page until the relevant work fills a second; two at most.** The one guide that names a line puts it at eight years [S67]; this skill uses about eight to ten (the skill's judgment). Two pages don't cost a strong candidate: reviewers at accounting firms ranked two-page resumes above one-page ones for highly qualified candidates, even when they said they preferred one page [S115], and in a vendor simulation 482 hiring professionals chose two-page resumes 2.3 times as often [S124]. About 70% of 418 hiring professionals accept two pages at 16 years [S56]. Stanford GSB and MIT cap at two pages [S62, S65]; Yale says one to two [S63]; Kellogg says usually one to two [S68].
 - **Never three pages** for a US private-sector resume. 81% of the same survey called more than two pages excessive [S56].
 - **Fill the pages you use.** 61% said a page that spills over hurts the candidate [S56]. A short page two is a material problem (the skill's judgment): go back to the evidence for the next strongest on-target claim before touching spacing.
 
 ## File and format
 
-- **DOCX, a complete one.** Textkernel, a parser behind several systems, treats a PDF as a major issue [S44, S100]. The file carries every part Word writes: Lever's parser refused a six-part file and read the same text once those parts were added [L04, S89]. `build_resume.py` writes the full set, and `parse_check.py` warns when a file lacks it. A file edited in Word and saved again keeps the parts.
+- **DOCX, a complete one.** Textkernel treats a PDF as a major issue, and it parses for Lever and several other systems [S44, S88, S100]. Send a PDF only when the employer asks for one. The file carries a full set of parts, as Word or LibreOffice saves them: Lever's parser refused a six-part file and read the same text once LibreOffice re-saved it with the full set [L04, S89]. Which part mattered wasn't isolated, so this is a cheap precaution, not a proven need. `build_resume.py` writes the full set, and `parse_check.py` warns when a file lacks it. A file edited in Word and saved again keeps the parts. A Google Docs export does not: it leaves out `docProps/core.xml`, `docProps/app.xml`, and `word/webSettings.xml` (seen on four exports, November 2026). `parse_check.py --repair` writes a copy with those parts added and every other part untouched, so the layout doesn't move.
 - **One column.** No tables, text boxes, columns, images, icons, charts, or content in page headers and footers [S14, S01, S44]. `parse_check.py` fails tables, text boxes, columns, images, hidden text, and contact details in a header or footer; look for the rest on the render.
 - **One font:** Calibri, Arial, Helvetica, Georgia, Garamond, or Times New Roman, body 10 to 12 point. Margins at least 0.5 inch. The guides range from Times New Roman at 10 to 11 point with 0.5-inch margins [S63] to Calibri or Arial at 11 to 12 with 0.7 [S62].
-- **Bold** for the name, the headline if there is one, section headers, each company line, and each job title [S53]. Dates and bullets stay plain.
+- **Bold** for the name, the headline if there is one, section headers, each company line, and each job title [S53, S62]. Dates and bullets stay plain, with no bold label opening a bullet. The guides and the eye-tracking study bold titles and headers, and the one test of bolding found it didn't add weight to the bolded words [S142]; leaving bullets plain is the skill's judgment.
 - **Standard bullets** from the normal list style. No special glyphs.
 - **Filename:** `Firstname-Lastname-Resume.docx`. No dates, versions, or company names in it.
 - **The plain-text copy** comes from the same source, written by the build. Paste it into plain-text fields.
