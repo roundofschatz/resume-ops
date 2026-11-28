@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """The summary rules and commas in lists, as the skill's own files state them
-(2.6.0). The summary is a pitch: what the candidate does and for whom, the run
+(2.7.0). The summary is a pitch: what the candidate does and for whom, the run
 of work that matches the employer, and what they've built and led, voiced on a
-summary that worked, in four rendered lines, about 75 words, where every source
-found points. These tests fail if the old formula (one result, a belief line)
-or the 2.5.0 length (110 words, seven lines) comes back, or if the skill's own
-prose drops the one comma style it keeps."""
+summary that worked, with no fixed length: no study tests one, and the guides
+give limits in three different units. Outside 45 to 120 words the draft check
+asks for a reread, never a cut. These tests fail if the old formula (one
+result, a belief line), the 2.5.0 length (110 words, seven lines) or the 2.6.0
+cap (four lines, about 75 words) comes back, or if the skill's own prose drops
+the one comma style it keeps."""
 import re
 import sys
 import unittest
@@ -41,26 +43,31 @@ class SummaryRules(unittest.TestCase):
     def test_the_old_formula_is_gone(self):
         body = summary_section()
         for old in ("belief", "One sentence of belief", "No second role-level result",
-                    "three to four lines", "50 to 70 words", "110 words", "seven rendered lines"):
+                    "three to four lines", "50 to 70 words", "110 words", "seven rendered lines",
+                    "four rendered lines", "about 75 words", "45 to 75"):
             self.assertNotIn(old, body, old)
         for name in FILES:
             self.assertNotRegex(text(name), r"(?i)belief sentence|proof sentence", name)
 
     def test_the_new_rules_are_stated(self):
         body = summary_section()
-        for needed in ("four rendered lines", "about 75 words", "Results belong in the bullets",
+        for needed in ("It sets no fixed length", "never to cut one to a number",
+                       "nothing is added or cut only to reach a number",
+                       "Keep one employer's points in one sentence", "Results belong in the bullets",
                        "voice model", "got an interview", "Never \"I\"", "has a job behind it",
                        "The years count the whole career", "holds for every candidate"):
             self.assertIn(needed, body, needed)
-        self.assertIn("45 to 75 words", body)
+        self.assertIn("45 to 120 words", body)
 
     def test_the_length_agrees_everywhere(self):
-        self.assertEqual(dr.SUMMARY_WORDS, (45, 75))
-        self.assertIn("up to four rendered lines, about 75 words", text("references/document.md"))
-        self.assertIn("the summary within four lines", text("SKILL.md"))
+        self.assertEqual(dr.SUMMARY_WORDS, (45, 120))
+        self.assertIn("no bullets, with no fixed length", text("references/document.md"))
+        self.assertNotIn("summary within four lines", text("SKILL.md"))
         self.assertNotIn("summary within seven lines", text("SKILL.md"))
         for name in FILES:
             self.assertNotIn("--summary-words", text(name), name)
+            self.assertNotIn("four rendered lines", text(name), name)
+            self.assertNotIn("about 75 words", text(name), name)
 
     def test_the_skill_asks_for_a_summary_that_worked(self):
         ask = re.search(r"\*\*Ask\*\*(.*?)\*\*Decide yourself", text("SKILL.md"), re.S).group(1)
@@ -70,7 +77,7 @@ class SummaryRules(unittest.TestCase):
         examples = re.findall(r"^> (.+)$", summary_section(), re.M)
         self.assertGreaterEqual(len(examples), 3)
         for ex in examples:
-            self.assertLessEqual(len(ex.split()), 75, ex)
+            self.assertLessEqual(len(ex.split()), dr.SUMMARY_WORDS[1], ex)
             self.assertFalse(dr.first_person(ex), ex)
             fails = [h for h in dr.tell_hits(ex) if h[0] == dr.FAIL]
             self.assertFalse(fails, (ex, fails))

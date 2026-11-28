@@ -2,6 +2,27 @@
 
 Every change to a rule bumps the version and adds a line here, the same day. A version number covers one state of the rules, never two.
 
+## 2.7.0 (2026-11-28)
+
+The skill argues the case now, not only defends it. Through 2.6.0 every rule could only take away: the hard rules stopped invented facts, and the checks caught writing and parsing faults. Nothing pushed a true claim to its full size, so a session could follow every rule and hand back a resume that was accurate and small. The owner's red team of November 28, 2026 tested a method that pushes, kept what the evidence backs, and wrote the guard in beside it. The hard rules don't change.
+
+**What changes on the page**
+- New: write each claim at its largest true size: who the work served, how far it reached, and what changed, in the unit that shows it (`references/writing.md`, The largest true size). Size is a bigger true unit, never a stronger word: "built" stays built, and a split in the evidence (27 trained, the rest onboarded) stays split.
+- New: two checks beside it, for every claim at size. The interviewer's next question has a true answer in the evidence that needs no caveat, and a former colleague would confirm the wording. Research backs both: answers no one can check run higher, and asking for detail shrinks them most [S149].
+- New: make the case before any line is written, in both procedures. Rank what to prove: the posting's requirements in the order it leads with and repeats, or on a base resume the must-proves by how many postings require them. The ranking sets the summary's order and each role's first bullet, never the sentences, so two candidates reading the same postings don't hand in the same summary.
+- New: search the whole career before asking or calling a gap. A gap means the career doesn't show it, not that no single line says it, and a pattern counts only with the entries behind it named.
+- New: years in "X or a related field" come from the dated roles that did the work, and the brief lists them. Background checks verify titles and dates.
+- New: how to use a blind review. "Claimed without proof" means write the proof on the page when the evidence holds it. One read is one sample.
+- Changed: the summary has no fixed length. No study tests one, and three guides give limits in three different units (lines, words, sentences). `draft_review.py` asks for a reread outside 45 to 120 words, never a cut. Every clause answers something the posting asks or carries its proof.
+- New: keep one employer's points in one sentence of the summary, oldest first (the skill's judgment).
+- New: `draft_review.py` flags a head count of people ("10 people", "8 users") for a second look at its unit. It never fails one and never changes a number.
+
+**Sources**
+- Added S149 (Levashina, Morgeson and Campion 2012, 16,304 applicants), S153 (the UC Davis Career Center's resume guide, read at the source) and L07 (four blind reads of one resume with only the summary swapped).
+- S62's row now says Stanford's four lines come with bullet points under them. S81 and S83 are now cited in the writing and tailoring references.
+
+**Not added, and why:** a step that writes the ideal summary as a paragraph with blanks (it hands every user the same sentences), a check that raises numbers on its own (a check that can only push up is how overclaiming starts), and a flag on every before-and-after pair (the script can't see whether the evidence holds a share, and it would fire on good lines like "from 12 days to 5").
+
 ## 2.6.0 (2026-11-22)
 
 Every rule shows its evidence. The owner's red team of November 22, 2026 graded each rule, ban and limit by the evidence behind it: research, the systems' own documents and tests, career-center guidance where three or more agree, surveys, or the skill's judgment. Two reviewers who hadn't seen the grades then checked the 20 rules that matter most on the page from the sources alone, and every disagreement was settled against the source. The owner ruled that evidence decides, not preference.

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """draft_review.py tests. Every name, employer and number here is invented."""
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -8,7 +9,7 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fixtures import BLOCKS, FIXTURES, SCRIPTS, run, write_docx  # noqa: E402
+from fixtures import BLOCKS, FIXTURES, ROOT, SCRIPTS, run, write_docx  # noqa: E402
 
 sys.path.insert(0, str(SCRIPTS))
 import draft_review as dr  # noqa: E402
@@ -356,6 +357,46 @@ class Summary(unittest.TestCase):
         self.assertNotIn("unnamed count", review_names(resume(named, self.BULLETS)))
 
 
+class HeadCount(unittest.TestCase):
+    """2.7.0: a head count of people named only as people gets a second look at
+    its unit (references/writing.md, The largest true size). It is a REVIEW,
+    never a FAIL, and the script never changes a number."""
+    BULLETS = Summary.BULLETS
+
+    def flags(self, bullets, summary=None):
+        fails, reviews = dr.review(resume(summary or Summary.GOOD, bullets))
+        return ([h for _i, n, h, _x in fails if n == "head count"],
+                [h for _i, n, h, _x in reviews if n == "head count"])
+
+    def test_a_head_count_in_a_bullet_is_a_review(self):
+        fails, reviews = self.flags(self.BULLETS + ["Trained 10 people to run the new yard system."])
+        self.assertEqual(fails, [])
+        self.assertEqual(reviews, ["10 people"])
+
+    def test_a_head_count_in_the_summary_is_a_review(self):
+        summary = Summary.GOOD + " Trained 8 users on the yard system."
+        fails, reviews = self.flags(self.BULLETS + ["Trained 8 users on the yard system at Harbor."], summary)
+        self.assertEqual(fails, [])
+        self.assertIn("8 users", reviews)
+
+    def test_the_whole_group_and_role_words_pass(self):
+        for line in ("Onboarded all 130 employees in 12 offices to the new process.",
+                     "Trained 40 shift leads across three shifts.",
+                     "Precepted 11 new graduates who now work charge shifts.",
+                     "Taught 5 sections of Algebra II to 140 students."):
+            self.assertEqual(dr.head_counts(line), [], line)
+
+    def test_the_skills_own_example_bullets_pass(self):
+        md = (ROOT / "references" / "writing.md").read_text(encoding="utf-8")
+        examples = re.findall(r"^- \*\*(?:Strong|Nursing|Finance|Trades|Teaching):\*\* (.+)$", md, re.M)
+        self.assertGreaterEqual(len(examples), 5)
+        for ex in examples:
+            self.assertEqual(dr.head_counts(ex), [], ex)
+
+    def test_it_rests_on_judgment(self):
+        self.assertEqual(dr.basis("head count"), "(judgment)")
+
+
 class CareerTotals(unittest.TestCase):
     """v2.0.1: a total the candidate confirmed that spans several jobs may sit in
     the summary with no single role behind it."""
@@ -401,8 +442,8 @@ class CareerTotals(unittest.TestCase):
 
 class SummaryAsPitch(unittest.TestCase):
     """The summary is a pitch (2.5.0), with no count of results and no belief
-    line. 2.6.0 holds it to four rendered lines, about 75 words, where every
-    source found points. The ban on "I" and the rule that every name and number
+    line. 2.7.0 sets no fixed length: outside 45 to 120 words it asks for a
+    reread, never a cut. The ban on "I" and the rule that every name and number
     has a bullet behind it stay."""
     BULLETS = [
         "Ran 14 public workshops for the Elm County trails plan; the county adopted it in 2023.",
@@ -423,15 +464,27 @@ class SummaryAsPitch(unittest.TestCase):
              "downtowns, including the Elm County trails plan and the Ashford downtown plan. Opened "
              "the Denver office and built a team of 6 planners and designers.")
 
+    LONG = PITCH + (" Ran public workshops for the Elm County trails plan and won public pursuits "
+                    "for the Denver office in its first two years, working with city departments, "
+                    "residents, and developers on every plan the team wrote, and trained the staff "
+                    "who now run the review process for parks, downtowns, and corridors across the "
+                    "Colorado communities it serves.")
+
     def test_a_pitch_within_the_limit_is_clean(self):
-        self.assertLessEqual(len(self.SHORT.split()), 75)
+        self.assertLessEqual(len(self.SHORT.split()), 120)
         fails, reviews = dr.review(resume(self.SHORT, self.BULLETS))
         self.assertFalse(fails, [(n, h) for _i, n, h, _x in fails])
         self.assertNotIn("summary length", [n for _i, n, _h, _x in reviews])
 
-    def test_a_long_pitch_is_a_second_read_not_a_fail(self):
+    def test_a_pitch_of_about_80_words_is_not_flagged(self):
+        """The 2.6.0 cap was 75 words. A pitch past it is no longer flagged."""
         self.assertGreater(len(self.PITCH.split()), 75)
-        fails, reviews = dr.review(resume(self.PITCH, self.BULLETS))
+        reviews = dr.review(resume(self.PITCH, self.BULLETS))[1]
+        self.assertNotIn("summary length", [n for _i, n, _h, _x in reviews])
+
+    def test_a_long_pitch_is_a_second_read_not_a_fail(self):
+        self.assertGreater(len(self.LONG.split()), 120)
+        fails, reviews = dr.review(resume(self.LONG, self.BULLETS))
         self.assertFalse(fails, [(n, h) for _i, n, h, _x in fails])
         self.assertIn("summary length", [n for _i, n, _h, _x in reviews])
 
@@ -445,16 +498,18 @@ class SummaryAsPitch(unittest.TestCase):
         names = [n for _i, n, _h, _x in reviews]
         self.assertFalse([n for n in names if "result" in n], names)
 
-    def test_the_length_limit_is_75_words(self):
-        self.assertEqual(dr.SUMMARY_WORDS, (45, 75))
-        words = self.PITCH.split()
-        at_limit = " ".join(words[:75]).rstrip(".,") + "."
+    def test_the_reread_prompt_starts_past_120_words(self):
+        self.assertEqual(dr.SUMMARY_WORDS, (45, 120))
+        words = self.LONG.split()
+        at_limit = " ".join(words[:120]).rstrip(".,") + "."
         over = at_limit[:-1] + " " + " ".join(["more"] * 6) + "."
         self.assertNotIn("summary length", review_names(resume(at_limit, self.BULLETS)))
         hits = [(h, x) for _i, n, h, x in dr.review(resume(over, self.BULLETS))[1] if n == "summary length"]
         self.assertTrue(hits)
-        self.assertIn("45 to 75", hits[0][1])
-        self.assertIn("Four rendered lines", hits[0][1])
+        self.assertIn("45 to 120", hits[0][1])
+        self.assertIn("reread", hits[0][1])
+        self.assertIn("don't add or cut only to reach a number", hits[0][1])
+        self.assertNotIn("Four rendered lines", hits[0][1])
 
     def test_first_person_still_fails_in_a_pitch(self):
         bad = self.PITCH.replace("Practice builder and team leader who has", "I'm a practice builder who has")

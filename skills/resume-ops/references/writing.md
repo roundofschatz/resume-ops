@@ -51,6 +51,21 @@ Every number traces to a line in the candidate's evidence or to an answer they g
 - **Numerals for 10 and up:** "16 years", "130 employees". The guides agree on numerals from 10 up [S67, S126, S139, S145]. Under 10, a word or a numeral, used the same way throughout [S145]. Money and percentages always take numerals: "$2M", "5%" [S67]. Numerals catch the eye of a reader who is skimming [S139, S140]. `draft_review.py` flags a written-out number of 10 or more inside a sentence.
 - **The number in the first line of the bullet,** where the sentence allows. Readers skimming a web page look hardest at the first words of each line [S141]. No resume study tests it (the skill's judgment).
 
+## The largest true size
+
+Write each claim at the largest size the evidence states: who the work served (a team, a firm, its clients), how far it reached (offices, people, markets), and what changed. Pick the unit that shows the size, from what the evidence states: the team or the firm where the evidence names it, not a head count; the firm-wide reach where the work was firm-wide, not one office; a share the evidence gives where a count alone reads small. Never compute a share the evidence doesn't give (Numbers, Real beats round).
+
+Size is a bigger true unit, never a stronger word. "Built" stays built, not "founded." Where the evidence splits a group (27 trained to run it, the rest onboarded), the line keeps the split. Size never widens the candidate's part: on shared work, claim the layer you worked at (Bullets) at its full reach. A figure the candidate ruled one way is said that way.
+
+Every claim at size passes two checks before it goes on the page:
+
+- **The next question.** An interviewer asks how, how many, or who else. The evidence holds the true answer, and it needs no caveat. If the answer has to start with "well," the claim is too big: write the size the answer supports.
+- **The reference.** A former colleague at that firm, asked about the line, would confirm its wording.
+
+Research supports both. Answers no one can check run higher than answers someone can, and asking applicants to back an answer with detail shrinks them, most of all the ones no one can check [S149]. Plain statements raised perceived fit in one experiment, while the strongest self-promotion read as manipulative and ranked lower [S117]. A size word that isn't in the evidence (a reach, a name for a team, "national") stays off the page until the candidate confirms it and it's recorded. Background checks confirm titles and dates [S81, S83], not scope, so nothing after the resume catches an inflated claim before the interview does.
+
+Read every number once for its unit: a head count where the team or the firm is true, a count where the evidence gives a share, one office where the reach was firm-wide. Raise it only when the evidence states the larger unit, never on a guess. `draft_review.py` flags a head count of people for that second look. It never fails one and never changes one.
+
 ## When the client can't be named
 
 Work down this ladder and stop at the first rung that is allowed:
@@ -63,15 +78,17 @@ Never write around a restriction in a way that implies more access than the cand
 
 ## The summary
 
-A prose paragraph of full sentences under the Summary header, up to four rendered lines, about 75 words, no bullets. It's the pitch: who the candidate is and why they fit this employer. Results belong in the bullets, each one in the job that produced it. A summary assembled from slots (title and years, one result, one pattern, a closing line) reads choppy and sells nothing, so don't build one that way.
+A prose paragraph of full sentences under the Summary header, no bullets, as long as it takes to answer what the posting asks most (on a base resume, what most postings share), and no longer. It's the pitch: who the candidate is and why they fit this employer. Results belong in the bullets, each one in the job that produced it. A summary assembled from slots (title and years, one result, one pattern, a closing line) reads choppy and sells nothing, so don't build one that way.
 
-No study tests a summary's length or form. Stanford GSB says "Limit the summary to 4 lines plus bullet points" [S62]; Yale says fifty words or fewer [S63]; the median of 23,191 summaries on one job platform was 64 words [S147]; the federal labor statistics office calls a summary optional [S125]; and the one outcome dataset found no reliable interview effect from having one [S98]. This skill drops the bullets: bullets under the summary repeated the roles below them in every resume of the skill's 2026 test [L05]. It holds the paragraph to four lines, about 75 words at the build's default type, because every source found points that short and none points longer, and every summary line pushes the first job, where screeners look longest [S113], further down page one. Two guides are not enough to make it a convention, so the limit is the skill's judgment until a test settles it, and it holds for every candidate (SKILL.md, Rulings: Evidence first). The test: the candidate's own callbacks, or a blind read through job-seeker-ops's submission-review of one resume with a 50-word and a 75-word summary. No claim may live only in the summary.
+No study tests a summary's length or form. Stanford GSB says "Limit the summary to 4 lines plus bullet points" [S62]; Yale says fifty words or fewer [S63]; UC Davis, in a guide written for students, says three to five sentences [S153]; the median of 23,191 summaries on one job platform was 64 words [S147]; the federal labor statistics office calls a summary optional [S125]; and the one outcome dataset found no reliable interview effect from having one [S98]. This skill drops the bullets: bullets under the summary repeated the roles below them in every resume of the skill's 2026 test [L05]. It sets no fixed length. The three guides give short limits in three different units, and Stanford's four lines come with bullet points under them, so they make no convention. Length still costs something. Every summary line pushes the first job, where screeners look longest [S113], further down page one, and in blind reads of one candidate's resume a reader called a summary of about 120 words "one dense block," though it read best of three [L07]. So every clause answers something the posting asks (on a base resume, something most postings share) or carries the name or number that proves it, and nothing is added or cut only to reach a number. This is the skill's judgment, and it holds for every candidate (SKILL.md, Rulings: Evidence first). The test: the candidate's own callbacks by summary length. No claim may live only in the summary.
 
 **What it covers.** Three things, in whatever order and number of sentences the evidence and the candidate's voice call for:
 
 - What the candidate does, for whom, and what comes of it.
 - The run of work that matches this employer, by name (clients, places, programs), with the career's years and the range of fields.
 - What they've built and led: practices, teams, people trained, and kinds of products.
+
+Keep one employer's points in one sentence, oldest first. This is the skill's judgment: no study tests it, and no blind reader has called it choppy. The test: a blind read of a split version.
 
 **Start from a summary that worked.** Before writing, ask whether the candidate has a summary that got an interview, or one they wrote themselves, and look for one in the evidence. Use it as the voice model: its sentence shapes, its rhythm, its words for the work. Take the shape, not the words. Drop anything a rule here or a candidate ruling bans, and any fact that has gone stale (an old year count, a title no longer held). Record which summary is the model in the rulings file. With no model, write from the evidence in plain, full sentences.
 
@@ -95,7 +112,7 @@ No study tests a summary's length or form. Stanford GSB says "Limit the summary 
 
 > Controller for private manufacturers who closes the books fast enough for owners to run the business on this month's numbers. Fourteen years in accounting, the last eight leading finance at Brightline Tool and Keller Plastics through two acquisitions. Built the month-end close at both companies, hired and trained the teams of four and six that run them, and took both through audits with no adjustments.
 
-`draft_review.py` fails a bullet under Summary, a keyword strip, a first-person pronoun, and a figure or name found only in the summary, unless it is a listed career total. It asks you to re-read a summary outside 45 to 75 words, any count that names fewer items than it claims, and any summary sentence that copies a bullet word for word. It never counts results.
+`draft_review.py` fails a bullet under Summary, a keyword strip, a first-person pronoun, and a figure or name found only in the summary, unless it is a listed career total. It asks you to re-read a summary outside 45 to 120 words, never to cut one to a number, any count that names fewer items than it claims, and any summary sentence that copies a bullet word for word. It never counts results.
 
 ## AI-writing tells
 

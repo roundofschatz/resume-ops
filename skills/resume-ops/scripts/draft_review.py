@@ -62,7 +62,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _docx  # noqa: E402
 
 WORD_CEILING = 35         # about two lines at the build's default type; a hint, the render decides
-SUMMARY_WORDS = (45, 75)  # the skill's judgment; references/writing.md, The summary
+SUMMARY_WORDS = (45, 120)  # a reread prompt, not a limit; references/writing.md, The summary
 MAX_ROLE_BULLETS = 6      # [S136]; three to five is the norm [S125, S138]
 COPY_RUN = 8        # words in a row a summary sentence shares with one bullet
 COPY_SHARE = 0.8    # or this share of the sentence's words, in order, from one bullet
@@ -1338,6 +1338,34 @@ PROPER = re.compile(r"(?<!^)(?<![.!?]\s)\b[A-Z][A-Za-z&'.-]{2,}")
 DIGIT = re.compile(r"\d|\b(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|"
                    r"twelve|dozen|twenty|thirty|forty|fifty|hundred|thousand|million)\b", re.I)
 PERCENT_END = re.compile(r"\d+(?:\.\d+)?%[^.]*\.?\s*$")
+
+# --- a head count, for a second look at its unit -----------------------------
+# A number of people named only as people: "trained 10 people", "8 users". A
+# role word ("40 shift leads", "11 new graduates") says who they were and is
+# left alone, and so is a count that already says it was the whole group ("all
+# 130 employees"). The check is a REVIEW flag that never fails and never raises
+# a number: the evidence decides whether a larger true unit exists
+# (references/writing.md, The largest true size). The skill's judgment.
+HEADCOUNT = re.compile(
+    r"(?<![\w$.,-])(?P<n>\d{1,3}(?:,\d{3})*|(?i:two|three|four|five|six|seven|eight|nine|ten|"
+    r"eleven|twelve|dozen))\+?\s+(?:(?i:new|more|other|full-time|part-time|internal)\s+)?"
+    r"(?P<noun>(?i:people|persons|individuals|users|employees|staff\s+members|staffers|staff|"
+    r"team\s+members|colleagues|co-?workers|workers))\b")
+HEADCOUNT_FIX = ("A head count. If the evidence names the group they made up (the team, the "
+                 "department, the firm) or gives the share, that may be the truer size. Change it "
+                 "only to a unit the evidence states (references/writing.md, The largest true size).")
+WHOLE_GROUP = re.compile(r"\b(?:all|every|each of the|all of (?:the|its|their))\s+$", re.I)
+
+
+def head_counts(text):
+    """Head counts of people named only as people, unless the line says it was
+    the whole group."""
+    out = []
+    for m in HEADCOUNT.finditer(text):
+        if WHOLE_GROUP.search(text[:m.start()]):
+            continue
+        out.append(m.group(0))
+    return out
 SKILLS_LINE = re.compile(r"^\s*(?:key\s+|core\s+)?(?:skills?|tools?)(?:\s+used)?\s*:", re.I)
 CONTACT = re.compile(r"@|\(\d{3}\)|\d{3}[-.\s]\d{3}[-.\s]\d{4}|linkedin\.com", re.I)
 
@@ -1558,6 +1586,8 @@ def review(blocks, career_totals=(), serial_comma=False, allow=()):
         if not DIGIT.search(b.text) and not PROPER.search(b.text):
             add(REVIEW, b.n, "no number and no named thing", b.text[:60],
                 "Anyone could have written this about anyone. Add the specific.")
+        for hit in dict.fromkeys(head_counts(b.text)):
+            add(REVIEW, b.n, "head count", hit, HEADCOUNT_FIX)
 
     ends_pct = [b for b in role_bullets if PERCENT_END.search(b.text)]
     if role_bullets and len(ends_pct) * 3 > len(role_bullets):
@@ -1611,7 +1641,8 @@ def review(blocks, career_totals=(), serial_comma=False, allow=()):
         lo, hi = SUMMARY_WORDS
         if not lo <= words <= hi:
             add(REVIEW, first_n, "summary length", f"{words} words",
-                f"{lo} to {hi} words is the range. Four rendered lines at most.")
+                f"Outside {lo} to {hi} words: reread it. Each clause should answer something the "
+                "posting asks; don't add or cut only to reach a number.")
 
         for s in sents:
             opener = third_person_opener(s)
@@ -1628,6 +1659,8 @@ def review(blocks, career_totals=(), serial_comma=False, allow=()):
         if rating:
             add(REVIEW, first_n, "self-rating in front of the role", rating,
                 "Let the work show it. Name the role and the proof.")
+        for hit in dict.fromkeys(head_counts(text)):
+            add(REVIEW, first_n, "head count", hit, HEADCOUNT_FIX)
 
         # figures and named clients that live only here
         seen = set()

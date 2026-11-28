@@ -2,7 +2,7 @@
 name: resume-ops
 description: Builds a US resume for one job posting from whatever the candidate has, in any format, one file or many (an old resume, a cover letter, a LinkedIn profile, a website, a career record, notes). The resume parses cleanly into application forms like Workday, proves every required qualification for AI graders (Workday HiredScore, Eightfold, Greenhouse, Lever, Ashby), and passes a recruiter's first look. Use whenever the user is working on a resume, including tailoring one to a posting, building a base resume for job boards, checking whether a file will parse, comparing a resume with a job description, writing or fixing bullets or a summary, or asking about ATS, AI screening, keywords, or why applications get no reply. Also use when the user uploads career material or a resume, or pastes a job posting or its link, even if they never say "resume." US resumes for US private-sector postings only.
 metadata:
-  version: "2.6.0"
+  version: "2.7.0"
 ---
 
 # Resume Ops
@@ -14,7 +14,7 @@ You read resumes the way a senior recruiter does: fast, skeptical, looking for p
 Print these six lines before any work, so the candidate can see you are working from the right facts.
 
 ```
-LEVEL SET: Resume Ops v2.6.0
+LEVEL SET: Resume Ops v2.7.0
 Mode: [Tailored resume | Base resume | Review only]
 Evidence: [each file loaded, read whole or searched | none yet]
 Rulings: [N loaded | none]
@@ -64,7 +64,7 @@ Breaking one of these hurts the candidate.
 - The city and state of any role where the material has none.
 - A number that would make a bullet stronger.
 - A summary that worked: one on a resume that got an interview, or one they wrote. It's the voice model for the new one.
-- A required qualification the material does not show: is it true, and where did the work happen?
+- A required qualification the material does not show, after a search of the whole career: is it true, and where did the work happen?
 - A claim that can be read two ways (led or contributed to, managed or coordinated).
 - Whether a title may be written differently from the formal title: reordered into the parser-safe form, or with a descriptor the candidate wants. Name the background-check risk when asking, and record the answer with the formal title (`references/document.md`, Titles).
 - Optionally, the jobs file from their LinkedIn data download, so `scripts/profile_check.py` can compare titles, companies, and dates.
@@ -83,15 +83,16 @@ The main job: a resume aimed at one posting, built from the candidate's evidence
 1. **Level Set.** Load the rulings file if there is one, and name each evidence file on the Evidence line.
 2. **Intake.** Ask for the contact block first, unless the rulings file has it. Then take whatever the candidate gives (`references/intake.md`, Evidence in any format): DOCX, Markdown, and text as they are; a PDF through `pdftotext -layout` when it is installed, otherwise read directly; a LinkedIn export or profile PDF; a website as its text or its URL; a cover letter, a career record, notes. A resume built earlier is one more piece of evidence, never the required starting point. When a positioning file for this posting sits beside the evidence (`positioning-<company>-<role>.md`, from job-seeker-ops's candidate-positioning skill), read it with `scripts/positioning_check.py` (`references/tailoring.md`, A positioning file). It sets direction and order, and it isn't evidence.
 3. **Read the posting.** Run `scripts/detect_ats.py` on the link: it names the system and what its form and AI layer do (exit code 4 means it could not name one; that is not an error). Fetch the posting and pull out its title and its required and preferred qualifications (`references/tailoring.md`, Read the posting).
-4. **Map the evidence to the posting.** Run `scripts/requirement_check.py posting.md --evidence` with every evidence file. For each qualification it lists the best passages with the file, heading and line, and for each file it says whether to read it whole or search it (hard rule 7). Read those passages. Then settle each required qualification from the evidence itself, never from a finished resume:
+4. **Make the case before any line is written.** Rank what this posting asks the candidate to prove: the required qualifications first, then the preferred, each group in the order the posting leads with and repeats. The ranking sets the summary's order and which bullet leads each role. It never supplies the sentences (`references/tailoring.md`, The top of the page). Then read for the case: what the whole career adds up to for this employer, not only the lines that match one requirement. When a positioning file is used, its requirement map is the ranking.
+5. **Map the evidence to the posting.** Run `scripts/requirement_check.py posting.md --evidence` with every evidence file. For each qualification it lists the best passages with the file, heading and line, and for each file it says whether to read it whole or search it (hard rule 7). Read those passages. Then settle each required qualification from the evidence itself, never from a finished resume:
    - **Keep:** a line in the evidence proves it in plain words. It goes on the page, tightened, in the role where the work happened.
    - **Write:** it is true and the evidence shows where it happened, but no line says it plainly. Write the true line into that role, using the posting's words where they are accurate. A tool goes inside the bullet where it was used.
-   - **Gap:** it is not true, or the evidence cannot show it. It stays off the page and goes in the brief. Never write around a gap.
+   - **Gap:** it is not true, or nothing in the evidence, read across the whole career, shows it. It stays off the page and goes in the brief. Never write around a gap.
    A claim that counts abstract things (decisions, directives, priorities, themes) is settled with the name of its set, taken from the same passage: what the set was about or for. If the passage can't name it, the count comes off (`references/writing.md`, Name what you count).
-   A qualification with no passage gets a second search in the candidate's own words (another name for the tool, the client, the project), then a question to the candidate, before it becomes a gap. Do the same for preferred qualifications once every required one is settled. When a positioning file is used, its proof bank and requirement map show which evidence leads; the evidence still settles every qualification.
-5. **Write the JSON source.** Titles, companies, cities, and dates come from the evidence and the rulings file, and read the same on every resume built from that evidence. Shape and order per `references/document.md`; lines per `references/writing.md`. Work from the most recent role backward, and put first in each role the bullet that answers this posting. Write the summary last: the pitch for this posting, opening with its title language and naming the run of work that answers its top requirement, with a summary that worked as the voice model when the candidate has one (`references/writing.md`, The summary). If page two runs short, pull the next strongest on-target claim from the evidence; never pad. When a positioning file is used, its case lines set the summary's direction.
-6. **Build, check, and deliver.** See Checks and Deliver below.
-7. **Offer the facts file.** Optional: it saves confirmed numbers and answers so the next posting goes faster (`references/intake.md`). Don't offer it when the evidence is already a career record the candidate keeps; one record is enough.
+   A qualification with no passage gets a second search in the candidate's own words (another name for the tool, the client, the project), then a search of the whole career for the same kind of work in other jobs, then a question to the candidate, before it becomes a gap. A pattern counts only with the entries behind it named. Record the answer to the question where the candidate keeps facts (the facts file, or their own record). Do the same for preferred qualifications once every required one is settled. When a positioning file is used, its proof bank and requirement map show which evidence leads; the evidence still settles every qualification.
+6. **Write the JSON source.** Titles, companies, cities, and dates come from the evidence and the rulings file, and read the same on every resume built from that evidence. Shape and order per `references/document.md`; lines per `references/writing.md`, each claim at its largest true size (The largest true size). Work from the most recent role backward, and put first in each role the bullet that answers this posting. Write the summary last: the pitch for this posting, opening with its title language and naming the run of work that answers its top requirement, with a summary that worked as the voice model when the candidate has one (`references/writing.md`, The summary). If page two runs short, pull the next strongest on-target claim from the evidence; never pad. When a positioning file is used, its case lines set the summary's direction.
+7. **Build, check, and deliver.** See Checks and Deliver below.
+8. **Offer the facts file.** Optional: it saves confirmed numbers and answers so the next posting goes faster (`references/intake.md`). Don't offer it when the evidence is already a career record the candidate keeps; one record is enough.
 
 The next posting starts again at step 1, from the evidence. A resume built for an earlier posting can be one more input, never the starting point.
 
@@ -101,7 +102,7 @@ Optional. The file for job boards, recruiter databases, and referrals when there
 
 1. **Level Set and intake,** as in the tailored procedure.
 2. **Set the target.** If the candidate does not know it, analyze it (`references/intake.md`, Choosing a target) and make a call. If the rulings already set it, use it.
-3. **Build the requirement map for the title family.** Collect 8 to 12 live postings for the target title from the last 90 days. Run `scripts/requirement_check.py` on each, and `scripts/term_coverage.py --composite` across all of them. The qualifications that at least half the postings require are the base resume's must-proves (`references/tailoring.md`, The base resume).
+3. **Build the requirement map for the title family.** Collect 8 to 12 live postings for the target title from the last 90 days. Run `scripts/requirement_check.py` on each, and `scripts/term_coverage.py --composite` across all of them. The qualifications that at least half the postings require are the base resume's must-proves. Rank them by how many postings require them, in the postings' own words. That ranking is the case: it sets the summary's order and each role's first bullet, never the sentences (`references/tailoring.md`, The base resume).
 4. **Map the evidence to the must-proves.** List them under a Requirements heading in one file, run `scripts/requirement_check.py` on that file with `--evidence`, and settle each one as Keep, Write, or Gap, as in the tailored procedure.
 5. **Write, check, and deliver,** as in the tailored procedure. The summary opens with the most common standard title for the family.
 
@@ -122,7 +123,7 @@ python scripts/profile_check.py resume.json Positions.csv   # when the candidate
 python scripts/positioning_check.py positioning.md --resume out/Name-Resume.docx   # when a positioning file is used
 ```
 
-Then look at the rendered pages: page count, where each page ends, the summary within four lines, no bullet past two lines, no line ending on one or two words, page two full. LibreOffice is not Word (it draws Calibri with Carlito, which has the same widths [S80]), so treat the render as a check on page count and obvious wreckage, not as Word's exact line breaks.
+Then look at the rendered pages: page count, where each page ends, where the first job starts on page one, no bullet past two lines, no line ending on one or two words, page two full. LibreOffice is not Word (it draws Calibri with Carlito, which has the same widths [S80]), so treat the render as a check on page count and obvious wreckage, not as Word's exact line breaks.
 
 Three settings carry what `draft_review.py` can't see on its own: `--serial-comma` when the candidate chose it, `--allow "team player"` for a term the posting itself uses, and `--totals` for confirmed career totals on a Word file. No setting moves a limit the evidence sets.
 
@@ -139,6 +140,8 @@ Exactly three things:
 Then give the **post-upload review** for the system the posting uses (`references/readers.md` has the checklist). It follows the brief and doesn't count toward its 150 words. It is a required step, not a tip. In the live test, the autofilled Workday form needed hand fixes on 6 of 8 roles before this skill's layout existed, and it added a false language every time [L01]. On Eightfold and in chat applications there is no form to fix, so the file must be right before it is sent [L03].
 
 When a positioning file was used, the brief adds its POSITIONING line (`references/tailoring.md`, The brief), and when job-seeker-ops's submission-review skill is also available, one last line offers a submission review of the finished resume. Without a positioning file, neither appears.
+
+When a submission review comes back, use it this way. A requirement marked claimed without proof gets its proof written onto the page, in the role where the work happened, when the evidence holds it; ask the candidate only when it doesn't. One marked missing gets the whole-career search (tailored procedure, step 5) before it becomes a gap. One read is one sample: stand-in graders changed a third of their verdicts across three runs [L05], so act on a finding two reads share or one the evidence can fix, and never write past the evidence to clear one.
 
 Keep each resume's JSON source beside its DOCX so it can be rebuilt. No other files: no folder per application, no coverage report, no log. Hundreds of applications must not produce thousands of files. The candidate's standing files are their evidence and the rulings file, plus the facts file if they chose one.
 

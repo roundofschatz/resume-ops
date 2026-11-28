@@ -20,15 +20,15 @@ For every required qualification, one of three actions, with the proof taken fro
 
 - **Keep.** A line in the evidence proves it, in words a grader would match to the qualification. It goes on the page in the role where the work happened. A title alone doesn't prove it, and neither does a skills list: a line has to show the work.
 - **Write.** It is true, and the evidence shows where it happened, but no line says it plainly. Write the true line into that role. Use the posting's words where they are accurate ("patient throughput", "Epic", "Tableau dashboards").
-- **Gap.** It is not true, or the evidence cannot show it. It stays off the page. It goes in the brief by name. Never write around a gap, never put the term in a list to catch a search, never hint at it.
+- **Gap.** It is not true, or nothing in the evidence, read across the whole career, shows it. It stays off the page. It goes in the brief by name. Never write around a gap, never put the term in a list to catch a search, never hint at it.
 
-A qualification with no passage gets a second search in the candidate's own words, then a question, before it is called a gap.
+A qualification with no passage gets a second search in the candidate's own words, then a search of the whole career for the same kind of work in other jobs, then a question, before it is called a gap. A gap means the career doesn't show it, not that no single line says it. A pattern counts only with the entries behind it named.
 
 Then the preferred qualifications, the same way, once every required one is settled.
 
 How to prove the common kinds:
 
-- **Years of experience ("10+ years in X").** Count from the role dates, only the roles that did X. If the count falls short, it's a gap, not a rounding question. The summary's years are a different count: the whole career (`references/writing.md`, The summary). Never attach the career number to X unless the jobs that did X add up to it.
+- **Years of experience ("10+ years in X").** Count from the role dates, only the roles that did X. If the count falls short, it's a gap, not a rounding question. The summary's years are a different count: the whole career (`references/writing.md`, The summary). Never attach the career number to X unless the jobs that did X add up to it. When a posting counts years in "X or a related field," count the dated roles whose work was X or the related field it names, because background checks verify titles and dates [S81, S83]. On the page, name the field in the posting's words where those roles show the work; in the brief, list the roles that make up the count.
 - **A degree.** Education shows it or it's a gap. "Or equivalent experience" is the candidate's call to argue in the application, not on the page.
 - **A tool.** Inside the bullet where it was used. `requirement_check.py` marks a tool found only on the Skills line as WEAK for that reason.
 - **Leading people.** Team size, who, and what came of it: "Built and led a team of 6 analysts." Mentoring counts when it names who was mentored and what they went on to do.
@@ -80,7 +80,7 @@ Optional, and never a prerequisite for a tailored resume. A base resume has no s
 2. Run `requirement_check.py` on each. Group the required qualifications that recur across postings (they will be worded differently; group them by what they ask for).
 3. Run `term_coverage.py --composite` across all of them. Terms in 60% or more of the postings are Tier 1 for the base; 30 to 59%, Tier 2.
 4. The qualifications that at least half the postings require are the base resume's must-proves. List them under a Requirements heading in one file and run `requirement_check.py` on it with `--evidence`. Each one that is true for the candidate gets a proof line in a role. Each one they don't have gets named to them: if most postings require a credential they lack, that is a targeting problem, not a writing one.
-5. The summary opens with the most common standard title for the family, and the work it names answers the must-prove that the most postings share.
+5. Rank the must-proves by how many postings require them. The summary opens with the most common standard title for the family and answers the must-proves in that order; the bullets prove each one. The ranking sets the order, not the sentences: take the sentence shapes and words from a summary that worked for the candidate (`references/writing.md`, The summary), never from a template filled with the candidate's facts.
 
 A base resume stands alone: no cover letter, no posting-specific language, no company names of employers it's aimed at.
 

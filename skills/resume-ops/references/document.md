@@ -41,7 +41,7 @@ City, ST | (555) 555-0134 | name@example.com | linkedin.com/in/handle
 
 ## Summary
 
-A prose paragraph under the Summary header: up to four rendered lines, about 75 words, no bullets. What goes in it and how it's written is in `references/writing.md`, The summary. `build_resume.py` refuses a bullet under Summary.
+A prose paragraph under the Summary header, no bullets, with no fixed length. What goes in it and how it's written is in `references/writing.md`, The summary. `build_resume.py` refuses a bullet under Summary.
 
 ## Experience
 
